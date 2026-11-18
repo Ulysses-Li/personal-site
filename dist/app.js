@@ -34,13 +34,20 @@
   const titles = {
     home: '工程實踐與技術筆記',
     work: '作品案例',
+    tools: '小工具',
     notes: '技術知識庫',
     resume: '個人履歷'
   };
 
   let activeView = null;
   let selectedCategory = '全部';
+  let selectedToolCategory = '全部';
   let lastOpener = null;
+  const toolItems = (Array.isArray(data.tools) ? data.tools : []).map((tool) => ({
+    ...tool,
+    category: tool.category || '其他',
+    tags: Array.isArray(tool.tags) ? tool.tags : []
+  }));
 
   // ============================================================
   // 02. 個人資料：將 content.js 的設定套用到共用位置
@@ -191,7 +198,81 @@
   }
 
   // ============================================================
-  // 06. 共用詳情視窗：作品案例與技術文章使用相同容器
+  // 06. 個人小工具：獨立工具箱，支援外部網址與本站的本機 HTML 工具
+  // ============================================================
+  function toolIcon(name) {
+    // 圖形只從固定清單選擇，不執行資料欄位內的 HTML。
+    const icons = {
+      calculator: '<rect x="5" y="2" width="14" height="20" rx="3"/><path d="M8 6h8M8 11h1m3 0h1m3 0h.1M8 15h1m3 0h1m3 0h.1M8 19h1m3 0h1m3 0h.1"/>',
+      code: '<path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 3l-4 18"/>',
+      document: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+      grid: '<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'
+    };
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.grid}</svg>`;
+  }
+
+  function toolHref(value) {
+    if (typeof value !== 'string' || !value.trim()) return null;
+    const url = value.trim();
+    try {
+      const target = new URL(url, document.baseURI);
+      if (!['https:', 'http:', 'file:'].includes(target.protocol)) return null;
+      // 本機工具使用相對路徑，避免把某台電腦的絕對檔案位置寫死。
+      if (target.protocol === 'file:' && /^[a-z][a-z\d+.-]*:/i.test(url)) return null;
+      return url;
+    } catch {
+      return null;
+    }
+  }
+
+  function renderToolFilters() {
+    const toolCategories = ['全部', ...new Set(toolItems.map((tool) => tool.category))];
+    $('#tool-filters').innerHTML = toolCategories.map((category) => `
+      <button class="tool-filter" type="button" data-tool-category="${escape(category)}"
+        aria-pressed="${category === selectedToolCategory}">${escape(category)}</button>
+    `).join('');
+  }
+
+  function renderTools() {
+    const tokens = $('#tool-search').value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    const filtered = toolItems.filter((tool) => {
+      const text = [tool.title, tool.category, tool.description, tool.source, ...tool.tags]
+        .join(' ').toLocaleLowerCase();
+      return (selectedToolCategory === '全部' || tool.category === selectedToolCategory)
+        && tokens.every((token) => text.includes(token));
+    });
+    const isCollectionEmpty = toolItems.length === 0;
+    $('#tools-toolbar').hidden = isCollectionEmpty;
+    $('#tool-results').hidden = isCollectionEmpty;
+    $('#tool-results').textContent = `${filtered.length} 個小工具 / 全部 ${toolItems.length} 個`;
+    $('#tools-empty').hidden = filtered.length > 0;
+    $('#reset-tools').hidden = isCollectionEmpty;
+    $('#tools-empty-title').textContent = isCollectionEmpty
+      ? '第一批小工具，準備上架。' : '還沒有符合的小工具';
+    $('#tools-empty-description').textContent = isCollectionEmpty
+      ? '這裡會收進自己做的工具，以及工作與生活中常用的小幫手。'
+      : '換個關鍵字，或清除條件看看全部工具。';
+    $('#tool-grid').innerHTML = filtered.map((tool) => {
+      const href = toolHref(tool.url);
+      return `
+        <article class="tool-card" data-tool-id="${escape(tool.id)}">
+          <div class="tool-card-top"><span class="tool-icon">${toolIcon(tool.icon)}</span><span class="tool-category">${escape(tool.category)}</span></div>
+          <h2 class="tool-title">${escape(tool.title)}</h2>
+          <p class="tool-description">${escape(tool.description)}</p>
+          <div class="tool-tags">${tags(tool.tags)}</div>
+          <footer class="tool-card-footer"><span class="tool-source">${escape(tool.source || '小工具')}</span>
+            ${href ? `<a class="tool-launch" href="${escape(href)}" target="_blank" rel="noopener noreferrer" aria-label="開啟${escape(tool.title)}（新分頁）">開啟工具 <span aria-hidden="true">↗</span></a>` : '<span class="tool-pending">入口待補</span>'}
+          </footer>
+        </article>
+      `;
+    }).join('');
+    document.querySelectorAll('[data-tool-category]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.toolCategory === selectedToolCategory));
+    });
+  }
+
+  // ============================================================
+  // 07. 共用詳情視窗：作品案例與技術文章使用相同容器
   // ============================================================
   function showDetail(kind, item) {
     $('#detail-kicker').textContent = kind === 'project'
@@ -245,7 +326,7 @@
   }
 
   // ============================================================
-  // 07. 網址導覽：#home、#work、#notes、#resume 與詳情深連結
+  // 08. 網址導覽：#home、#work、#tools、#notes、#resume 與詳情深連結
   // ============================================================
   function closeMenu() {
     $('#site-nav').classList.remove('is-open');
@@ -296,7 +377,7 @@
   }
 
   // ============================================================
-  // 08. 點擊、輸入與鍵盤事件：動態列表使用事件委派
+  // 09. 點擊、輸入與鍵盤事件：動態列表使用事件委派
   // ============================================================
   function bindEvents() {
     document.addEventListener('click', (event) => {
@@ -325,12 +406,25 @@
       const previewButton = event.target.closest('[data-preview]');
       if (previewButton) setPreview(previewButton.dataset.preview);
 
+      const toolCategoryButton = event.target.closest('[data-tool-category]');
+      if (toolCategoryButton) {
+        selectedToolCategory = toolCategoryButton.dataset.toolCategory;
+        renderTools();
+      }
+
       if (!event.target.closest('.site-header')) closeMenu();
       const sameRouteLink = event.target.closest('a[href^="#"]');
       if (sameRouteLink?.getAttribute('href') === location.hash) closeMenu();
     });
 
     $('#knowledge-search').addEventListener('input', renderNotes);
+    $('#tool-search').addEventListener('input', renderTools);
+    $('#reset-tools').addEventListener('click', () => {
+      selectedToolCategory = '全部';
+      $('#tool-search').value = '';
+      renderTools();
+      $('#tool-search').focus();
+    });
     $('#reset-search').addEventListener('click', () => {
       selectedCategory = '全部';
       $('#knowledge-search').value = '';
@@ -377,7 +471,7 @@
   }
 
   // ============================================================
-  // 09. 作品舞台：按鈕與方向鍵切換真實專案截圖，不自動輪播
+  // 10. 作品舞台：按鈕與方向鍵切換真實專案截圖，不自動輪播
   // ============================================================
   function renderShowcase() {
     const items = data.showcase || [];
@@ -435,7 +529,7 @@
   }
 
   // ============================================================
-  // 10. 輕量微互動：捲動進場與桌機作品卡傾角，手機維持穩定操作
+  // 11. 輕量微互動：捲動進場與桌機作品卡傾角，手機維持穩定操作
   // ============================================================
   function initializeMotion() {
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -486,13 +580,15 @@
   }
 
   // ============================================================
-  // 11. 初始化順序：資料套用 → 建立列表與作品舞台 → 綁定事件 → 顯示頁面
+  // 12. 初始化順序：資料套用 → 建立列表與作品舞台 → 綁定事件 → 顯示頁面
   // ============================================================
   renderProfile();
   renderOverview();
   renderResume();
   renderFilters();
   renderNotes();
+  renderToolFilters();
+  renderTools();
   renderShowcase();
   bindEvents();
   route({ initial: true });

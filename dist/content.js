@@ -7,6 +7,7 @@
  * 04 作品案例 projects      → 作品列表及案例詳情
  * 05 技術筆記 knowledge     → 知識庫分類、搜尋與主題詳情
  * 06 履歷摘要 resume        → 個人摘要、技術標籤與待補資料
+ * 07 個人小工具 tools       → 工具箱的名稱、分類、說明、標籤與網址
  *
  * 新增作品或筆記時，複製同一陣列中的一個完整物件，再修改欄位。
  * id 必須保持唯一；已使用的 id 請盡量保留，避免既有主題網址失效。
@@ -14,6 +15,13 @@
  * 本站內容以已知資料為依據；未確認的作品細節與文章範本需保留狀態說明。
  */
 window.SITE_CONTENT = {
+  // ── 07｜個人小工具：收到工具清單後，將物件加入這個陣列。 ──
+  // 範例欄位：{ id: 'my-tool', title: '工具名稱', category: '日常工具',
+  // description: '這個工具能幫忙完成的事情', url: 'tools/my-tool/index.html',
+  // icon: 'grid', tags: ['關鍵字'], source: '個人工具' }
+  // url 可填完整 HTTP(S) 網址，或相對於 dist/index.html 的本機 HTML 路徑。
+  // icon 可用 calculator、code、document、grid；本機工具可放在 dist/tools/。
+  tools: [],
   // ── 01｜個人資料：聯絡網址使用完整 HTTPS 網址，Email 只填信箱。 ──
   profile: {
     name: 'Louis Li',

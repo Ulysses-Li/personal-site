@@ -11,12 +11,14 @@
     <link rel="stylesheet" href="styles.css">
     <!-- 個人工作室的首頁排版與微互動；共用頁面仍由 styles.css 管理。 -->
     <link rel="stylesheet" href="studio.css">
+    <!-- 小工具收藏、分類與首頁入口；工具清單集中於 content.js。 -->
+    <link rel="stylesheet" href="tools.css">
     <script src="content.js" defer></script>
     <script src="app.js" defer></script>
   </head>
   <body class="portfolio-studio">
     <a class="skip-link" href="#main-content">跳至主要內容</a>
-    <!-- 02｜共用頁首與導覽：四個頁面由 app.js 依網址 hash 切換。 -->
+    <!-- 02｜共用頁首與導覽：五個頁面由 app.js 依網址 hash 切換。 -->
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="#home" aria-label="Louis Li 首頁">
@@ -30,6 +32,7 @@
         <nav class="site-nav" id="site-nav" aria-label="主要導覽">
           <a href="#home" data-view="home" aria-current="page">關於我</a>
           <a href="#work" data-view="work">作品案例</a>
+          <a href="#tools" data-view="tools">小工具</a>
           <a href="#notes" data-view="notes">技術知識庫</a>
           <a href="#resume" data-view="resume">個人履歷</a>
         </nav>
@@ -71,6 +74,13 @@
           </div>
         </div>
         <div class="studio-ribbon" aria-label="專業領域"><span>CNC / CAM</span><span>TOOL APPLICATION</span><span>WEB DEVELOPMENT</span><span>AI WORKFLOW</span></div>
+
+        <!-- 小工具的常用入口：獨立於作品案例，方便日常直接開啟使用。 -->
+        <section class="home-tools-shelf reveal" aria-labelledby="home-tools-title">
+          <span class="home-tools-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M17.5 14v7M14 17.5h7"/></svg></span>
+          <div><p class="studio-section-label">MY LITTLE TOOLBOX</p><h2 id="home-tools-title">自己的小工具，放在順手的地方。</h2><p>加工計算、資料整理，或是解決日常問題的小幫手。</p></div>
+          <a class="button button-plain" href="#tools">打開工具箱 <span aria-hidden="true">↗</span></a>
+        </section>
 
         <!-- 03-2｜錯落的作品與知識入口：每張卡片都帶到可操作的內容。 -->
         <section aria-labelledby="featured-title">
@@ -114,7 +124,25 @@
           <a class="text-link" href="mailto:louis962911@gmail.com">聊聊技術與合作 <span aria-hidden="true">↗</span></a>
         </section>
       </section>
-      <!-- 05｜技術知識庫：搜尋、分類、主題列表與無結果狀態。 -->
+      <!-- 05｜個人小工具：工具資料、分類與網址集中於 content.js 的 tools。 -->
+      <section class="view tools-view" data-view="tools" hidden aria-labelledby="tools-title">
+        <header class="tools-heading">
+          <div><p class="studio-section-label">MY LITTLE TOOLBOX</p><h1 id="tools-title">小工具，<br>隨手就用。</h1><p class="tools-lead">把自己做的、工作常用的，以及值得留下的小幫手，收在同一個地方。</p></div>
+          <span class="tools-heading-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M17.5 14v7M14 17.5h7"/></svg></span>
+        </header>
+        <div class="tools-toolbar" id="tools-toolbar">
+          <div class="tools-search-field"><label for="tool-search">搜尋小工具</label><input type="search" id="tool-search" placeholder="輸入名稱、用途或關鍵字…" autocomplete="off"></div>
+          <div class="tools-filter-list" id="tool-filters" aria-label="依工具分類"></div>
+        </div>
+        <p class="tools-results" id="tool-results" aria-live="polite"></p>
+        <div class="tool-grid" id="tool-grid"></div>
+        <div class="tools-empty" id="tools-empty" hidden>
+          <h2 id="tools-empty-title">第一批小工具，準備上架。</h2>
+          <p id="tools-empty-description">這裡會收進自己做的工具，以及工作與生活中常用的小幫手。</p>
+          <button class="button button-dark" id="reset-tools" type="button">清除搜尋條件</button>
+        </div>
+      </section>
+      <!-- 06｜技術知識庫：搜尋、分類、主題列表與無結果狀態。 -->
       <section class="view" data-view="notes" hidden aria-labelledby="notes-title">
         <div class="page-heading">
           <p class="eyebrow">THE ENGINEERING NOTEBOOK / 技術知識庫</p>
@@ -140,7 +168,7 @@
           <p>目前條目是「整理範本」，用來引導後續記錄真實案例，尚不是已驗證的技術教學。這一版提供可分享內容的展示架構；私人工作筆記與權限管理將另行建置。</p>
         </aside>
       </section>
-      <!-- 06｜個人履歷：摘要、能力與專案由 content.js 載入；列印版位於 styles.css。 -->
+      <!-- 07｜個人履歷：摘要、能力與專案由 content.js 載入；列印版位於 styles.css。 -->
       <section class="view" data-view="resume" hidden aria-labelledby="resume-title">
         <div class="resume-toolbar no-print">
           <span>個人履歷 / 能力摘要初版</span>
@@ -198,14 +226,14 @@
         <p class="work-note">請啟用 JavaScript 以使用作品、知識搜尋與履歷功能。聯絡方式：<a href="mailto:louis962911@gmail.com">louis962911@gmail.com</a>。</p>
       </noscript>
     </main>
-    <!-- 07｜共用頁尾：版權與 GitHub 入口。 -->
+    <!-- 08｜共用頁尾：版權與 GitHub 入口。 -->
     <footer class="site-footer">
       <div class="container footer-inner">
         <span>© 2026 LOUIS LI <span class="footer-dot">/</span> 工程實踐與技術筆記</span>
         <span>持續整理，持續向前。 <a data-profile-link="github" href="https://github.com/Ulysses-Li" target="_blank" rel="noopener noreferrer" aria-label="Louis Li 的 GitHub">GITHUB ↗</a></span>
       </div>
     </footer>
-    <!-- 08｜共用詳情視窗：app.js 依點選項目填入案例或技術筆記。 -->
+    <!-- 09｜共用詳情視窗：app.js 依點選項目填入案例或技術筆記。 -->
     <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-title">
       <button class="dialog-close" type="button" aria-label="關閉內容">關閉 <span aria-hidden="true">×</span></button>
       <div id="detail-content">

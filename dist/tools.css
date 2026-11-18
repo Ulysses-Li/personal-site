@@ -1,0 +1,649 @@
+/*
+ * 個人小工具專區
+ * 載入順序：styles.css → studio.css → tools.css。
+ * 工具資料、搜尋與分類邏輯由 content.js、app.js 維護；本檔只管理呈現。
+ */
+
+/* ==========================================================================
+   01｜首頁工具入口
+   以緊湊的淺色工具帶，銜接主視覺與作品區，不搶走首頁主標題。
+   ========================================================================== */
+.home-tools-shelf {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 12px 0 31px;
+  padding: 23px 27px;
+  border: 1px solid rgba(255, 255, 255, 0.94);
+  border-radius: 24px;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.88), rgba(235, 246, 255, 0.78));
+  box-shadow: 0 10px 32px rgba(50, 104, 146, 0.055);
+  backdrop-filter: blur(12px);
+}
+
+.home-tools-shelf > div:not(.home-tools-icon) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.home-tools-shelf .studio-section-label {
+  margin: 0 0 4px;
+  color: #5980a0;
+  font-size: 10px;
+}
+
+.home-tools-shelf h2 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+}
+
+.home-tools-shelf p:not(.studio-section-label) {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.home-tools-shelf > .button {
+  flex: 0 0 auto;
+  gap: 15px;
+  min-height: 44px;
+  padding: 11px 18px;
+  background: white;
+  font-size: 13px;
+}
+
+.home-tools-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 53px;
+  height: 53px;
+  border: 1px solid rgba(14, 165, 233, 0.12);
+  border-radius: 17px;
+  background: #e7f5fe;
+  color: var(--primary-dark);
+}
+
+.home-tools-icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+/* ==========================================================================
+   02｜小工具頁標題
+   大標題說明用途，右側圖示只作視覺提示，主要內容維持文字可讀性。
+   ========================================================================== */
+.tools-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 34px;
+  padding: 53px 0 35px;
+}
+
+.tools-heading > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tools-heading .studio-section-label {
+  margin-bottom: 14px;
+}
+
+.tools-heading h1 {
+  margin: 0 0 18px;
+  font-size: clamp(35px, 4.4vw, 53px);
+  line-height: 1.4;
+  letter-spacing: -0.055em;
+}
+
+.tools-lead {
+  max-width: 750px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.tools-heading-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 119px;
+  height: 119px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 33px;
+  background: linear-gradient(135deg, #e1f5ff, #eeebff);
+  box-shadow: 0 14px 34px rgba(50, 104, 146, 0.07);
+  color: var(--primary-dark);
+  transform: rotate(5deg);
+}
+
+.tools-heading-icon svg {
+  width: 49px;
+  height: 49px;
+}
+
+/* ==========================================================================
+   03｜搜尋與分類工具列
+   搜尋輸入和分類條件可同時使用；選中狀態由 aria-pressed 控制。
+   ========================================================================== */
+.tools-toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 1.05fr);
+  align-items: end;
+  gap: 20px 25px;
+  padding: 22px;
+  border: 1px solid var(--studio-border);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 24px rgba(50, 104, 146, 0.035);
+}
+
+.tools-search-field {
+  min-width: 0;
+}
+
+.tools-search-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.tools-search-field input {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 15px;
+  border: 1px solid rgba(148, 192, 223, 0.5);
+  border-radius: 14px;
+  background: white;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+  appearance: none;
+}
+
+.tools-search-field input::placeholder {
+  color: #7a8da1;
+}
+
+.tools-filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 3px;
+}
+
+.tool-filter {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.tool-filter[aria-pressed="true"] {
+  border-color: var(--primary-dark);
+  background: var(--primary-dark);
+  box-shadow: 0 5px 15px rgba(3, 105, 161, 0.13);
+  color: white;
+}
+
+.tools-results {
+  margin: 23px 1px 16px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* ==========================================================================
+   04｜工具卡片與開啟入口
+   桌機三欄；卡片下方的來源與操作維持對齊，標題與說明保持清楚層級。
+   ========================================================================== */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 315px;
+  padding: 25px;
+  border: 1px solid var(--studio-border);
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 13px 35px rgba(50, 104, 146, 0.065);
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.tool-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.tool-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 51px;
+  height: 51px;
+  border: 1px solid rgba(14, 165, 233, 0.1);
+  border-radius: 16px;
+  background: #eaf6fe;
+  color: var(--primary-dark);
+}
+
+.tool-icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.tool-category {
+  padding: 4px 9px;
+  border: 1px solid #e2edf5;
+  border-radius: 9px;
+  background: #f5faff;
+  color: #5d7892;
+  font-size: 11px;
+  line-height: 1.7;
+  text-align: right;
+}
+
+.tool-title {
+  margin: 0 0 11px;
+  font-size: 23px;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.tool-description {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.tool-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 23px;
+}
+
+.tool-tags > .tag {
+  padding: 4px 8px;
+  border-color: #e0edf6;
+  border-radius: 7px;
+  background: #f5faff;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.tool-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e6f0f7;
+}
+
+.tool-source {
+  min-width: 0;
+  color: #72869a;
+  font-size: 11px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.tool-launch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  gap: 10px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid rgba(14, 165, 233, 0.16);
+  border-radius: 13px;
+  background: #edf8ff;
+  color: var(--primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.7;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.tool-launch svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ==========================================================================
+   05｜沒有符合結果的狀態
+   保留清楚的重設入口；hidden 屬性仍由共用樣式負責隱藏。
+   ========================================================================== */
+.tools-empty {
+  padding: 51px 25px;
+  border: 1px dashed rgba(14, 165, 233, 0.28);
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.62);
+  text-align: center;
+}
+
+.tools-empty h2 {
+  margin: 0 0 12px;
+  font-size: 25px;
+  line-height: 1.6;
+}
+
+.tools-empty p {
+  margin: 0 0 22px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.tools-empty button {
+  min-height: 44px;
+}
+
+/* ==========================================================================
+   06｜滑鼠互動與五項導覽的寬度調整
+   只收緊平板橫向空間，不改動原本 650px 的手機選單斷點。
+   ========================================================================== */
+@media (hover: hover) and (pointer: fine) {
+  .tool-card:hover {
+    border-color: rgba(14, 165, 233, 0.3);
+    box-shadow: 0 20px 45px rgba(50, 104, 146, 0.13);
+    transform: translateY(-4px);
+  }
+
+  .tool-filter:not([aria-pressed="true"]):hover {
+    border-color: rgba(14, 165, 233, 0.42);
+    background: white;
+    color: var(--primary-dark);
+  }
+
+  .tool-launch:hover {
+    border-color: var(--primary-dark);
+    background: var(--primary-dark);
+    color: white;
+  }
+}
+
+@media (min-width: 651px) and (max-width: 1050px) {
+  .header-inner {
+    gap: 20px;
+  }
+
+  .site-nav {
+    gap: 2px;
+  }
+
+  .site-nav a {
+    padding-inline: 10px;
+    font-size: 13px;
+  }
+
+  .nav-contact {
+    gap: 12px;
+    padding-left: 18px;
+  }
+}
+
+/* ==========================================================================
+   07｜平板與手機排版
+   平板兩欄、手機單欄；搜尋、分類與工具入口維持至少 44px 的點擊高度。
+   ========================================================================== */
+@media (max-width: 1000px) {
+  .tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .tools-toolbar {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .tools-filter-list {
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 850px) {
+  .tools-heading {
+    gap: 25px;
+    padding-top: 44px;
+  }
+
+  .tools-heading h1 {
+    font-size: 40px;
+  }
+
+  .tools-heading-icon {
+    width: 95px;
+    height: 95px;
+    border-radius: 27px;
+  }
+
+  .tools-heading-icon svg {
+    width: 41px;
+    height: 41px;
+  }
+
+  .home-tools-shelf {
+    gap: 17px;
+    padding: 21px;
+  }
+
+  .home-tools-shelf h2 {
+    font-size: 22px;
+  }
+
+  .home-tools-shelf p:not(.studio-section-label) {
+    font-size: 13px;
+  }
+
+  .home-tools-icon {
+    width: 47px;
+    height: 47px;
+  }
+}
+
+@media (max-width: 650px) {
+  .home-tools-shelf {
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 7px 0 27px;
+    padding: 21px;
+    border-radius: 23px;
+  }
+
+  .home-tools-shelf > div:not(.home-tools-icon) {
+    flex-basis: calc(100% - 65px);
+  }
+
+  .home-tools-shelf h2 {
+    font-size: 22px;
+  }
+
+  .home-tools-shelf .studio-section-label {
+    font-size: 9px;
+  }
+
+  .home-tools-shelf p:not(.studio-section-label) {
+    font-size: 14px;
+  }
+
+  .home-tools-shelf > .button {
+    justify-content: space-between;
+    width: 100%;
+    padding-inline: 15px;
+  }
+
+  .tools-heading {
+    align-items: flex-start;
+    gap: 16px;
+    padding: 34px 0 26px;
+  }
+
+  .tools-heading .studio-section-label {
+    margin-bottom: 12px;
+    font-size: 10px;
+  }
+
+  .tools-heading h1 {
+    margin-bottom: 14px;
+    font-size: 35px;
+  }
+
+  .tools-lead {
+    font-size: 15px;
+    line-height: 1.9;
+  }
+
+  .tools-heading-icon {
+    width: 64px;
+    height: 64px;
+    margin-top: 7px;
+    border-radius: 21px;
+  }
+
+  .tools-heading-icon svg {
+    width: 29px;
+    height: 29px;
+  }
+
+  .tools-toolbar {
+    gap: 17px;
+    padding: 19px;
+    border-radius: 22px;
+  }
+
+  .tools-search-field input {
+    min-height: 50px;
+    padding-inline: 13px;
+    font-size: 15px;
+  }
+
+  .tools-filter-list {
+    gap: 7px;
+  }
+
+  .tool-filter {
+    padding-inline: 11px;
+    font-size: 12px;
+  }
+
+  .tools-results {
+    margin: 20px 1px 14px;
+  }
+
+  .tool-grid {
+    grid-template-columns: 1fr;
+    gap: 17px;
+  }
+
+  .tool-card {
+    min-height: 0;
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .tool-card-top {
+    margin-bottom: 18px;
+  }
+
+  .tool-title {
+    font-size: 24px;
+  }
+
+  .tool-description {
+    font-size: 16px;
+  }
+
+  .tool-tags > .tag {
+    font-size: 12px;
+  }
+
+  .tool-source {
+    font-size: 12px;
+  }
+
+  .tools-empty {
+    padding: 35px 23px;
+    border-radius: 23px;
+  }
+
+  .tools-empty h2 {
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 360px) {
+  .home-tools-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 15px;
+  }
+
+  .home-tools-shelf h2 {
+    font-size: 21px;
+  }
+
+  .tools-heading-icon {
+    display: none;
+  }
+
+  .tools-heading h1 {
+    font-size: 33px;
+  }
+
+  .tool-card {
+    padding: 22px;
+  }
+
+  .tool-title {
+    font-size: 22px;
+  }
+}
+
+/* ==========================================================================
+   08｜減少動態偏好
+   工具搜尋不依賴動畫；列印時由 styles.css 統一隱藏非履歷頁面。
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .tool-card,
+  .tool-filter,
+  .tool-launch {
+    transition: none;
+  }
+
+  .tool-card:hover {
+    transform: none;
+  }
+}
