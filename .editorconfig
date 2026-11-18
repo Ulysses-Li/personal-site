@@ -1,0 +1,13 @@
+# 編輯器共用設定：程式與繁體中文註解統一使用 UTF-8、兩格縮排。
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false

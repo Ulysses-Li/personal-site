@@ -1,5 +1,19 @@
-/* 本站內容來自既有個人連結頁；作品細節與文章範本明確標示，供後續持續維護。 */
+/*
+ * 網站內容資料｜日常更新優先修改本檔案
+ *
+ * 01 個人資料 profile       → 姓名、職稱、簡介與聯絡方式
+ * 02 專業能力 competencies  → 首頁與履歷共用的能力介紹
+ * 03 作品案例 projects      → 作品列表及案例詳情
+ * 04 技術筆記 knowledge     → 知識庫分類、搜尋與主題詳情
+ * 05 履歷摘要 resume        → 個人摘要、技術標籤與待補資料
+ *
+ * 新增作品或筆記時，複製同一陣列中的一個完整物件，再修改欄位。
+ * id 必須保持唯一；已使用的 id 請盡量保留，避免既有主題網址失效。
+ * 文字以單引號包住，字串中的單引號需寫成 \'，物件之間以逗號分隔。
+ * 本站內容以已知資料為依據；未確認的作品細節與文章範本需保留狀態說明。
+ */
 window.SITE_CONTENT = {
+  // ── 01｜個人資料：聯絡網址使用完整 HTTPS 網址，Email 只填信箱。 ──
   profile: {
     name: 'Louis Li',
     role: '產品管理部工程師',
@@ -10,6 +24,7 @@ window.SITE_CONTENT = {
     website: 'https://cwli.dev',
     line: 'https://line.me/ti/p/P0eXqNnDh-'
   },
+  // ── 02｜專業能力：title 為中文定位，english 為領域名稱，tags 為技術標籤。 ──
   competencies: [
     {
       title: '從加工條件找問題',
@@ -36,6 +51,8 @@ window.SITE_CONTENT = {
       tags: ['翻譯', '文件整理', '選型流程', '人工核對']
     }
   ],
+  // ── 03｜作品案例：status 說明進度；背景、方法、證據與下一步分欄保存。 ──
+  // url 可使用 HTTPS 網址，或 #home 這類站內頁面網址；id 用於 #work/作品代號。
   projects: [
     {
       id: 'engineering-notebook',
@@ -90,6 +107,8 @@ window.SITE_CONTENT = {
       tags: ['刀具選型', '加工計算', '工程工具']
     }
   ],
+  // ── 04｜技術筆記：category 產生分類，tags 加入搜尋，sections 保存文章段落。 ──
+  // 每段包含 heading（小標）與 body（內文）；id 用於 #notes/主題代號。
   knowledge: [
     {
       id: 'cnc-problem-record',
@@ -260,6 +279,7 @@ window.SITE_CONTENT = {
       ]
     }
   ],
+  // ── 05｜履歷摘要：summary 為簡介，skills 為技術清單，gaps 為待確認的資料。 ──
   resume: {
     summary: '產品管理部工程師，專長方向涵蓋 CNC / CAM 技術支援、Nine-9 刀具應用、Web 工具開發與 AI 工作流。將加工現場經驗、刀具應用與數位工具整合，協助理解問題、選擇方法與改善流程。',
     skills: [

@@ -1,0 +1,18 @@
+# 文字檔固定使用 LF，跨編輯器與作業系統維持一致。
+* text=auto
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.md text eol=lf
+*.svg text eol=lf
+*.json text eol=lf
+.gitignore text eol=lf
+.editorconfig text eol=lf
+.gitattributes text eol=lf
+
+# 圖片與封裝檔保留原始位元組。
+*.jpeg binary
+*.jpg binary
+*.png binary
+*.tar.gz binary
