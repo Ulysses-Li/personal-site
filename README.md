@@ -88,6 +88,8 @@ personal-site/
 
 上方導覽「小工具」與首頁「打開工具箱」皆通往 `#tools`。目前已有「羽球開打」，程式位於 `dist/tools/badminton/`；詳細修改說明見 `docs/badminton-tool.md`。
 
+羽球工具的手機介面集中在 `dist/tools/badminton/mobile.css`（四分頁、底部導覽、觸控尺寸）與 `mobile-app.js`（切頁、焦點、操作按鈕位置）；本機 Bootstrap Icons 由 `icons.js` 管理，原始 SVG 與授權放在 `vendor/icons/`。修改手機版不需要另建一份名單、比分或儲存資料。
+
 在 `dist/content.js` 找到 `tools` 陣列，保留既有工具，再依下列格式加入新物件。以下為填寫範例，需替換成自己的名稱與可開啟網址：
 
 ```javascript

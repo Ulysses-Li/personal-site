@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#eef8ff">
   <meta name="description" content="不用安裝的羽球分組與計分工具：單雙打、公平輪替、多場地，以及發球與站位提示。">
   <title>羽球開打｜分組・計分・站位｜Louis Li</title>
@@ -15,63 +15,58 @@
   <link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../assets/theme.css">
   <link rel="stylesheet" href="theme.css">
+  <!-- 手機操作介面：同一份名單與球場 DOM，以底部導覽切換。 -->
+  <link rel="stylesheet" href="mobile.css">
 </head>
 
-<body>
+<body class="badminton-app" data-mobile-screen="court">
   <header class="app-header">
-    <div class="app-shell px-3 px-lg-4 py-3 d-flex align-items-center justify-content-between gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none">
-            <path d="m9 18-4-11 7 2 4-6 3 7 8-1-7 14M9 18l11 5-5 6-8-4zM9 18l10-8M12 9l3 12M5 7l15 16"
-              stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
-          </svg></div>
-        <div>
-          <div class="fw-bold" style="letter-spacing:.06em">羽球開打<span class="text-brand">.</span></div>
-          <div class="hint" style="font-size:12px">BADMINTON COURT SIDE</div>
-        </div>
+    <div class="app-shell app-topbar px-3 px-lg-4 py-3 d-flex align-items-center justify-content-between gap-3">
+      <div class="brand-group d-flex align-items-center gap-3">
+        <a class="mobile-back-link mobile-only" href="../../index.html#tools" aria-label="返回小工具"><span data-icon="arrow-left" aria-hidden="true"></span></a>
+        <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m9 18-4-11 7 2 4-6 3 7 8-1-7 14M9 18l11 5-5 6-8-4zM9 18l10-8M12 9l3 12M5 7l15 16" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+        <div class="brand-copy"><strong>羽球開打<span class="text-brand">.</span></strong><small class="desktop-brand-subtitle hint">BADMINTON COURT SIDE</small><h1 class="mobile-page-title mobile-only" id="mobile-page-title">球場</h1></div>
       </div>
-      <div class="d-flex align-items-center gap-3"><span id="save-status" class="save-label"><span
-            class="save-dot"></span>僅儲存於此瀏覽器</span><button class="btn btn-outline-secondary d-none d-sm-inline-flex"
-          id="rules-shortcut">使用說明</button></div>
+      <div class="header-status d-flex align-items-center gap-3"><span id="save-status" class="save-label"><span class="save-dot"></span>僅儲存於此瀏覽器</span><button class="btn btn-outline-secondary" id="rules-shortcut" type="button" aria-label="使用說明"><span data-icon="question-circle" aria-hidden="true"></span><span class="action-label">使用說明</span></button></div>
     </div>
   </header>
   <!-- 個人網站入口：本機檔案與 HTTP 預覽都使用同一條相對路徑。 -->
   <nav class="app-shell tool-breadcrumb px-3 px-lg-4 pt-3" aria-label="工具導覽"><a href="../../index.html#tools">← 返回小工具</a><span>LOUIS LI / 休閒工具</span></nav>
   <main class="app-shell px-3 px-lg-4 py-4">
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div class="desktop-intro d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
       <div>
         <div class="eyebrow mb-2">LESS PLANNING. MORE PLAYING.</div>
         <h1 class="title mb-2">人到齊，<span class="text-brand">就開打。</span></h1>
         <p class="hint mb-0">分組、輪替、計分、發球站位，一頁搞定。</p>
       </div>
-      <div class="d-flex gap-2"><button id="export" class="btn btn-outline-secondary">匯出紀錄</button><button id="reset"
-          class="btn btn-outline-secondary">新活動</button></div>
+      <div class="d-flex gap-2" id="desktop-activity-host"><button id="export" class="btn btn-outline-secondary"><span data-icon="download" aria-hidden="true"></span><span class="action-label">匯出紀錄</span></button><button id="reset"
+          class="btn btn-outline-secondary"><span data-icon="arrow-clockwise" aria-hidden="true"></span><span class="action-label">新活動</span></button></div>
     </div>
     <div class="d-flex gap-4 align-items-start workspace-layout">
       <aside class="sidebar" aria-label="活動設定">
         <div class="sidebar-grid">
-          <section class="surface p-3 p-lg-4 mb-3">
+          <section class="surface p-3 p-lg-4 mb-3" id="players-panel" data-mobile-panel="players" tabindex="-1">
             <details open id="roster-details">
-              <summary><span class="section-number">01</span>
+              <summary><span class="section-number"><span data-icon="people" aria-hidden="true"></span></span>
                 <h2 class="panel-heading">誰要上場？</h2><span class="hint ms-1" id="roster-count"></span>
               </summary>
               <div class="pt-3"><label for="names" class="form-label">球友名字</label><textarea id="names"
                   class="form-control" rows="2" placeholder="貼上名單，每行一人，或用逗號分隔" maxlength="10000"></textarea>
-                <div class="d-flex gap-2 mt-2"><button id="add-names" class="btn btn-outline-secondary flex-grow-1">＋
-                    加入名單</button><button id="rename" class="btn btn-outline-secondary">修改名字</button></div>
+                <div class="d-flex gap-2 mt-2"><button id="add-names" class="btn btn-outline-secondary flex-grow-1"><span data-icon="person-plus" aria-hidden="true"></span><span class="action-label">加入名單</span></button><button id="rename" class="btn btn-outline-secondary"><span data-icon="pencil-square" aria-hidden="true"></span><span class="action-label">修改名字</span></button></div>
                 <div class="d-flex align-items-end gap-2 mt-3">
                   <div class="flex-grow-1"><label for="quick-count" class="form-label">還沒名單？先用人數建立</label><input
                       id="quick-count" required class="form-control" type="number" min="1" max="200" value="8"
-                      inputmode="numeric"></div><button id="quick-add" class="btn btn-outline-secondary">補齊人數</button>
+                      inputmode="numeric"></div><button id="quick-add" class="btn btn-outline-secondary"><span data-icon="people" aria-hidden="true"></span><span class="action-label">補齊人數</span></button>
                 </div>
                 <p class="hint mt-3 mb-2">勾選本輪可上場的人。暫休取消勾選即可。</p>
                 <div id="player-list" class="player-list"></div>
               </div>
             </details>
+            <div class="mobile-only panel-complete"><button class="btn btn-primary panel-done w-100" type="button" data-mobile-go="court"><span data-icon="check-lg" aria-hidden="true"></span><span>名單好了，回球場</span></button></div>
           </section>
-          <section class="surface p-3 p-lg-4 mb-3">
+          <section class="surface p-3 p-lg-4 mb-3" id="settings-panel" data-mobile-panel="settings" tabindex="-1">
             <details open id="settings-details">
-              <summary><span class="section-number">02</span>
+              <summary><span class="section-number"><span data-icon="sliders" aria-hidden="true"></span></span>
                 <h2 class="panel-heading">今天怎麼打？</h2>
               </summary>
               <div class="pt-3">
@@ -105,10 +100,11 @@
                 <p class="hint mb-0 mt-3 connection-note">每場打一局，結束後換下一輪。設定變更從下一輪生效。</p>
               </div>
             </details>
+            <div class="mobile-only panel-complete"><button class="btn btn-primary panel-done w-100" type="button" data-mobile-go="court"><span data-icon="check-lg" aria-hidden="true"></span><span>套用設定，回球場</span></button><div id="mobile-reset-host" class="mobile-reset-host mt-3"></div></div>
           </section>
-          <section class="surface p-3 p-lg-4 mb-3" id="rules">
+          <section class="surface p-3 p-lg-4 mb-3" id="rules" data-mobile-panel="settings">
             <details id="rules-details">
-              <summary><span class="section-number">?</span>
+              <summary><span class="section-number"><span data-icon="question-circle" aria-hidden="true"></span></span>
                 <h2 class="panel-heading">怎麼用 / 站位規則</h2>
               </summary>
               <ol class="rules-list mt-3 mb-0">
@@ -128,8 +124,8 @@
           </section>
         </div>
       </aside>
-      <div class="flex-grow-1 w-100" style="min-width:0">
-        <section class="surface p-3 p-lg-4 mb-4" aria-label="活動概況">
+      <div id="main-workspace" class="flex-grow-1 w-100" style="min-width:0">
+        <section class="surface p-3 p-lg-4 mb-4" aria-label="活動概況" id="overview-panel" data-mobile-panel="court">
           <div class="summary-strip">
             <div>
               <div class="stat-value" id="stat-ready">8</div>
@@ -149,29 +145,30 @@
             </div>
           </div>
         </section>
-        <section aria-labelledby="round-heading">
+        <section id="courts-panel" data-mobile-panel="court" aria-labelledby="round-heading" tabindex="-1">
           <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
             <div>
               <div class="eyebrow mb-1">LIVE COURTS</div>
               <h2 id="round-heading" class="round-title mb-0">準備上場</h2>
             </div>
-            <div class="d-flex gap-2 round-controls"><button id="cancel-round" class="btn btn-outline-secondary"
-                hidden>取消本輪</button><button id="next-round" class="btn btn-primary">安排第一輪 ↗</button></div>
+            <div id="desktop-round-host"><div id="round-controls" class="d-flex gap-2 round-controls"><button id="cancel-round" class="btn btn-outline-secondary"
+                hidden><span data-icon="x-lg" aria-hidden="true"></span><span class="action-label">取消本輪</span></button><button id="next-round" class="btn btn-primary">安排第一輪 ↗</button></div></div>
           </div>
           <p id="arrange-hint" class="hint mb-3"></p>
           <div id="courts" class="row g-3" aria-label="各場地計分"></div>
         </section>
-        <section class="surface p-3 p-lg-4 mt-4" aria-labelledby="waiting-heading">
+        <section class="surface p-3 p-lg-4 mt-4" aria-labelledby="waiting-heading" id="waiting-panel" data-mobile-panel="players">
           <div class="d-flex justify-content-between gap-2 mb-3">
             <h2 id="waiting-heading" class="panel-heading">候補休息區</h2><span class="hint" id="waiting-count"></span>
           </div>
           <div id="waiting" class="d-flex flex-wrap gap-2"></div>
           <p class="hint mt-3 mb-0">輪替會參考上場次數；人數不滿一場時，保留候補到下一輪。</p>
         </section>
-        <section class="surface p-3 p-lg-4 mt-4" aria-labelledby="history-heading">
+        <section class="surface p-3 p-lg-4 mt-4" aria-labelledby="history-heading" id="history-panel" data-mobile-panel="history" tabindex="-1">
           <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
             <h2 id="history-heading" class="panel-heading">今日對戰紀錄</h2><span class="hint" id="history-count">0 場</span>
           </div>
+          <div id="mobile-export-host" class="mobile-only mobile-export-host"></div>
           <div id="history" class="history-list"></div>
         </section>
       </div>
@@ -179,13 +176,21 @@
   </main>
   <footer class="app-footer app-shell mx-auto px-3 px-lg-4 py-4 d-flex flex-wrap justify-content-between gap-2">
     <span>羽球開打 · 把時間留給球場。</span><span>免安裝 / 無須登入 / 可離線使用</span></footer>
+  <!-- 手機操作列：原按鈕由 mobile-app.js 搬入，避免重複事件與資料。 -->
+  <div class="mobile-round-dock" id="mobile-round-dock" aria-label="分組操作"></div>
+  <nav class="mobile-nav" aria-label="羽球操作區">
+    <button type="button" data-mobile-go="court" aria-controls="courts-panel" aria-current="page"><span data-icon="grid-1x2" aria-hidden="true"></span><span class="nav-label">球場</span></button>
+    <button type="button" data-mobile-go="players" aria-controls="players-panel"><span data-icon="people" aria-hidden="true"></span><span class="nav-label">球友</span><small class="mobile-nav-badge" data-badge="players" aria-hidden="true" hidden></small></button>
+    <button type="button" data-mobile-go="settings" aria-controls="settings-panel"><span data-icon="sliders" aria-hidden="true"></span><span class="nav-label">設定</span></button>
+    <button type="button" data-mobile-go="history" aria-controls="history-panel"><span data-icon="clock-history" aria-hidden="true"></span><span class="nav-label">紀錄</span><small class="mobile-nav-badge" data-badge="history" aria-hidden="true" hidden></small></button>
+  </nav>
   <div id="toast" class="toast-message" role="status" hidden></div>
   <div id="live" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
   <dialog id="confirm-dialog" aria-labelledby="confirm-title">
     <h2 id="confirm-title" class="panel-heading mb-3">確認操作</h2>
     <p id="confirm-text"></p>
     <div class="d-flex justify-content-end gap-2"><button id="confirm-no"
-        class="btn btn-outline-secondary">返回</button><button id="confirm-yes" class="btn btn-primary">確定</button></div>
+        class="btn btn-outline-secondary"><span data-icon="x-lg" aria-hidden="true"></span><span class="action-label">返回</span></button><button id="confirm-yes" class="btn btn-primary"><span data-icon="check-lg" aria-hidden="true"></span><span class="action-label">確定</span></button></div>
   </dialog>
   <dialog id="rename-dialog" aria-labelledby="rename-title">
     <h2 id="rename-title" class="panel-heading mb-2">修改球友名字</h2>
@@ -193,11 +198,13 @@
       id="rename-player" class="form-select mb-3"></select><label class="form-label" for="rename-name">新名字</label><input
       id="rename-name" class="form-control" maxlength="30">
     <div class="d-flex justify-content-end gap-2 mt-4"><button id="rename-no"
-        class="btn btn-outline-secondary">返回</button><button id="rename-save" class="btn btn-primary">儲存名字</button>
+        class="btn btn-outline-secondary"><span data-icon="arrow-left" aria-hidden="true"></span><span class="action-label">返回</span></button><button id="rename-save" class="btn btn-primary"><span data-icon="check-lg" aria-hidden="true"></span><span class="action-label">儲存名字</span></button>
     </div>
   </dialog>
+  <script src="icons.js"></script>
   <script id="badminton-engine" src="engine.js"></script>
   <script id="badminton-ui" src="app.js"></script>
+  <script src="mobile-app.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,903 @@
+/*
+ * 羽球開打：手機 App 介面
+ * 載於 theme.css 之後；767.98px 以下啟用分頁、底部導覽與主要操作列。
+ * 分組、計分與球場站位仍沿用原本引擎，本檔不複製功能或資料。
+ */
+
+/* ==========================================================================
+   01｜圖示與桌機預設
+   圖示皆由本機 SVG 提供；新增手機控制項在桌機保持隱藏。
+   ========================================================================== */
+.badminton-app svg.bi {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  vertical-align: -0.125em;
+}
+
+.badminton-app .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.badminton-app [data-icon] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 1;
+}
+
+.badminton-app [hidden] {
+  display: none !important;
+}
+
+.brand-copy > strong,
+.desktop-brand-subtitle {
+  display: block;
+}
+
+.mobile-only,
+.mobile-back-link,
+.mobile-nav,
+.mobile-round-dock,
+.panel-done,
+#mobile-export-host,
+#mobile-reset-host {
+  display: none;
+}
+
+/* ==========================================================================
+   02｜手機整體框架與頁首
+   頁首保留當前頁名、返回與說明；安全區域由裝置環境變數補足。
+   ========================================================================== */
+@media (max-width: 767.98px) {
+  body.badminton-app {
+    --mobile-nav-height: 68px;
+    --mobile-dock-height: 82px;
+    --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+    min-height: 100dvh;
+    padding-bottom: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom) + 24px);
+  }
+
+  body.badminton-app[data-mobile-screen="court"] {
+    padding-bottom: calc(var(--mobile-nav-height) + var(--mobile-dock-height) + var(--mobile-safe-bottom) + 22px);
+  }
+
+  .badminton-app .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    padding-top: env(safe-area-inset-top, 0px);
+    border-bottom-color: rgba(148, 192, 223, 0.22);
+    background: rgba(248, 252, 255, 0.96);
+    box-shadow: 0 3px 16px rgba(50, 104, 146, 0.035);
+    backdrop-filter: blur(18px);
+  }
+
+  .badminton-app .app-topbar {
+    flex-wrap: nowrap;
+    min-height: 64px;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    gap: 12px !important;
+  }
+
+  .badminton-app .brand-group {
+    min-width: 0;
+    gap: 9px !important;
+  }
+
+  .mobile-back-link.mobile-only {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 44px;
+    margin-left: -7px;
+    border-radius: 13px;
+    color: var(--primary-dark);
+    text-decoration: none;
+  }
+
+  .badminton-app .brand-mark {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    border-radius: 11px;
+  }
+
+  .badminton-app .brand-mark svg,
+  .badminton-app .brand-mark svg.bi {
+    width: 24px;
+    height: 24px;
+  }
+
+  .brand-copy {
+    min-width: 0;
+  }
+
+  .brand-copy > strong {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  #mobile-page-title {
+    margin: 1px 0 0;
+    color: var(--text);
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.035em;
+  }
+
+  .desktop-brand-subtitle,
+  .badminton-app .tool-breadcrumb,
+  .desktop-intro,
+  .badminton-app .app-footer {
+    display: none !important;
+  }
+
+  .header-status {
+    flex: 0 0 auto;
+    gap: 7px !important;
+  }
+
+  #save-status {
+    justify-content: center;
+    width: 14px;
+    height: 24px;
+    overflow: hidden;
+    gap: 0;
+    font-size: 0;
+  }
+
+  #save-status .save-dot {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 auto;
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.08);
+  }
+
+  #save-status.failed .save-dot {
+    box-shadow: 0 0 0 3px rgba(179, 67, 102, 0.08);
+  }
+
+  #rules-shortcut {
+    display: inline-flex !important;
+    width: 44px;
+    min-height: 44px;
+    padding: 9px;
+    border-color: rgba(148, 192, 223, 0.3);
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  #rules-shortcut .action-label {
+    display: none;
+  }
+
+  .badminton-app main.app-shell {
+    padding-top: 14px !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* ========================================================================
+     03｜四個手機分頁
+     解除桌機左右欄的排版盒，只顯示目前分頁的面板；內容仍使用同一份 DOM。
+     ======================================================================== */
+  .badminton-app .workspace-layout,
+  .badminton-app .sidebar,
+  .badminton-app .sidebar-grid,
+  .badminton-app #main-workspace {
+    display: contents !important;
+  }
+
+  .badminton-app [data-mobile-panel] {
+    display: none !important;
+    min-width: 0;
+    margin: 0 0 16px !important;
+  }
+
+  body.badminton-app[data-mobile-screen="court"] [data-mobile-panel="court"],
+  body.badminton-app[data-mobile-screen="players"] [data-mobile-panel="players"],
+  body.badminton-app[data-mobile-screen="settings"] [data-mobile-panel="settings"],
+  body.badminton-app[data-mobile-screen="history"] [data-mobile-panel="history"] {
+    display: block !important;
+  }
+
+  .badminton-app [data-mobile-panel].surface {
+    border-radius: 21px;
+  }
+
+  .badminton-app .sidebar details > summary {
+    min-height: 38px;
+    cursor: default;
+  }
+
+  .badminton-app .sidebar details > summary::after {
+    display: none;
+  }
+
+  .badminton-app .sidebar details > summary .section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    min-height: 30px;
+    border-radius: 10px;
+  }
+
+  .badminton-app .panel-heading {
+    font-size: 19px;
+    line-height: 1.5;
+  }
+
+  .mobile-panel-heading {
+    margin: 2px 0 19px;
+  }
+
+  .mobile-panel-heading h2 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: -0.04em;
+  }
+
+  .mobile-panel-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .panel-done {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 50px;
+    margin-top: 20px;
+    border-radius: 14px;
+    font-size: 15px;
+  }
+
+  #mobile-export-host,
+  #mobile-reset-host {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 17px;
+  }
+
+  #mobile-export-host > button,
+  #mobile-reset-host > button {
+    display: inline-flex;
+    width: 100%;
+    min-height: 48px;
+    border-radius: 13px;
+  }
+
+  #mobile-reset-host {
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ========================================================================
+     04｜球場、比分與觸控操作
+     加分改成大觸控區；保留原本球場線條與側向站位的相對位置。
+     ======================================================================== */
+  #overview-panel {
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    margin-bottom: 13px !important;
+  }
+
+  .summary-strip > div {
+    min-width: 0;
+  }
+
+  .summary-strip > div + div {
+    padding-left: 11px;
+  }
+
+  .stat-value {
+    font-size: 25px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .round-title {
+    font-size: 24px;
+  }
+
+  #courts-panel > .d-flex > div > .eyebrow {
+    display: none;
+  }
+
+  #arrange-hint {
+    margin-bottom: 12px !important;
+    font-size: 13px;
+  }
+
+  .court-column {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
+  .court-card {
+    border-radius: 20px;
+    scroll-margin-top: calc(80px + env(safe-area-inset-top, 0px));
+  }
+
+  .court-head {
+    padding: 13px 14px !important;
+  }
+
+  .court-head h3 {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .court-rule {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .court-tools {
+    align-items: center;
+  }
+
+  .court-tools button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    min-height: 44px;
+    padding: 9px;
+    border-radius: 12px;
+  }
+
+  .court-tools .status-pill {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .court-body {
+    padding-inline: 14px !important;
+  }
+
+  .scoreboard {
+    grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr);
+    gap: 8px;
+    padding: 15px 0 14px;
+  }
+
+  .team-label {
+    font-size: 11px;
+  }
+
+  .team-names {
+    min-height: 41px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .score-number {
+    margin: 5px 0 3px;
+    font-size: 66px;
+    line-height: 1.05;
+  }
+
+  .score-divider {
+    font-size: 22px;
+  }
+
+  .score-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 58px;
+    margin-top: 8px;
+    padding: 12px 5px;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+
+  .score-button svg.bi {
+    width: 20px;
+    height: 20px;
+  }
+
+  .serve-banner {
+    min-height: 0;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .court-view-label {
+    font-size: 12px;
+  }
+
+  .court-view-button {
+    display: inline-flex;
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+
+  .court-map {
+    padding: 24px 16px;
+    border-radius: 15px;
+  }
+
+  .court-map:not(.sideways) .court-half {
+    min-height: 95px;
+  }
+
+  .court-map.sideways .court-half {
+    min-height: 200px;
+  }
+
+  .player-token {
+    padding: 6px 7px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .court-slot .position-label {
+    margin-bottom: 3px;
+    font-size: 10px;
+  }
+
+  .role-label {
+    font-size: 10px;
+  }
+
+  .court-caption,
+  .legend {
+    font-size: 10px;
+    line-height: 1.6;
+  }
+
+  .match-actions {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px !important;
+  }
+
+  .match-actions .small-action {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 59px;
+    padding: 8px 3px;
+    border-radius: 13px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .empty-state {
+    min-height: 350px;
+    padding: 31px 19px;
+  }
+
+  .empty-state .empty-court {
+    margin-bottom: 24px;
+  }
+
+  .empty-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 49px;
+    margin-top: 20px;
+    padding-inline: 19px;
+    border-radius: 14px;
+  }
+
+  /* ========================================================================
+     05｜球友、設定與歷史內容
+     手機以整頁捲動代替卡片內的小捲動區，避免觸控操作卡在內層。
+     ======================================================================== */
+  .badminton-app .sidebar .player-list {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .player-row {
+    gap: 9px;
+    min-height: 59px;
+    padding: 8px 0;
+  }
+
+  .player-row label {
+    min-height: 44px;
+  }
+
+  .player-name {
+    font-size: 16px;
+  }
+
+  .player-count {
+    font-size: 11px;
+  }
+
+  .player-row .form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-top: 0;
+  }
+
+  .remove-player {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 44px;
+    min-height: 44px;
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .badminton-app .form-control,
+  .badminton-app .form-select {
+    min-height: 48px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+
+  .badminton-app textarea.form-control {
+    min-height: 102px;
+  }
+
+  .badminton-app .form-label {
+    font-size: 13px;
+  }
+
+  .badminton-app .form-check-label {
+    line-height: 1.7;
+  }
+
+  .history-list {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .activity-row {
+    gap: 12px;
+    min-width: 0;
+    padding-block: 15px;
+  }
+
+  .activity-score {
+    font-size: 25px;
+  }
+
+  .activity-title {
+    font-size: 15px;
+  }
+
+  /* ========================================================================
+     06｜固定底部導覽與安排下一輪
+     導覽列包含裝置底部安全區；主要操作位於導覽上方，頁面同步保留底部空間。
+     ======================================================================== */
+  .mobile-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1010;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: center;
+    gap: 5px;
+    height: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom));
+    padding: 5px max(10px, env(safe-area-inset-left, 0px)) calc(6px + var(--mobile-safe-bottom)) max(10px, env(safe-area-inset-right, 0px));
+    border-top: 1px solid rgba(148, 192, 223, 0.26);
+    background: rgba(250, 253, 255, 0.97);
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-nav > button {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    min-height: 54px;
+    padding: 6px 3px;
+    border: 0;
+    border-radius: 15px;
+    background: transparent;
+    color: #74889d;
+    transition: color 160ms ease, background 160ms ease;
+  }
+
+  .badminton-app .mobile-nav svg.bi {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav-label {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .mobile-nav > button[aria-current="page"] {
+    background: #e9f5ff;
+    color: var(--primary-dark);
+  }
+
+  .mobile-nav-badge {
+    position: absolute;
+    top: 3px;
+    left: calc(50% + 6px);
+    display: inline-grid;
+    place-items: center;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border: 2px solid #fafdff;
+    border-radius: 99px;
+    background: var(--primary-dark);
+    color: white;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .mobile-round-dock {
+    position: fixed;
+    right: 0;
+    bottom: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom));
+    left: 0;
+    z-index: 1009;
+    display: none;
+    min-height: var(--mobile-dock-height);
+    padding: 12px max(16px, env(safe-area-inset-left, 0px)) 13px max(16px, env(safe-area-inset-right, 0px));
+    border-top: 1px solid rgba(148, 192, 223, 0.18);
+    background: rgba(248, 252, 255, 0.97);
+    box-shadow: 0 -8px 24px rgba(50, 104, 146, 0.055);
+    backdrop-filter: blur(18px);
+  }
+
+  body.badminton-app[data-mobile-screen="court"] .mobile-round-dock {
+    display: block;
+  }
+
+  .mobile-round-dock .round-controls {
+    display: flex;
+    align-items: stretch;
+    gap: 9px !important;
+    width: 100%;
+    max-width: 620px;
+    margin-inline: auto;
+  }
+
+  .mobile-round-dock #next-round {
+    display: inline-flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 56px;
+    border-radius: 16px;
+    font-size: 16px;
+    line-height: 1.6;
+    box-shadow: 0 7px 18px rgba(3, 105, 161, 0.16);
+  }
+
+  .mobile-round-dock #cancel-round {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    padding-inline: 14px;
+    border-radius: 15px;
+    font-size: 14px;
+  }
+
+  .badminton-app .toast-message {
+    bottom: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom) + 14px);
+    z-index: 1100;
+    padding: 11px 16px;
+    border-radius: 13px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  body.badminton-app[data-mobile-screen="court"] .toast-message {
+    bottom: calc(var(--mobile-nav-height) + var(--mobile-dock-height) + var(--mobile-safe-bottom) + 12px);
+  }
+
+  /* ========================================================================
+     07｜放大球場
+     保留既有全螢幕覆蓋與捲動；底部 App 控制項在此模式退場。
+     ======================================================================== */
+  body.badminton-app.has-focused-court {
+    padding-bottom: 0;
+  }
+
+  .badminton-app.has-focused-court .mobile-nav,
+  .badminton-app.has-focused-court .mobile-round-dock {
+    display: none !important;
+  }
+
+  .badminton-app .court-card.is-focused {
+    inset: 0;
+    z-index: 1050;
+    padding: calc(10px + env(safe-area-inset-top, 0px)) 12px calc(16px + var(--mobile-safe-bottom));
+    overflow: auto;
+    border-radius: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .badminton-app .court-card.is-focused .court-head {
+    top: calc(-10px - env(safe-area-inset-top, 0px));
+    margin-bottom: 0;
+  }
+
+  .badminton-app .court-card.is-focused .court-body {
+    padding-inline: 8px !important;
+  }
+
+  .badminton-app .court-card.is-focused .score-number {
+    font-size: 72px;
+  }
+
+  body.badminton-app.has-focused-court .toast-message {
+    bottom: calc(16px + var(--mobile-safe-bottom));
+  }
+}
+
+/* ==========================================================================
+   08｜極窄螢幕、減少動態與列印
+   小螢幕維持觸控尺寸；列印不保留任何固定的手機導覽或操作列。
+   ========================================================================== */
+@media (max-width: 359.98px) {
+  .badminton-app .app-topbar {
+    gap: 8px !important;
+    padding-inline: 12px !important;
+  }
+
+  .badminton-app .brand-group {
+    gap: 7px !important;
+  }
+
+  .badminton-app .brand-mark {
+    width: 30px;
+    height: 30px;
+  }
+
+  #mobile-page-title {
+    font-size: 20px;
+  }
+
+  .badminton-app .court-body {
+    padding-inline: 12px !important;
+  }
+
+  .badminton-app .scoreboard {
+    grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .badminton-app .score-number {
+    font-size: 60px;
+  }
+
+  .badminton-app .score-button {
+    gap: 5px;
+    font-size: 17px;
+  }
+
+  .badminton-app .court-head {
+    padding-inline: 11px !important;
+  }
+
+  .badminton-app .court-tools {
+    gap: 3px !important;
+  }
+
+  .badminton-app .court-rule {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav > button {
+    transition: none;
+  }
+}
+
+@media print {
+  .mobile-nav,
+  .mobile-round-dock,
+  .mobile-back-link,
+  .mobile-only,
+  .panel-done,
+  .empty-action,
+  #mobile-export-host,
+  #mobile-reset-host {
+    display: none !important;
+  }
+
+  body.badminton-app {
+    padding-bottom: 0;
+  }
+
+  .badminton-app main.app-shell {
+    padding: 0 !important;
+  }
+
+  body.badminton-app .workspace-layout,
+  body.badminton-app #main-workspace {
+    display: block !important;
+  }
+
+  body.badminton-app .sidebar {
+    display: none !important;
+  }
+
+  body.badminton-app[data-mobile-screen] #main-workspace > [data-mobile-panel] {
+    display: block !important;
+  }
+
+  .badminton-app .court-column {
+    flex: 0 0 50%;
+    width: 50%;
+    max-width: 50%;
+  }
+
+  .badminton-app .court-card.is-focused {
+    position: static;
+    inset: auto;
+    height: auto !important;
+    padding: 0;
+    overflow: visible;
+    border-radius: 18px;
+  }
+
+  .badminton-app .court-card.is-focused .court-head {
+    position: static;
+    top: auto;
+  }
+
+  .badminton-app .app-header {
+    position: static;
+    padding-top: 0;
+    box-shadow: none;
+  }
+}
