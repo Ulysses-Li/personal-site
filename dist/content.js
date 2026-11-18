@@ -2,10 +2,11 @@
  * 網站內容資料｜日常更新優先修改本檔案
  *
  * 01 個人資料 profile       → 姓名、職稱、簡介與聯絡方式
- * 02 專業能力 competencies  → 首頁與履歷共用的能力介紹
- * 03 作品案例 projects      → 作品列表及案例詳情
- * 04 技術筆記 knowledge     → 知識庫分類、搜尋與主題詳情
- * 05 履歷摘要 resume        → 個人摘要、技術標籤與待補資料
+ * 02 互動展示 showcase      → 代表作畫面、切換標籤與正式入口
+ * 03 專業能力 competencies  → 首頁與履歷共用的能力介紹
+ * 04 作品案例 projects      → 作品列表及案例詳情
+ * 05 技術筆記 knowledge     → 知識庫分類、搜尋與主題詳情
+ * 06 履歷摘要 resume        → 個人摘要、技術標籤與待補資料
  *
  * 新增作品或筆記時，複製同一陣列中的一個完整物件，再修改欄位。
  * id 必須保持唯一；已使用的 id 請盡量保留，避免既有主題網址失效。
@@ -18,13 +19,41 @@ window.SITE_CONTENT = {
     name: 'Louis Li',
     role: '產品管理部工程師',
     headline: '把現場問題，整理成可用的方法。',
-    intro: '我把加工現場經驗、刀具應用與數位工具整合起來，協助製造業更快理解問題、選對方法，並把流程變得更有效率。',
+    intro: '我在製造業做技術支援，也把加工經驗轉成數位工具。最近正在設計公司外銷的技術支援網站，讓刀具資料與加工方法更容易被理解、被使用。',
     email: 'louis962911@gmail.com',
     github: 'https://github.com/Ulysses-Li',
     website: 'https://cwli.dev',
     line: 'https://line.me/ti/p/P0eXqNnDh-'
   },
-  // ── 02｜專業能力：title 為中文定位，english 為領域名稱，tags 為技術標籤。 ──
+  // ── 02｜代表作互動展示：image 使用本機圖片路徑，url 指向對應的正式功能頁。 ──
+  // id 對應展示切換項目；更新畫面時保留檔名，或同步修改 image 路徑。
+  showcase: [
+    {
+      id: 'portal',
+      label: '技術入口',
+      title: '讓客戶找到下一步',
+      description: '產品、切削資料與技術資源的整合入口',
+      image: 'assets/support-center-home.png',
+      url: 'https://n9sp.cwli.dev/index.html'
+    },
+    {
+      id: 'cutting',
+      label: '切削工作台',
+      title: '把加工條件變成可操作介面',
+      description: 'ACE Spot Drill 的切削設定與即時結果',
+      image: 'assets/support-center-ace.png',
+      url: 'https://n9sp.cwli.dev/CuttingData/AceSpotDrill/index.html'
+    },
+    {
+      id: 'nc',
+      label: 'NC 程式工具',
+      title: '讓程式與刀路一起被理解',
+      description: '螺紋銑削 V2 的參數設定與雙視圖',
+      image: 'assets/support-center-nc.png',
+      url: 'https://n9sp.cwli.dev/NCProgram/Thread_Milling_V2/index.html'
+    }
+  ],
+  // ── 03｜專業能力：title 為中文定位，english 為領域名稱，tags 為技術標籤。 ──
   competencies: [
     {
       title: '從加工條件找問題',
@@ -51,9 +80,23 @@ window.SITE_CONTENT = {
       tags: ['翻譯', '文件整理', '選型流程', '人工核對']
     }
   ],
-  // ── 03｜作品案例：status 說明進度；背景、方法、證據與下一步分欄保存。 ──
+  // ── 04｜作品案例：status 說明進度；背景、方法、證據與下一步分欄保存。 ──
   // url 可使用 HTTPS 網址，或 #home 這類站內頁面網址；id 用於 #work/作品代號。
   projects: [
+    {
+      id: 'support-center',
+      title: 'Nine9 Support Center',
+      category: '外銷技術支援網站',
+      summary: '為公司外銷技術支援設計的網站，整合產品分類、切削資料與 NC 程式工具，讓加工資訊能在同一個入口查找與操作。',
+      url: 'https://n9sp.cwli.dev/index.html',
+      status: '持續開發中',
+      context: '將公司外銷技術支援所需的產品與加工資訊整理成網站，連結刀具應用知識、型錄資料與實際操作流程。',
+      role: '需求主導、加工知識整理、操作流程規劃與迭代驗收。將現場條件與原廠確認資訊轉成介面需求，持續檢視選型、加工幾何及手機操作的呈現方式。',
+      approach: '以產品分類建立入口，將型錄內容結構化；在 ACE Spot Drill 工作台呈現點鑽與倒角幾何，並以螺紋銑削 V2 工具提供參數設定、雙視圖、中英介面與 NC 程式下載。',
+      evidence: '正式入口可查看產品分類、切削資料與 NC 工具；ACE Spot Drill 與螺紋銑削 V2 頁面可查看對應的互動介面。',
+      nextStep: '持續整合產品資料與技術支援流程，補充來源與適用條件，並依實際使用情境整理後續驗證紀錄。',
+      tags: ['外銷技術支援', '型錄資料結構化', '切削工作台', 'NC 程式工具', '中英介面']
+    },
     {
       id: 'engineering-notebook',
       title: '個人工程履歷與技術知識庫',
@@ -107,7 +150,7 @@ window.SITE_CONTENT = {
       tags: ['刀具選型', '加工計算', '工程工具']
     }
   ],
-  // ── 04｜技術筆記：category 產生分類，tags 加入搜尋，sections 保存文章段落。 ──
+  // ── 05｜技術筆記：category 產生分類，tags 加入搜尋，sections 保存文章段落。 ──
   // 每段包含 heading（小標）與 body（內文）；id 用於 #notes/主題代號。
   knowledge: [
     {
@@ -279,7 +322,7 @@ window.SITE_CONTENT = {
       ]
     }
   ],
-  // ── 05｜履歷摘要：summary 為簡介，skills 為技術清單，gaps 為待確認的資料。 ──
+  // ── 06｜履歷摘要：summary 為簡介，skills 為技術清單，gaps 為待確認的資料。 ──
   resume: {
     summary: '產品管理部工程師，專長方向涵蓋 CNC / CAM 技術支援、Nine-9 刀具應用、Web 工具開發與 AI 工作流。將加工現場經驗、刀具應用與數位工具整合，協助理解問題、選擇方法與改善流程。',
     skills: [

@@ -32,8 +32,11 @@ personal-site/
 │  ├─ index.html             四個頁面的版面與固定文案
 │  ├─ content.js             個人資料、能力、作品、技術主題、履歷
 │  ├─ styles.css             色彩、版面、手機版、列印版
+│  ├─ studio.css             個人工作室首頁、作品舞台與微互動
 │  ├─ app.js                 導覽、列表、搜尋、分類、詳情與列印
-│  └─ assets/                頭像與網站圖示
+│  └─ assets/                頭像、網站圖示與真實專案截圖
+├─ docs/
+│  └─ support-center-case.md 代表作品的事實與畫面來源
 ├─ scripts/
 │  ├─ preview.mjs            可選的本機預覽工具
 │  └─ publish-source.mjs     可選的 Sites 發佈工具
@@ -47,12 +50,13 @@ personal-site/
 主要編輯 `dist/content.js`：
 
 - `profile`：個人資料與聯絡入口。姓名、職稱、個人簡介與 Email 會套用到頁面；其餘固定文案與頁尾位於 `index.html`。
+- `showcase`：首頁可切換的專案畫面，包含按鈕標籤、標題、圖片路徑、說明與對應正式網址。
 - `competencies`：四類能力，會同步顯示在首頁與履歷。
 - `projects`：每個案例保留背景、方法、證據與下一步；只有可確認的成果才加入。
 - `knowledge`：每個主題包含分類、關鍵字與文章段落。現有 8 篇為整理範本；轉成正式文章時，需同步調整 `app.js` 的範本顯示文字。
 - `resume`：個人摘要、技術清單與待補資料。
 
-`dist/styles.css` 管理視覺與列印版；`dist/app.js` 管理導覽、案例詳情、知識搜尋與分類。
+`dist/styles.css` 管理共用視覺與列印版；`dist/studio.css` 管理新版首頁排版與微互動。`dist/app.js` 管理導覽、作品舞台、案例詳情、知識搜尋與分類。
 
 ## 最常用的修改方式
 
@@ -64,7 +68,9 @@ personal-site/
 | 新增技術主題與文章段落 | `content.js` 的 `knowledge` |
 | 履歷摘要、技術與待補資料 | `content.js` 的 `resume` |
 | 首頁大標題、固定介紹、頁尾 | `index.html` 的繁體中文分區 |
+| 首頁展示的專案畫面與連結 | `content.js` 的 `showcase` |
 | 背景、文字、按鈕與卡片色彩 | `styles.css` 最上方的色彩變數 |
+| 首頁錯落卡片、漂浮標籤、畫面舞台 | `studio.css` 的繁體中文分區 |
 | 手機與列印版面 | `styles.css` 的響應式與列印區塊 |
 | 搜尋、切頁與詳情行為 | `app.js` 的編號功能區塊 |
 
@@ -100,6 +106,10 @@ git log --oneline -5
 ## 第一版已實作
 
 四個導覽頁面、作品詳情、可分享的主題網址（例如 `#notes/cam-review-checklist`）、搜尋與分類交集、空結果提示、手機選單、鍵盤操作、可列印的履歷版面。
+
+首頁改為個人數位工作室：Support Center 真實畫面手動切換、方向鍵選擇、對應實際工具連結、錯落作品與筆記入口、捲動進場與桌機作品卡輕微傾角。啟用「減少動態效果」時，保留功能並停止漂浮、進場與傾角動畫。
+
+Nine9 Support Center 為目前代表案例，共有 5 項作品入口。專案截圖於 2026-11-18 由正式網站擷取，畫面來源與可確認的參與範圍記錄在 `docs/support-center-case.md`。首頁預覽是本站儲存的截圖，點選右上角箭頭可開啟實際工具。
 
 ## 下一步優先順序
 

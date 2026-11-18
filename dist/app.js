@@ -47,11 +47,11 @@
   // ============================================================
   function renderProfile() {
     $('.brand-copy strong').textContent = data.profile.name.toUpperCase();
-    $('.hero-author strong').textContent = data.profile.name;
-    $('.hero-author img').alt = data.profile.name;
-    $('.hero-intro').textContent = (
-      `我是 ${data.profile.name}，${data.profile.role}。${data.profile.intro}`
-    );
+    $('.studio-name').innerHTML = `${escape(data.profile.name)}<span class="name-period">.</span>`;
+    $('.studio-signature strong').textContent = data.profile.name;
+    $('.studio-signature img').alt = data.profile.name;
+    $('.studio-signature small').textContent = `${data.profile.role} / 持續學習，持續實作`;
+    $('.studio-bio').textContent = data.profile.intro;
     $('#resume-title').textContent = data.profile.name;
     $('.resume-heading > div > p:last-child').textContent = data.profile.role;
 
@@ -79,7 +79,7 @@
   // ============================================================
   function renderOverview() {
     $('#practice-grid').innerHTML = data.competencies.map((item, index) => `
-      <article class="practice-item">
+      <article class="practice-item reveal">
         <span class="item-number">0${index + 1} / ${escape(item.english.toUpperCase())}</span>
         <h3>${escape(item.title)}</h3>
         <p>${escape(item.description)}</p>
@@ -99,7 +99,7 @@
         <div class="work-actions">
           <span class="status-note">${escape(project.status)}</span>
           <button class="text-link" type="button" data-project="${escape(project.id)}">
-            查看案例 ${index === 0 ? '↗' : '整理架構 ↗'}
+            ${project.status.includes('案例待補') ? '查看整理架構' : '查看案例'} ↗
           </button>
         </div>
       </article>
@@ -202,6 +202,7 @@
 
     const sections = kind === 'project' ? [
       { heading: '問題與背景', body: item.context },
+      ...(item.role ? [{ heading: '我的參與', body: item.role }] : []),
       { heading: '採用方法與實作', body: item.approach },
       { heading: '成果與驗證證據', body: item.evidence },
       { heading: '接下來要完成的事', body: item.nextStep }
@@ -321,6 +322,9 @@
         renderNotes();
       }
 
+      const previewButton = event.target.closest('[data-preview]');
+      if (previewButton) setPreview(previewButton.dataset.preview);
+
       if (!event.target.closest('.site-header')) closeMenu();
       const sameRouteLink = event.target.closest('a[href^="#"]');
       if (sameRouteLink?.getAttribute('href') === location.hash) closeMenu();
@@ -373,13 +377,124 @@
   }
 
   // ============================================================
-  // 09. 初始化順序：資料套用 → 建立列表 → 綁定事件 → 顯示目前頁面
+  // 09. 作品舞台：按鈕與方向鍵切換真實專案截圖，不自動輪播
+  // ============================================================
+  function renderShowcase() {
+    const items = data.showcase || [];
+    $('#preview-switcher').innerHTML = items.map((item, index) => `
+      <button type="button" data-preview="${escape(item.id)}"
+        aria-pressed="${index === 0}" aria-controls="preview-image">
+        <span>${String(index + 1).padStart(2, '0')}</span>${escape(item.label)}
+      </button>
+    `).join('');
+    $('#home-note-count').textContent = `${data.knowledge.length} 個整理起點`;
+
+    // 預先讀取本站截圖，切換時不必等待外部網站載入。
+    items.forEach((item) => { const preload = new Image(); preload.src = item.image; });
+    // 首屏先展示有雙視圖的 NC 工具，其餘畫面由使用者自行切換。
+    const initialPreview = items.find((item) => item.id === 'nc') || items[0];
+    if (initialPreview) setPreview(initialPreview.id, { animate: false });
+
+    $('#preview-switcher').addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      const buttons = [...document.querySelectorAll('[data-preview]')];
+      const current = buttons.indexOf(document.activeElement);
+      if (current < 0) return;
+      event.preventDefault();
+      const offset = event.key === 'ArrowRight' ? 1 : -1;
+      const next = buttons[(current + offset + buttons.length) % buttons.length];
+      next.focus();
+      setPreview(next.dataset.preview);
+    });
+  }
+
+  function setPreview(id, { animate = true } = {}) {
+    const items = data.showcase || [];
+    const index = items.findIndex((item) => item.id === id);
+    if (index < 0) return;
+    const item = items[index];
+    const image = $('#preview-image');
+    image.src = item.image;
+    image.alt = `${item.label}：${item.title}，實際專案畫面`;
+    $('#preview-title').textContent = item.title;
+    $('#preview-count').textContent = `${String(index + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
+    $('#preview-description').textContent = item.description;
+    $('#preview-visit').href = item.url;
+    document.querySelectorAll('[data-preview]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.preview === id));
+    });
+
+    // 減少動態效果設定啟用時，直接換圖，維持相同的操作結果。
+    if (animate && image.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      image.getAnimations().forEach((animation) => animation.cancel());
+      image.animate([
+        { opacity: 0.35, transform: 'translateY(8px) scale(.99)' },
+        { opacity: 1, transform: 'translateY(0) scale(1)' }
+      ], { duration: 320, easing: 'cubic-bezier(.2,.7,.2,1)' });
+    }
+  }
+
+  // ============================================================
+  // 10. 輕量微互動：捲動進場與桌機作品卡傾角，手機維持穩定操作
+  // ============================================================
+  function initializeMotion() {
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const revealItems = [...document.querySelectorAll('.reveal')];
+    if (!reduceMotion.matches && 'IntersectionObserver' in window) {
+      document.body.classList.add('motion-ready');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.08 });
+      revealItems.forEach((item) => observer.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+    }
+
+    const card = document.querySelector('[data-tilt]');
+    if (!card) return;
+    let frame = null;
+    let position = null;
+    const resetTilt = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = null;
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+    };
+    card.addEventListener('pointermove', (event) => {
+      if (reduceMotion.matches || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      position = { x: event.clientX, y: event.clientY };
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        const box = card.getBoundingClientRect();
+        const x = Math.max(-0.5, Math.min(0.5, (position.x - box.left) / box.width - 0.5));
+        const y = Math.max(-0.5, Math.min(0.5, (position.y - box.top) / box.height - 0.5));
+        card.style.setProperty('--tilt-x', `${-y * 5}deg`);
+        card.style.setProperty('--tilt-y', `${x * 5}deg`);
+        frame = null;
+      });
+    });
+    card.addEventListener('pointerleave', resetTilt);
+    reduceMotion.addEventListener('change', () => {
+      if (!reduceMotion.matches) return;
+      resetTilt();
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+    });
+  }
+
+  // ============================================================
+  // 11. 初始化順序：資料套用 → 建立列表與作品舞台 → 綁定事件 → 顯示頁面
   // ============================================================
   renderProfile();
   renderOverview();
   renderResume();
   renderFilters();
   renderNotes();
+  renderShowcase();
   bindEvents();
   route({ initial: true });
+  initializeMotion();
 })();
