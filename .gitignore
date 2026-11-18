@@ -1,0 +1,6 @@
+.preview/
+.staging/
+*.tar.gz
+node_modules/
+.env
+.env.*
