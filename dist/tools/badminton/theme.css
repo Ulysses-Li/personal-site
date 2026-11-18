@@ -1,0 +1,476 @@
+/*
+ * 羽球工具的個人網站主題
+ * 載入於 app.css、court.css 與共用 assets/theme.css 之後。
+ * 本檔只對應顏色、表面與導覽，不改動分組、計分或球場幾何。
+ */
+
+/* ==========================================================================
+   01｜既有變數與 Bootstrap 主題對應
+   舊變數只映射共用色彩；不重設 --text、--primary-dark 等共用變數。
+   ========================================================================== */
+:root {
+  --ink: var(--text);
+  --orange: var(--primary-dark);
+  --blue: var(--primary-dark);
+  --bs-body-color: var(--text);
+  --bs-body-bg: var(--bg);
+  --bs-body-font-family: var(--sans);
+  --bs-primary: var(--primary-dark);
+  --bs-primary-rgb: 3, 105, 161;
+  --bs-link-color: var(--primary-dark);
+  --bs-link-color-rgb: 3, 105, 161;
+  --bs-link-hover-color: var(--primary-hover);
+  --bs-link-hover-color-rgb: 7, 89, 133;
+  --badminton-team-a: #0369a1;
+  --badminton-team-b: #7754ad;
+  --badminton-team-a-surface: #e7f5ff;
+  --badminton-team-b-surface: #f0ebff;
+  --badminton-court: #0b6078;
+  --badminton-court-edge: #075066;
+  --badminton-court-line: #b8e9f3;
+  --badminton-court-line-strong: #edfaff;
+  --badminton-server-surface: #a5f3fc;
+  --badminton-server-text: #075367;
+  --badminton-server-edge: #22d3ee;
+  --badminton-receiver-surface: #e8e0ff;
+  --badminton-receiver-text: #58368c;
+  --badminton-receiver-edge: #b69ae8;
+}
+
+body {
+  background: var(--page-gradient);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--sans);
+}
+
+::selection {
+  background: var(--selection);
+}
+
+:focus-visible {
+  outline-color: var(--primary-dark) !important;
+}
+
+/* ==========================================================================
+   02｜頁首、返回入口與共用表面
+   導覽使用相對路徑；手機可換行，每個返回入口仍保留 44px 點擊高度。
+   ========================================================================== */
+.app-header {
+  background: var(--glass);
+  border-bottom-color: var(--line);
+  backdrop-filter: blur(16px);
+}
+
+.app-header > .app-shell {
+  flex-wrap: wrap;
+}
+
+.brand-mark {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.18);
+}
+
+.text-brand {
+  color: var(--primary-dark);
+}
+
+.tool-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 20px;
+}
+
+.tool-breadcrumb > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--primary-dark);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+  text-decoration: none;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+
+.tool-breadcrumb > a:hover {
+  border-color: var(--line-strong);
+  background: white;
+  color: var(--primary-hover);
+}
+
+.tool-breadcrumb > span {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.7;
+  letter-spacing: 0.055em;
+}
+
+.surface {
+  border-color: var(--line);
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.section-number {
+  background: #e7f5fe;
+  color: var(--primary-dark);
+}
+
+.connection-note {
+  border-left-color: var(--primary);
+  background: #edf8ff;
+}
+
+.wait-chip {
+  background: #edf6ff;
+}
+
+.toast-message {
+  background: var(--text);
+  box-shadow: var(--dialog-shadow);
+}
+
+dialog {
+  border-color: var(--line);
+  border-radius: 22px;
+  background: var(--surface-strong);
+  color: var(--text);
+  box-shadow: var(--dialog-shadow);
+}
+
+dialog::backdrop {
+  background: var(--overlay);
+  backdrop-filter: blur(3px);
+}
+
+/* ==========================================================================
+   03｜按鈕、表單與狀態提示
+   主要操作為深藍白字；失敗狀態保留獨立的紅紫提示，不與正常儲存混色。
+   ========================================================================== */
+.btn-primary {
+  --bs-btn-color: #ffffff;
+  --bs-btn-bg: var(--primary-dark);
+  --bs-btn-border-color: var(--primary-dark);
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-hover-bg: var(--primary-hover);
+  --bs-btn-hover-border-color: var(--primary-hover);
+  --bs-btn-active-color: #ffffff;
+  --bs-btn-active-bg: #064e75;
+  --bs-btn-active-border-color: #064e75;
+  --bs-btn-disabled-color: #ffffff;
+  --bs-btn-disabled-bg: var(--primary-dark);
+  --bs-btn-disabled-border-color: var(--primary-dark);
+  --bs-btn-focus-shadow-rgb: 14, 165, 233;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--primary-dark);
+  --bs-btn-border-color: rgba(3, 105, 161, 0.25);
+  --bs-btn-hover-bg: #e7f5ff;
+  --bs-btn-hover-color: var(--primary-hover);
+  --bs-btn-hover-border-color: rgba(3, 105, 161, 0.42);
+  --bs-btn-active-bg: #d9efff;
+  --bs-btn-active-color: var(--primary-hover);
+  --bs-btn-active-border-color: var(--primary-dark);
+  --bs-btn-focus-shadow-rgb: 14, 165, 233;
+}
+
+.form-control,
+.form-select {
+  border-color: rgba(148, 192, 223, 0.5);
+  background-color: var(--surface-strong);
+  color: var(--text);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.12);
+}
+
+.form-check-input:checked {
+  border-color: var(--primary-dark);
+  background-color: var(--primary-dark);
+}
+
+.save-dot {
+  background: #0891b2;
+}
+
+.save-label.failed .save-dot {
+  background: #b34366;
+}
+
+.status-pill {
+  background: #e6f6ff;
+  color: var(--primary-dark);
+}
+
+.status-pill.wait {
+  background: #f0ebff;
+  color: #7754ad;
+}
+
+/* ==========================================================================
+   04｜雙方比分與比賽狀態
+   A 方使用藍色、B 方使用淡紫；隊名與數字保留原本語意與操作順序。
+   ========================================================================== */
+.court-card {
+  border-top-color: var(--primary);
+}
+
+.court-head {
+  border-bottom-color: var(--line);
+  background: #f7fbff;
+}
+
+.team-score.team-a .team-label,
+.team-a .score-number {
+  color: var(--badminton-team-a);
+}
+
+.team-score.team-b .team-label,
+.team-b .score-number {
+  color: var(--badminton-team-b);
+}
+
+.score-button {
+  border-color: #b5daef;
+  background: var(--badminton-team-a-surface);
+  color: var(--badminton-team-a);
+}
+
+.score-button:hover {
+  border-color: #94c7e3;
+  background: #d5edfd;
+  color: var(--primary-hover);
+}
+
+.team-b .score-button {
+  border-color: #d1c4ef;
+  background: var(--badminton-team-b-surface);
+  color: var(--badminton-team-b);
+}
+
+.team-b .score-button:hover {
+  border-color: #bba6e2;
+  background: #e5dcfa;
+  color: #603d92;
+}
+
+.serve-banner {
+  background: #edf8ff;
+}
+
+.serve-banner strong {
+  color: var(--primary-dark);
+}
+
+.serve-banner.finished {
+  background: #f0ebff;
+}
+
+.serve-banner.finished strong {
+  color: var(--badminton-team-b);
+}
+
+/* ==========================================================================
+   05｜球場配色、發球員與接球員
+   僅覆寫線條與背景顏色；直向、側向、旋轉與放大時的幾何仍由來源樣式管理。
+   ========================================================================== */
+.court-map {
+  border-color: var(--badminton-court-edge);
+  background: var(--badminton-court);
+}
+
+.court-lines {
+  border-color: var(--badminton-court-line-strong);
+}
+
+.court-lines::before,
+.court-lines::after,
+.court-map.sideways .court-lines::before,
+.court-map.sideways .court-lines::after,
+.court-half::before,
+.court-half::after,
+.court-map.sideways .court-half::before,
+.court-map.sideways .court-half::after {
+  border-color: var(--badminton-court-line);
+}
+
+.court-net,
+.court-map.sideways .court-net {
+  border-color: var(--badminton-court-line-strong);
+  box-shadow: 0 3px rgba(3, 38, 56, 0.13);
+}
+
+.court-net span {
+  background: var(--badminton-court);
+  color: #e9fbff;
+}
+
+.court-slot .position-label {
+  color: #d1f0f7;
+}
+
+.court-caption {
+  color: #d1f0f7;
+}
+
+.player-token {
+  border: 2px solid transparent;
+  background: #f4fcff;
+  color: var(--text);
+  box-shadow: 0 3px 9px rgba(3, 38, 56, 0.18);
+}
+
+.player-token.serving {
+  border-color: #e7fcff;
+  border-style: solid;
+  background: var(--badminton-server-surface);
+  color: var(--badminton-server-text);
+  box-shadow: 0 0 0 2px var(--badminton-server-edge);
+}
+
+.player-token.receiving {
+  border-color: var(--badminton-receiver-edge);
+  border-style: dashed;
+  background: var(--badminton-receiver-surface);
+  color: var(--badminton-receiver-text);
+  box-shadow: 0 0 0 1px #faf7ff;
+}
+
+.role-label {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.legend-dot {
+  border: 1px solid #0891b2;
+  background: var(--badminton-server-surface);
+}
+
+.legend-dot.receiver {
+  border: 1px dashed #7754ad;
+  background: var(--badminton-receiver-surface);
+}
+
+.empty-state {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.94) 45%, #eff8ff);
+}
+
+.empty-court {
+  border-color: #77b9d3;
+  background: #e1f3fb;
+  box-shadow: 14px 16px 0 #eaf0fc;
+}
+
+.empty-court::before {
+  border-left-color: #77b9d3;
+}
+
+/* ==========================================================================
+   06｜放大模式與手機
+   不覆寫球場的 position、inset、尺寸或網線位置，保留原工具的全螢幕行為。
+   ========================================================================== */
+.court-card:is(:fullscreen, .is-focused) {
+  background: var(--page-gradient);
+}
+
+.court-card.is-focused .court-head {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+}
+
+.court-card.is-focused .court-tools button {
+  background: var(--surface-strong);
+}
+
+@media (max-width: 575.98px) {
+  .tool-breadcrumb {
+    justify-content: flex-start;
+    column-gap: 14px;
+  }
+
+  .tool-breadcrumb > span {
+    font-size: 10px;
+  }
+
+  .surface {
+    border-radius: 18px;
+  }
+
+  .court-card.is-focused {
+    border-radius: 0;
+  }
+
+  .player-token {
+    border-width: 2px;
+  }
+}
+
+/* ==========================================================================
+   07｜減少動態與列印
+   列印保留球場與角色的功能分色；頁面背景改白，移除返回導覽與表面陰影。
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .tool-breadcrumb > a {
+    transition: none;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .tool-breadcrumb,
+  dialog {
+    display: none !important;
+  }
+
+  .app-header {
+    border-bottom-color: #bbb;
+    background: white;
+    backdrop-filter: none;
+  }
+
+  .surface {
+    border-color: #b9c9d4;
+    background: white;
+    box-shadow: none;
+  }
+
+  .court-map {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .court-card.is-focused {
+    position: static;
+    inset: auto;
+    z-index: auto;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+    border-radius: 18px;
+    background: white;
+  }
+
+  .court-card.is-focused .court-head {
+    position: static;
+    max-width: none;
+    background: white;
+    backdrop-filter: none;
+  }
+}

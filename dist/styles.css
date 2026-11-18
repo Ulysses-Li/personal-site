@@ -1,50 +1,14 @@
 /*
  * Louis Li 個人網站樣式表
- * 修改順序：先調整第 01 區的色彩變數，再依功能區塊修改版面。
+ * 修改順序：先調整 assets/theme.css 的共用色彩，再依功能區塊修改版面。
  * 每個 CSS 宣告獨立一行，避免日後維護時需要解讀壓縮程式碼。
  */
 
 /* ==========================================================================
    01｜全站色彩與字型變數
-   參考 links.cwli.dev 的淺藍、白、青色與淡紫配色。日後換色，優先修改這裡；文字與按鈕採深藍以保持對比。
+   參考 links.cwli.dev 的配色，變數集中於 assets/theme.css，供主站與小工具共同載入。
    ========================================================================== */
-:root {
-  --bg: #eef8ff;
-  --text: #172033;
-  --muted: #5b6b82;
-  --primary: #0ea5e9;
-  --primary-dark: #0369a1;
-  --primary-hover: #075985;
-  --cyan: #67e8f9;
-  --lavender: #a78bfa;
-  --line: rgba(14, 165, 233, 0.18);
-  --line-strong: rgba(3, 105, 161, 0.32);
-  --surface: rgba(255, 255, 255, 0.9);
-  --surface-tint: rgba(224, 242, 254, 0.86);
-  --surface-strong: #ffffff;
-  --glass: rgba(248, 252, 255, 0.92);
-  --grid-line: rgba(14, 165, 233, 0.08);
-  --selection: rgba(103, 232, 249, 0.35);
-  --diagram-frame: rgba(3, 105, 161, 0.42);
-  --diagram-shadow: rgba(14, 165, 233, 0.12);
-  --overlay: rgba(23, 32, 51, 0.7);
-  --shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
-  --shadow-soft: 0 10px 28px rgba(14, 165, 233, 0.07);
-  --dialog-shadow: 0 30px 90px rgba(15, 23, 42, 0.18);
-  --page-gradient:
-    radial-gradient(circle at 15% 12%, rgba(125, 211, 252, 0.38), transparent 28%),
-    radial-gradient(circle at 88% 18%, rgba(191, 219, 254, 0.65), transparent 25%),
-    radial-gradient(circle at 80% 88%, rgba(221, 214, 254, 0.55), transparent 28%),
-    linear-gradient(135deg, #f8fcff 0%, #eef8ff 42%, #f5f7ff 100%);
-  --hero-gradient:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(224, 242, 254, 0.86));
-  --case-gradient:
-    linear-gradient(135deg, rgba(186, 230, 253, 0.72), rgba(237, 233, 254, 0.78));
-  --radius-card: 24px;
-  --radius-control: 12px;
-  --mono: Consolas, "SFMono-Regular", monospace;
-  --sans: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
-}
+/* 共用色彩、背景與字型變數已集中至 assets/theme.css。 */
 
 /* ==========================================================================
    02｜基本元素與無障礙

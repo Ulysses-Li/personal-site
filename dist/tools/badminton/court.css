@@ -1,0 +1,90 @@
+/* 側邊看場時改排球場與網線，文字保持正向，不直接旋轉整張卡片。 */
+.court-map.sideways {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)
+}
+
+.court-map.sideways .court-half {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr 1fr;
+  min-height: 214px
+}
+
+.court-map.sideways .court-lines:before {
+  inset: 8% 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 1px solid #b6e0d0;
+  border-bottom: 1px solid #b6e0d0
+}
+
+.court-map.sideways .court-lines:after {
+  inset: 0 6%;
+  border-top: 0;
+  border-bottom: 0;
+  border-left: 1px solid #b6e0d0;
+  border-right: 1px solid #b6e0d0
+}
+
+.court-map.sideways .court-net {
+  top: 16px;
+  bottom: 16px;
+  left: 50%;
+  right: auto;
+  border-top: 0;
+  border-left: 3px solid #e7f7ef
+}
+
+.court-map.sideways .court-net span {
+  top: 50%;
+  left: -1px;
+  transform: translate(-50%, -50%);
+  padding: 5px 3px;
+  letter-spacing: 0
+}
+
+.court-map.sideways .court-half:before {
+  top: 0;
+  bottom: 0;
+  left: auto;
+  right: 20%;
+  border-bottom: 0;
+  border-right: 1px solid #c3e5d5
+}
+
+.court-map.sideways .court-half:after {
+  top: 50%;
+  bottom: auto;
+  left: 0;
+  right: 20%;
+  border-left: 0;
+  border-top: 1px solid #c3e5d5
+}
+
+.court-map.sideways .side-right:before {
+  left: 20%;
+  right: auto
+}
+
+.court-map.sideways .side-right:after {
+  left: 20%;
+  right: 0
+}
+
+.court-view-label {
+  font-size: 13px;
+  color: var(--muted)
+}
+
+.court-view-button {
+  font-size: 14px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px
+}
+
+.court-view-button svg {
+  width: 16px;
+  height: 16px
+}

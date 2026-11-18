@@ -31,14 +31,15 @@ personal-site/
 ├─ dist/                     完整網站；可直接開啟與修改
 │  ├─ index.html             五個頁面的版面與固定文案
 │  ├─ content.js             個人資料、能力、作品、技術主題、履歷
-│  ├─ styles.css             色彩、版面、手機版、列印版
+│  ├─ styles.css             共用版面、手機版、列印版
 │  ├─ studio.css             個人工作室首頁、作品舞台與微互動
 │  ├─ tools.css              小工具卡片、搜尋分類與首頁入口
 │  ├─ app.js                 導覽、列表、搜尋、分類、詳情與列印
-│  ├─ tools/                 自己的小工具 HTML 與對應資源
-│  └─ assets/                頭像、網站圖示與真實專案截圖
+│  ├─ tools/                 自己的小工具 HTML 與對應資源（已加入 badminton/）
+│  └─ assets/                共用 theme.css、頭像、圖示與專案截圖
 ├─ docs/
-│  └─ support-center-case.md 代表作品的事實與畫面來源
+│  ├─ support-center-case.md 代表作品的事實與畫面來源
+│  └─ badminton-tool.md      羽球工具複本、修改位置與驗證說明
 ├─ scripts/
 │  ├─ preview.mjs            可選的本機預覽工具
 │  └─ publish-source.mjs     可選的 Sites 發佈工具
@@ -53,13 +54,13 @@ personal-site/
 
 - `profile`：個人資料與聯絡入口。姓名、職稱、個人簡介與 Email 會套用到頁面；其餘固定文案與頁尾位於 `index.html`。
 - `showcase`：首頁可切換的專案畫面，包含按鈕標籤、標題、圖片路徑、說明與對應正式網址。
-- `tools`：個人小工具清單，目前先留空。填入工具名稱、分類、用途、標籤與網址後，工具箱會自動產生卡片、分類與搜尋。
+- `tools`：個人小工具清單，已加入「羽球開打」。填入工具名稱、分類、用途、標籤與網址後，工具箱會自動產生卡片、分類與搜尋。
 - `competencies`：四類能力，會同步顯示在首頁與履歷。
 - `projects`：每個案例保留背景、方法、證據與下一步；只有可確認的成果才加入。
 - `knowledge`：每個主題包含分類、關鍵字與文章段落。現有 8 篇為整理範本；轉成正式文章時，需同步調整 `app.js` 的範本顯示文字。
 - `resume`：個人摘要、技術清單與待補資料。
 
-`dist/styles.css` 管理共用視覺與列印版；`dist/studio.css` 管理新版首頁排版與微互動。`dist/app.js` 管理導覽、作品舞台、案例詳情、知識搜尋與分類。
+`dist/assets/theme.css` 管理主站與小工具共用配色；`dist/styles.css` 管理共用版面與列印版；`dist/studio.css` 管理新版首頁排版與微互動。`dist/app.js` 管理導覽、作品舞台、案例詳情、知識搜尋與分類。
 
 ## 最常用的修改方式
 
@@ -73,7 +74,7 @@ personal-site/
 | 首頁大標題、固定介紹、頁尾 | `index.html` 的繁體中文分區 |
 | 首頁展示的專案畫面與連結 | `content.js` 的 `showcase` |
 | 新增自己的小工具 | `content.js` 的 `tools`；本機程式放在 `dist/tools/` |
-| 背景、文字、按鈕與卡片色彩 | `styles.css` 最上方的色彩變數 |
+| 主站與工具的背景、文字、按鈕及卡片色彩 | `assets/theme.css` 的共用色彩變數 |
 | 首頁錯落卡片、漂浮標籤、畫面舞台 | `studio.css` 的繁體中文分區 |
 | 小工具的卡片與搜尋分類版面 | `tools.css` 的繁體中文分區 |
 | 手機與列印版面 | `styles.css` 的響應式與列印區塊 |
@@ -85,9 +86,9 @@ personal-site/
 
 ## 新增自己的小工具
 
-上方導覽「小工具」與首頁「打開工具箱」皆通往 `#tools`。目前先預留空的清單，沒有放入假工具。
+上方導覽「小工具」與首頁「打開工具箱」皆通往 `#tools`。目前已有「羽球開打」，程式位於 `dist/tools/badminton/`；詳細修改說明見 `docs/badminton-tool.md`。
 
-在 `dist/content.js` 找到 `tools: []`，依下列格式加入實際工具。以下為填寫範例，需替換成自己的名稱與可開啟網址：
+在 `dist/content.js` 找到 `tools` 陣列，保留既有工具，再依下列格式加入新物件。以下為填寫範例，需替換成自己的名稱與可開啟網址：
 
 ```javascript
 tools: [
@@ -106,14 +107,14 @@ tools: [
 
 - 自己的 HTML 工具可放在 `dist/tools/my-tool/index.html`，相關 CSS、JavaScript、圖片放在同一工具子資料夾；`url` 使用相對於 `dist/index.html` 的路徑。
 - 已上線的工具可直接將 `url` 換成完整 HTTP(S) 網址，點選後會在新分頁開啟。
-- `icon` 可填 `calculator`、`code`、`document`、`grid`；未指定時使用方格圖示。
+- `icon` 可填 `calculator`、`code`、`document`、`grid`、`badminton`；未指定時使用方格圖示。
 - 分類會從 `category` 自動建立，搜尋涵蓋名稱、分類、說明、來源與標籤。
 - 工具網址尚未填好時，卡片會顯示「入口待補」，不產生無效的開啟按鈕。
 - 此版透過本機程式檔維護工具清單，沒有線上新增／刪除後台。
 
 ## 配色設定
 
-參考 [links.cwli.dev](https://links.cwli.dev/) 的淺藍、白、青色與淡紫漸層。常用色彩集中在 `styles.css` 最上方：
+參考 [links.cwli.dev](https://links.cwli.dev/) 的淺藍、白、青色與淡紫漸層。常用色彩集中在 `assets/theme.css`，個人站與羽球工具共同載入：
 
 - 背景基色：`#eef8ff`
 - 主要文字：`#172033`

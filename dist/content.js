@@ -15,13 +15,24 @@
  * 本站內容以已知資料為依據；未確認的作品細節與文章範本需保留狀態說明。
  */
 window.SITE_CONTENT = {
-  // ── 07｜個人小工具：收到工具清單後，將物件加入這個陣列。 ──
+  // ── 07｜個人小工具：新增工具時，將物件加入這個陣列。 ──
   // 範例欄位：{ id: 'my-tool', title: '工具名稱', category: '日常工具',
   // description: '這個工具能幫忙完成的事情', url: 'tools/my-tool/index.html',
   // icon: 'grid', tags: ['關鍵字'], source: '個人工具' }
   // url 可填完整 HTTP(S) 網址，或相對於 dist/index.html 的本機 HTML 路徑。
-  // icon 可用 calculator、code、document、grid；本機工具可放在 dist/tools/。
-  tools: [],
+  // icon 可用 calculator、code、document、grid、badminton；本機工具可放在 dist/tools/。
+  tools: [
+    {
+      id: 'badminton',
+      title: '羽球開打',
+      category: '休閒運動',
+      description: '單雙打公平分組、輪替計分與發球站位，一頁整理球友、場地和對戰紀錄。',
+      url: 'tools/badminton/index.html',
+      icon: 'badminton',
+      tags: ['羽球', '分組', '計分', '站位', '離線使用'],
+      source: '個人工具'
+    }
+  ],
   // ── 01｜個人資料：聯絡網址使用完整 HTTPS 網址，Email 只填信箱。 ──
   profile: {
     name: 'Louis Li',
