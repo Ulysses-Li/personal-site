@@ -34,6 +34,7 @@ personal-site/
 │  ├─ styles.css             共用版面、手機版、列印版
 │  ├─ studio.css             個人工作室首頁、作品舞台與微互動
 │  ├─ tools.css              小工具卡片、搜尋分類與首頁入口
+│  ├─ work.css               作品頁及作品詳情的閱讀字級與響應式排版
 │  ├─ app.js                 導覽、列表、搜尋、分類、詳情與列印
 │  ├─ tools/                 自己的小工具 HTML 與對應資源（已加入 badminton/）
 │  └─ assets/                共用 theme.css、頭像、圖示與專案截圖
@@ -77,6 +78,7 @@ personal-site/
 | 主站與工具的背景、文字、按鈕及卡片色彩 | `assets/theme.css` 的共用色彩變數 |
 | 首頁錯落卡片、漂浮標籤、畫面舞台 | `studio.css` 的繁體中文分區 |
 | 小工具的卡片與搜尋分類版面 | `tools.css` 的繁體中文分區 |
+| 作品頁標題、摘要、標籤及作品詳情字級 | `work.css` 的繁體中文分區 |
 | 手機與列印版面 | `styles.css` 的響應式與列印區塊 |
 | 搜尋、切頁與詳情行為 | `app.js` 的編號功能區塊 |
 

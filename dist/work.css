@@ -1,0 +1,288 @@
+/*
+ * 作品案例｜閱讀字級與比例
+ * 本檔只處理作品列表與作品詳情；以 rem 尊重瀏覽器文字大小設定。
+ * 桌機及手機正文均為 18px（預設根字級），輔助標籤不低於 14px。
+ */
+
+/* ==========================================================================
+   01｜頁首：收斂大標題與內文之間的字級落差。
+   ========================================================================== */
+.view[data-view="work"] .page-heading {
+  max-width: 56rem;
+  padding: 3.5rem 0 2rem;
+}
+
+.view[data-view="work"] .page-heading .eyebrow {
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.25rem;
+}
+
+.view[data-view="work"] .page-heading h1 {
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  line-height: 1.4;
+  letter-spacing: -0.045em;
+  margin-bottom: 1.25rem;
+}
+
+.view[data-view="work"] .page-heading > p:last-child {
+  max-width: 44rem;
+  font-size: 1.125rem;
+  line-height: 1.85;
+}
+
+/* ==========================================================================
+   02｜整理說明：主要提示、補充說明與作品內容維持一致的閱讀尺度。
+   ========================================================================== */
+.view[data-view="work"] .work-note {
+  gap: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.view[data-view="work"] .work-note strong {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.view[data-view="work"] .work-note span {
+  max-width: 64rem;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+/* ==========================================================================
+   03｜作品列表：正文 18px、標題 28px、分類及狀態 14px。
+   ========================================================================== */
+.view[data-view="work"] .work-entry {
+  grid-template-columns: 2.25rem minmax(0, 1fr) 13rem;
+  gap: 1.75rem;
+  padding: 2.5rem 0;
+}
+
+.view[data-view="work"] .work-number {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  margin-top: 0;
+}
+
+.view[data-view="work"] .work-main {
+  min-width: 0;
+}
+
+.view[data-view="work"] .work-main > .eyebrow {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+}
+
+.view[data-view="work"] .work-main h2 {
+  font-size: 1.75rem;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+  margin: 0 0 0.75rem;
+}
+
+.view[data-view="work"] .work-main > p {
+  max-width: 44rem;
+  font-size: 1.125rem;
+  line-height: 1.85;
+  margin-bottom: 1.25rem;
+}
+
+.view[data-view="work"] .tag-list {
+  gap: 0.5rem;
+}
+
+.view[data-view="work"] .tag {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.view[data-view="work"] .work-actions {
+  grid-column: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.view[data-view="work"] .status-note {
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.view[data-view="work"] .work-actions .text-link {
+  min-height: 2.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-block: 0.5rem;
+}
+
+.view[data-view="work"] .home-note {
+  padding-block: 2.5rem;
+}
+
+.view[data-view="work"] .home-note h2 {
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+.view[data-view="work"] .home-note p {
+  max-width: 44rem;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.view[data-view="work"] .home-note .text-link {
+  min-height: 2.75rem;
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   04｜作品詳情：以內容類型限定樣式，不影響共用容器中的技術筆記。
+   ========================================================================== */
+.detail-dialog[data-detail-kind="project"] {
+  max-width: 54rem;
+}
+
+.detail-dialog[data-detail-kind="project"] .dialog-close {
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+}
+
+.detail-dialog[data-detail-kind="project"] #detail-content {
+  padding: 2rem 2.5rem 2.5rem;
+}
+
+.detail-dialog[data-detail-kind="project"] .detail-kicker {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  letter-spacing: 0.025em;
+}
+
+.detail-dialog[data-detail-kind="project"] #detail-title {
+  font-size: 2rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.detail-dialog[data-detail-kind="project"] .detail-tags {
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.detail-dialog[data-detail-kind="project"] .tag {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  padding: 0.25rem 0.625rem;
+}
+
+.detail-dialog[data-detail-kind="project"] .detail-section h3 {
+  font-size: 1.3125rem;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.detail-dialog[data-detail-kind="project"] .detail-section p {
+  font-size: 1.125rem;
+  line-height: 1.85;
+}
+
+.detail-dialog[data-detail-kind="project"] .detail-footer .button {
+  min-height: 3rem;
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   05｜平板與手機：改變欄位配置，正文及標籤保持可讀字級。
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .view[data-view="work"] .work-entry {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    column-gap: 1.25rem;
+    row-gap: 1.25rem;
+  }
+
+  .view[data-view="work"] .work-actions {
+    grid-column: 2;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .view[data-view="work"] .page-heading {
+    padding: 2.25rem 0 1.5rem;
+  }
+
+  .view[data-view="work"] .page-heading .eyebrow {
+    margin-bottom: 1rem;
+  }
+
+  .view[data-view="work"] .page-heading h1 {
+    font-size: clamp(2rem, 7.8vw, 2.25rem);
+  }
+
+  .view[data-view="work"] .work-note {
+    padding: 1.125rem;
+  }
+
+  .view[data-view="work"] .work-entry {
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    gap: 0 0.75rem;
+    padding: 1.75rem 0;
+  }
+
+  .view[data-view="work"] .work-number {
+    font-size: 0.875rem;
+  }
+
+  /* 讓摘要與標籤取得整列寬度，編號只與分類並排。 */
+  .view[data-view="work"] .work-main {
+    display: contents;
+  }
+
+  .view[data-view="work"] .work-main > :not(.eyebrow) {
+    grid-column: 1 / -1;
+  }
+
+  .view[data-view="work"] .work-main > .eyebrow {
+    margin-bottom: 0.75rem;
+  }
+
+  .view[data-view="work"] .work-main h2 {
+    font-size: 1.5625rem;
+  }
+
+  .view[data-view="work"] .work-actions {
+    grid-column: 1 / -1;
+    margin-top: 1.25rem;
+  }
+
+  .detail-dialog[data-detail-kind="project"] #detail-content {
+    padding: 1.5rem 1.25rem 1.75rem;
+  }
+
+  .detail-dialog[data-detail-kind="project"] #detail-title {
+    font-size: 1.75rem;
+  }
+
+  .detail-dialog[data-detail-kind="project"] .detail-section h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* ==========================================================================
+   06｜列印：沿用原本的精簡列印版，避免螢幕用的大字級改變履歷格式。
+   ========================================================================== */
+@media print {
+  .view[data-view="work"] {
+    display: none !important;
+  }
+}

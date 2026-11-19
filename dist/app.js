@@ -276,6 +276,8 @@
   // 07. 共用詳情視窗：作品案例與技術文章使用相同容器
   // ============================================================
   function showDetail(kind, item) {
+    // 詳情共用容器保留內容類型，讓作品的閱讀字級只套用於作品案例。
+    dialog.dataset.detailKind = kind;
     $('#detail-kicker').textContent = kind === 'project'
       ? `${item.category} / ${item.status}`
       : `${item.category} / 整理範本`;
