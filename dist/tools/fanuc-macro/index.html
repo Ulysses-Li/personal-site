@@ -9,11 +9,13 @@
   <link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../assets/theme.css">
   <link rel="stylesheet" href="app.css">
+  <!-- 手機 App 操作外觀；桌機仍使用 app.css 的完整工作區。 -->
+  <link rel="stylesheet" href="mobile.css">
   <script src="macro-data.js" defer></script>
   <script src="command-data.js" defer></script>
   <script src="app.js" defer></script>
 </head>
-<body>
+<body class="fanuc-app" data-mobile-tab="lookup" data-mobile-reading="false" data-mobile-keyboard="false">
   <!-- 01｜同頁圖示：不依賴網路字型或外部圖庫。 -->
   <svg class="icon-sprite" aria-hidden="true" width="0" height="0"><defs>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
@@ -31,9 +33,10 @@
   <!-- 02｜頁首與用途：維持個人網站的工具入口與配色。 -->
   <header class="app-header">
     <div class="shell header-inner">
+      <button id="mobile-header-back" class="icon-button mobile-only" type="button" aria-label="返回指令清單" hidden><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg></button>
       <a class="back-link" href="../../index.html#tools"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg><span>小工具</span></a>
-      <a class="tool-brand" href="index.html" aria-label="FANUC 查找工具首頁"><span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg></span><span><strong>CNC REFERENCE</strong><small>Louis Li 的加工工具箱</small></span></a>
-      <a class="sources-link" href="#source-guide"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>資料來源</span></a>
+      <a class="tool-brand" href="index.html" aria-label="FANUC 查找工具首頁"><span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg></span><span><strong>CNC REFERENCE</strong><small class="desktop-brand-subtitle">Louis Li 的加工工具箱</small><small id="mobile-screen-title" class="mobile-only">指令查找</small></span></a>
+      <a class="sources-link" href="#source-guide" aria-label="資料來源與說明"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>資料來源</span></a>
     </div>
   </header>
   <main class="shell">
@@ -70,6 +73,13 @@
     <footer class="app-footer"><span>LOUIS LI / CNC REFERENCE</span><span>本機可用・收藏留在此瀏覽器</span></footer>
     <noscript><p class="notice">請啟用 JavaScript 以搜尋本機資料及查看語法。</p></noscript>
   </main>
+  <!-- 06｜手機底部導覽：同一份內容與收藏，只切換畫面，不建立第二份資料。 -->
+  <nav class="mobile-nav" aria-label="FANUC 操作區">
+    <button type="button" data-mobile-tab="lookup" aria-controls="workspace" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="mobile-nav-label">查指令</span></button>
+    <button type="button" data-mobile-tab="arguments" aria-controls="argument-panel"><svg class="icon" aria-hidden="true"><use href="#i-table"/></svg><span class="mobile-nav-label">引數表</span></button>
+    <button type="button" data-mobile-tab="favorites" aria-controls="workspace"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span class="mobile-nav-label">收藏</span><small data-mobile-favorite-count hidden aria-hidden="true"></small></button>
+    <button type="button" data-mobile-tab="sources" aria-controls="source-guide"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span class="mobile-nav-label">說明</span></button>
+  </nav>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

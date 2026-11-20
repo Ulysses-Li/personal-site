@@ -22,6 +22,10 @@
   const codeTokens = entry => (entry.code.match(/[GM]\d+(?:\.\d+)?/gi) || []).map(normalize);
   const safeURL = value => { try { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) ? url.href : ''; } catch { return ''; } };
   let mode = 'all', category = '全部', selected = null, filtered = [], toastTimer;
+  // 手機各分頁只記住畫面條件；條目與收藏仍沿用原有資料及儲存鍵。
+  const mobileViews = new Map();
+  let mobileListScroll = 0;
+  let keyboardBaseHeight = innerHeight;
   let favorites = new Set();
   const copies = new Map();
   try {
@@ -151,33 +155,41 @@
 
   function render() {
     const argumentsMode = mode === 'arguments';
-    $('workspace').hidden = argumentsMode;
+    const sourcesMode = mode === 'sources' && media.matches;
+    $('workspace').hidden = argumentsMode || sourcesMode;
     $('argument-panel').hidden = !argumentsMode;
+    $('source-guide').hidden = media.matches && !sourcesMode;
+    if (sourcesMode) $('source-guide').open = true;
     $('favorite-count').textContent = favorites.size;
     $('clear-search').hidden = !$('search').value;
     document.querySelectorAll('[data-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
     if (argumentsMode) renderArguments();
-    else { renderCategories(); renderList(); renderDetail(); }
+    else if (!sourcesMode) { renderCategories(); renderList(); renderDetail(); }
+    syncMobileChrome();
   }
 
   // ── 05｜選取與手機返回：使用同一份詳情，桌機維持並排。 ──
   function selectEntry(id, { focus = true, updateURL = true } = {}) {
     if (!byId.has(id)) return;
+    if (media.matches && $('workspace').dataset.reading !== 'true') mobileListScroll = scrollY;
     selected = id;
     $('workspace').dataset.reading = 'true';
-    renderList(); renderDetail();
+    renderList(); renderDetail(); syncMobileChrome();
     if (updateURL) { try { history.replaceState(null, '', '#' + encodeURIComponent(id)); } catch { /* 不支援時不影響查找。 */ } }
     if (media.matches && focus) {
+      if (document.activeElement === $('search')) $('search').blur();
       $('entry-detail').focus({ preventScroll: true });
-      $('workspace').scrollIntoView({ block: 'start', behavior: 'instant' });
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }
 
   function backToResults() {
     $('workspace').dataset.reading = 'false';
+    syncMobileChrome();
     const button = document.querySelector(`[data-entry="${CSS.escape(selected || '')}"]`);
     button?.focus({ preventScroll: true });
-    button?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+    if (media.matches) window.scrollTo({ top: mobileListScroll, behavior: 'instant' });
+    else button?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
   }
 
   function setMode(value) {
@@ -246,8 +258,13 @@
     else if (button?.dataset.copy) copyText(button.dataset.copy, button);
     else if (button?.hasAttribute('data-reset')) reset();
     else if (button?.id === 'back-to-results') backToResults();
+    else if (button?.id === 'mobile-header-back') backToResults();
+    else if (button?.dataset.mobileTab) switchMobileTab(button.dataset.mobileTab);
     else if (button?.id === 'toggle-categories') setCategoryVisibility(button.getAttribute('aria-expanded') !== 'true');
-    if (event.target.closest('.sources-link')) $('source-guide').open = true;
+    if (event.target.closest('.sources-link')) {
+      if (media.matches) { event.preventDefault(); switchMobileTab('sources'); }
+      else $('source-guide').open = true;
+    }
   });
   document.addEventListener('keydown', event => {
     const editing = event.target.matches('input,textarea,select,[contenteditable="true"]');
@@ -256,14 +273,92 @@
     else if (event.key === 'Escape' && media.matches && $('workspace').dataset.reading === 'true') backToResults();
   });
 
-  // ── 07｜啟動與深連結：只接受資料檔中存在的 ID，不把 hash 當作 HTML。 ──
+  // ── 07｜手機 App 畫面：固定導覽、各頁搜尋記憶、閱讀返回與鍵盤空間。 ──
+  function mobileTab() {
+    return ['arguments', 'favorites', 'sources'].includes(mode) ? mode : 'lookup';
+  }
+
+  function syncMobileChrome() {
+    const tab = mobileTab();
+    const reading = !['arguments', 'sources'].includes(mode) && $('workspace').dataset.reading === 'true' && !!selected;
+    document.body.dataset.mobileTab = tab;
+    document.body.dataset.mobileReading = String(reading);
+    $('mobile-header-back').hidden = !media.matches || !reading;
+    const titles = { lookup: '指令查找', arguments: 'G65 引數對照', favorites: '我的收藏', sources: '資料來源與說明' };
+    $('mobile-screen-title').textContent = reading ? '指令詳情' : titles[tab];
+    document.querySelectorAll('.mobile-nav [data-mobile-tab]').forEach(button => {
+      if (button.dataset.mobileTab === tab) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('[data-mobile-favorite-count]').forEach(badge => {
+      badge.textContent = favorites.size > 99 ? '99+' : String(favorites.size);
+      badge.hidden = favorites.size === 0;
+    });
+    const argumentsMode = mode === 'arguments';
+    document.querySelector('.search-label').textContent = argumentsMode ? '搜尋引數位址或變數' : mode === 'favorites' ? '搜尋收藏指令' : '想查什麼指令？';
+    $('search').placeholder = argumentsMode ? '位址 A、X、Z 或變數 #24' : mode === 'favorites' ? '搜尋已收藏的代碼或用途' : '試試 G01、#100、WHILE 或「刀長補正」';
+    syncKeyboard();
+  }
+
+  function switchMobileTab(tab) {
+    if (!media.matches || !['lookup', 'arguments', 'favorites', 'sources'].includes(tab)) return;
+    if (tab === mobileTab()) {
+      if ($('workspace').dataset.reading === 'true' && !['arguments', 'sources'].includes(mode)) backToResults();
+      else window.scrollTo({ top: 0, behavior: 'instant' });
+      return;
+    }
+    mobileViews.set(mobileTab(), { mode, category, query: $('search').value, selected });
+    const saved = mobileViews.get(tab);
+    mode = saved?.mode || (tab === 'lookup' ? 'all' : tab);
+    category = saved?.category || '全部';
+    selected = saved?.selected || null;
+    $('search').value = saved?.query || '';
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+    $('workspace').dataset.reading = 'false';
+    setCategoryVisibility(false);
+    applyFilters();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    // 來源原有的錨點可直接開啟；離開來源分頁時移除過期的來源錨點。
+    try {
+      if (tab === 'sources') history.replaceState(null, '', '#source-guide');
+      else if (location.hash === '#source-guide') history.replaceState(null, '', location.pathname + location.search);
+    } catch { /* 本機瀏覽器不允許修改網址時，仍可正常操作。 */ }
+  }
+
+  function syncKeyboard() {
+    const available = window.visualViewport?.height || innerHeight;
+    const visible = media.matches && document.activeElement === $('search') && Math.max(keyboardBaseHeight, innerHeight) - available > 120;
+    document.body.dataset.mobileKeyboard = String(visible);
+  }
+  $('search').addEventListener('focus', () => { keyboardBaseHeight = Math.max(innerHeight, window.visualViewport?.height || 0); syncKeyboard(); });
+  $('search').addEventListener('blur', () => { document.body.dataset.mobileKeyboard = 'false'; });
+  window.visualViewport?.addEventListener('resize', syncKeyboard);
+  addEventListener('resize', () => { if (document.activeElement !== $('search')) keyboardBaseHeight = innerHeight; syncKeyboard(); });
+  media.addEventListener('change', () => {
+    if (media.matches && hashEntry() === 'source-guide') { switchMobileTab('sources'); return; }
+    // 說明在桌機恢復成頁尾區塊，避免保留手機專用模式而使工作區空白。
+    if (!media.matches && mode === 'sources') {
+      const saved = mobileViews.get('lookup');
+      mode = saved?.mode || 'all'; category = saved?.category || '全部';
+      selected = saved?.selected || null; $('search').value = saved?.query || '';
+    }
+    applyFilters();
+  });
+
+  // ── 08｜啟動與深連結：只接受資料檔中存在的 ID，不把 hash 當作 HTML。 ──
   function hashEntry() { try { return decodeURIComponent(location.hash.slice(1)); } catch { return ''; } }
+  function openSourceRoute() {
+    if (media.matches) switchMobileTab('sources');
+    else { $('source-guide').hidden = false; $('source-guide').open = true; }
+  }
   addEventListener('hashchange', () => {
     const id = hashEntry();
-    if (byId.has(id)) { mode = 'all'; category = '全部'; $('search').value = ''; selected = id; applyFilters(); selectEntry(id, { updateURL: false }); }
+    if (id === 'source-guide') openSourceRoute();
+    else if (byId.has(id)) { mode = 'all'; category = '全部'; $('search').value = ''; selected = id; applyFilters(); selectEntry(id, { updateURL: false }); }
   });
   const initial = hashEntry();
   selected = byId.has(initial) ? initial : entries.find(entry => codeTokens(entry).includes('g65'))?.id || entries[0]?.id || null;
   renderSources(); applyFilters();
-  if (byId.has(initial)) selectEntry(initial, { focus: false, updateURL: false });
+  if (initial === 'source-guide') openSourceRoute();
+  else if (byId.has(initial)) selectEntry(initial, { focus: false, updateURL: false });
 })();

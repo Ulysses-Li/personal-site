@@ -1,0 +1,801 @@
+/*
+ * FANUC 指令工具：手機 App 介面
+ * 載入於 app.css 之後；800px 以下以查找、引數、收藏、說明四個分頁呈現。
+ * 頁面狀態與資料仍由原 app.js 管理，本檔只覆寫手機版的版面及操作尺寸。
+ */
+
+/* ==========================================================================
+   01｜桌機預設
+   新增的手機頁名、返回按鈕與底部導覽不影響原本桌機雙欄介面。
+   ========================================================================== */
+.fanuc-app .mobile-only,
+.fanuc-app .mobile-nav,
+.fanuc-app #mobile-header-back {
+  display: none;
+}
+
+/* ==========================================================================
+   02｜手機框架與固定頁首
+   頁首內容高 64px，額外納入裝置上方安全區；閱讀詳情時保留單一返回入口。
+   ========================================================================== */
+@media screen and (max-width: 800px) {
+  body.fanuc-app {
+    --mobile-header-height: calc(64px + env(safe-area-inset-top, 0px));
+    --mobile-nav-height: 68px;
+    --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+    min-height: 100dvh;
+    padding-bottom: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom) + 20px);
+  }
+
+  .fanuc-app .shell {
+    width: calc(100% - 32px);
+  }
+
+  .fanuc-app .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding-top: env(safe-area-inset-top, 0px);
+    border-bottom: 0;
+    background: rgba(248, 252, 255, 0.97);
+    box-shadow: 0 1px 0 rgba(148, 192, 223, 0.23);
+    backdrop-filter: blur(18px);
+  }
+
+  .fanuc-app .header-inner {
+    min-height: 64px !important;
+    height: 64px;
+    gap: 10px;
+  }
+
+  .fanuc-app .back-link,
+  .fanuc-app .sources-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    border: 0;
+    border-radius: 13px;
+    text-decoration: none;
+  }
+
+  .fanuc-app .back-link {
+    margin-left: -6px;
+    background: transparent;
+  }
+
+  .fanuc-app .back-link > span,
+  .fanuc-app .sources-link > span {
+    display: none !important;
+  }
+
+  .fanuc-app .sources-link {
+    margin-left: auto;
+    border: 1px solid rgba(148, 192, 223, 0.28);
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .fanuc-app[data-mobile-tab="sources"] .sources-link {
+    border-color: rgba(14, 165, 233, 0.26);
+    background: #e8f5ff;
+  }
+
+  .fanuc-app .tool-brand {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 9px;
+  }
+
+  .fanuc-app .tool-brand > span:last-child {
+    min-width: 0;
+  }
+
+  .fanuc-app .brand-mark {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    border-radius: 11px;
+  }
+
+  .fanuc-app .brand-mark .icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .fanuc-app .tool-brand strong {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .fanuc-app .desktop-brand-subtitle,
+  .fanuc-app .intro,
+  .fanuc-app .app-footer {
+    display: none !important;
+  }
+
+  .fanuc-app #mobile-screen-title.mobile-only {
+    display: block !important;
+    margin-top: 1px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.035em;
+  }
+
+  .fanuc-app[data-mobile-reading="true"] #mobile-header-back {
+    display: inline-flex !important;
+    flex: 0 0 auto;
+    width: 44px;
+    min-height: 44px;
+    margin-left: -6px;
+    padding: 10px;
+    border: 0;
+    border-radius: 13px;
+    background: transparent;
+  }
+
+  .fanuc-app[data-mobile-reading="true"] .back-link,
+  .fanuc-app .mobile-detail-back {
+    display: none !important;
+  }
+
+  .fanuc-app main.shell {
+    padding-top: 0;
+  }
+
+  /* ========================================================================
+     03｜固定搜尋與四段資料類型
+     引數、收藏使用同一個搜尋欄；閱讀詳情與說明分頁則由狀態隱藏搜尋區。
+     ======================================================================== */
+  .fanuc-app .search-panel {
+    position: sticky;
+    top: var(--mobile-header-height);
+    z-index: 30;
+    margin: 0 -16px 14px;
+    padding: 12px 16px;
+    border: 0;
+    border-bottom: 1px solid rgba(148, 192, 223, 0.23);
+    border-radius: 0;
+    background: rgba(248, 252, 255, 0.97);
+    box-shadow: none;
+    backdrop-filter: blur(18px);
+  }
+
+  .fanuc-app .search-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .fanuc-app .search-row {
+    gap: 0;
+  }
+
+  .fanuc-app .search-box {
+    gap: 9px;
+    min-height: 50px;
+    padding: 2px 11px;
+    border-color: rgba(148, 192, 223, 0.4);
+    border-radius: 14px;
+    background: #ffffff;
+  }
+
+  .fanuc-app .search-box input {
+    height: 44px;
+    font-size: 16px;
+  }
+
+  .fanuc-app .search-box .icon-button {
+    width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    background: transparent;
+  }
+
+  .fanuc-app .search-hint,
+  .fanuc-app .search-box kbd {
+    display: none !important;
+  }
+
+  .fanuc-app .mode-filters {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 10px;
+    padding: 4px;
+    border: 1px solid rgba(148, 192, 223, 0.12);
+    border-radius: 14px;
+    background: #eaf2f9;
+  }
+
+  .fanuc-app .mode-filters button {
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 3px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .fanuc-app .mode-filters button[aria-pressed="true"] {
+    background: white;
+    color: var(--primary-dark);
+    box-shadow: 0 3px 11px rgba(50, 104, 146, 0.09);
+  }
+
+  .fanuc-app .mode-filters [data-mode="arguments"],
+  .fanuc-app .mode-filters [data-mode="favorites"],
+  .fanuc-app[data-mobile-tab="arguments"] .mode-filters,
+  .fanuc-app[data-mobile-tab="favorites"] .mode-filters,
+  .fanuc-app[data-mobile-tab="sources"] .search-panel,
+  .fanuc-app[data-mobile-reading="true"] .search-panel {
+    display: none !important;
+  }
+
+  .fanuc-app .scope-note {
+    display: none;
+  }
+
+  .fanuc-app[data-mobile-tab="sources"] .scope-note {
+    display: flex;
+    gap: 10px;
+    margin: 18px 0 15px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 17px;
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  .fanuc-app[data-mobile-reading="true"] .scope-note {
+    display: none !important;
+  }
+
+  /* ========================================================================
+     04｜查找與收藏列表
+     採整頁捲動，分類維持既有展開按鈕；不另外建立手機資料清單。
+     ======================================================================== */
+  .fanuc-app .workspace {
+    display: block;
+    min-width: 0;
+    margin-bottom: 0;
+    scroll-margin-top: calc(var(--mobile-header-height) + 16px);
+  }
+
+  .fanuc-app .browser-pane {
+    position: static;
+    max-height: none;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 19px;
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: 0 8px 24px rgba(50, 104, 146, 0.035);
+  }
+
+  .fanuc-app .result-heading {
+    gap: 10px;
+    min-height: 65px;
+    padding: 11px 13px;
+  }
+
+  .fanuc-app .result-heading h2 {
+    font-size: 16px;
+  }
+
+  .fanuc-app .result-tools {
+    gap: 8px;
+  }
+
+  .fanuc-app #results-count {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .fanuc-app .category-toggle {
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+
+  .fanuc-app .category-filters {
+    gap: 7px;
+    padding: 0 13px 14px;
+  }
+
+  .fanuc-app .category-filters button {
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: 11px;
+    font-size: 13px;
+  }
+
+  .fanuc-app .entry-list {
+    overflow: visible;
+  }
+
+  .fanuc-app .result-item {
+    align-items: center;
+    gap: 12px;
+    min-height: 90px;
+    padding: 17px 14px;
+  }
+
+  .fanuc-app .result-code {
+    max-width: 98px;
+    padding: 5px 7px;
+    border-radius: 9px;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .fanuc-app .result-copy strong {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .fanuc-app .result-copy small {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+
+  .fanuc-app .saved-mark {
+    width: 17px;
+    height: 17px;
+    margin-top: 0;
+  }
+
+  .fanuc-app .empty-state {
+    padding: 28px 20px;
+  }
+
+  .fanuc-app .empty-state p {
+    font-size: 16px;
+    line-height: 1.85;
+  }
+
+  .fanuc-app .empty-action {
+    min-height: 48px;
+    padding: 11px 17px;
+    border-radius: 13px;
+  }
+
+  /* ========================================================================
+     05｜全頁閱讀詳情
+     取消網站式外框，保留白色閱讀面、18px 正文與 16px 程式碼。
+     ======================================================================== */
+  body.fanuc-app[data-mobile-reading="true"] {
+    background: white;
+  }
+
+  .fanuc-app[data-mobile-reading="true"] main.shell {
+    width: 100%;
+  }
+
+  .fanuc-app[data-mobile-reading="true"] .workspace {
+    margin-top: 0;
+  }
+
+  .fanuc-app .detail-pane {
+    min-width: 0;
+    padding: 23px 20px 30px;
+    border: 0;
+    border-radius: 0;
+    background: white;
+    box-shadow: none;
+    scroll-margin-top: calc(var(--mobile-header-height) + 12px);
+  }
+
+  .fanuc-app .detail-top {
+    gap: 13px;
+  }
+
+  .fanuc-app .detail-meta {
+    gap: 6px;
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+
+  .fanuc-app .detail-code {
+    margin-bottom: 7px;
+    font-size: 30px;
+    line-height: 1.5;
+  }
+
+  .fanuc-app .detail-pane h2 {
+    font-size: 25px;
+    line-height: 1.6;
+  }
+
+  .fanuc-app .favorite-button {
+    width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    border-radius: 13px;
+  }
+
+  .fanuc-app .detail-summary {
+    margin: 20px 0 24px;
+    font-size: 18px;
+    line-height: 1.9;
+  }
+
+  .fanuc-app .detail-section {
+    margin-top: 25px;
+    padding-top: 20px;
+  }
+
+  .fanuc-app .detail-section h3 {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .fanuc-app .section-head {
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .fanuc-app .copy-button {
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  .fanuc-app pre {
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 16px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .fanuc-app pre code {
+    font: inherit;
+  }
+
+  .fanuc-app .example-note {
+    margin-top: 9px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .fanuc-app .notes-list {
+    padding-left: 22px;
+    font-size: 18px;
+    line-height: 1.9;
+  }
+
+  .fanuc-app .notes-list li {
+    margin-bottom: 13px;
+  }
+
+  .fanuc-app .detail-tags {
+    gap: 7px;
+    margin-top: 23px;
+  }
+
+  .fanuc-app .tag {
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+
+  .fanuc-app .entry-sources {
+    margin-top: 25px;
+    padding-top: 20px;
+  }
+
+  .fanuc-app .entry-sources h3 {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .fanuc-app .source-link {
+    margin-bottom: 13px;
+    font-size: 15px;
+    line-height: 1.9;
+  }
+
+  /* ========================================================================
+     06｜引數表與來源說明
+     引數表保留橫向捲動能力；說明頁使用獨立頁名，不再重複 details 摘要。
+     ======================================================================== */
+  .fanuc-app .argument-panel {
+    margin-bottom: 0;
+    padding: 22px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 19px;
+    background: white;
+    scroll-margin-top: calc(var(--mobile-header-height) + 12px);
+  }
+
+  .fanuc-app .argument-panel > .eyebrow {
+    margin-bottom: 12px;
+    font-size: 11px;
+  }
+
+  .fanuc-app .argument-panel h2 {
+    margin-bottom: 14px;
+    font-size: 25px;
+    line-height: 1.5;
+    letter-spacing: -0.035em;
+  }
+
+  .fanuc-app .argument-panel > p {
+    font-size: 18px;
+    line-height: 1.9;
+  }
+
+  .fanuc-app .argument-example {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 22px 0;
+  }
+
+  .fanuc-app .argument-example > div {
+    padding: 16px;
+  }
+
+  .fanuc-app .argument-example strong {
+    font-size: 15px;
+  }
+
+  .fanuc-app .argument-example code {
+    font-size: 16px;
+    line-height: 1.9;
+  }
+
+  .fanuc-app .table-scroll {
+    margin-inline: -3px;
+    overscroll-behavior-inline: contain;
+  }
+
+  .fanuc-app .argument-table th {
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+
+  .fanuc-app .argument-table td {
+    height: 57px;
+    padding: 12px 8px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .fanuc-app .argument-table code {
+    font-size: 18px;
+  }
+
+  .fanuc-app .source-guide {
+    margin: 0;
+    border: 0;
+    border-radius: 19px;
+    background: white;
+    scroll-margin-top: calc(var(--mobile-header-height) + 12px);
+  }
+
+  .fanuc-app[data-mobile-tab="sources"] .source-guide > summary {
+    display: none !important;
+  }
+
+  .fanuc-app #sources-content {
+    padding: 22px 17px;
+  }
+
+  .fanuc-app #sources-content > p {
+    margin-bottom: 22px;
+    font-size: 18px;
+    line-height: 1.9;
+  }
+
+  .fanuc-app .source-item {
+    margin-top: 21px;
+    padding-top: 18px;
+  }
+
+  .fanuc-app .source-item h3 {
+    margin-bottom: 9px;
+    font-size: 17px;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  .fanuc-app .source-item p {
+    margin-bottom: 7px;
+    font-size: 15px;
+    line-height: 1.9;
+    overflow-wrap: anywhere;
+  }
+
+  /* ========================================================================
+     07｜底部四分頁、收藏數與鍵盤
+     導覽包含安全區，軟鍵盤開啟時隱藏，避免壓縮輸入與搜尋結果空間。
+     ======================================================================== */
+  .fanuc-app .mobile-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: center;
+    gap: 5px;
+    height: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom));
+    padding: 5px max(10px, env(safe-area-inset-left, 0px)) calc(6px + var(--mobile-safe-bottom)) max(10px, env(safe-area-inset-right, 0px));
+    border-top: 1px solid rgba(148, 192, 223, 0.26);
+    background: rgba(250, 253, 255, 0.97);
+    box-shadow: 0 -5px 19px rgba(50, 104, 146, 0.035);
+    backdrop-filter: blur(18px);
+  }
+
+  .fanuc-app .mobile-nav > button {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    min-height: 54px;
+    padding: 6px 3px;
+    border: 0;
+    border-radius: 15px;
+    background: transparent;
+    color: #74889d;
+    transition: color 160ms ease, background 160ms ease;
+  }
+
+  .fanuc-app .mobile-nav .icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .fanuc-app .mobile-nav-label {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .fanuc-app .mobile-nav > button[aria-current="page"] {
+    background: #e8f5ff;
+    color: var(--primary-dark);
+  }
+
+  .fanuc-app [data-mobile-favorite-count] {
+    position: absolute;
+    top: 3px;
+    left: calc(50% + 7px);
+    display: inline-grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border: 2px solid #fafdff;
+    border-radius: 99px;
+    background: #7754ad;
+    color: white;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .fanuc-app[data-mobile-keyboard="true"] .mobile-nav {
+    display: none !important;
+  }
+
+  body.fanuc-app[data-mobile-keyboard="true"] {
+    padding-bottom: 16px;
+  }
+
+  .fanuc-app .toast {
+    z-index: 60;
+    bottom: calc(var(--mobile-nav-height) + var(--mobile-safe-bottom) + 14px);
+    padding: 12px 16px;
+    border-radius: 13px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .fanuc-app[data-mobile-keyboard="true"] .toast {
+    bottom: calc(var(--mobile-safe-bottom) + 13px);
+  }
+}
+
+/* ==========================================================================
+   08｜窄螢幕、減少動態與列印
+   不縮小主要觸控目標；列印仍沿用 app.css 的詳情輸出規則。
+   ========================================================================== */
+@media screen and (max-width: 359.98px) {
+  .fanuc-app .header-inner {
+    gap: 8px;
+  }
+
+  .fanuc-app .tool-brand {
+    gap: 7px;
+  }
+
+  .fanuc-app .brand-mark {
+    width: 30px;
+    height: 30px;
+  }
+
+  .fanuc-app .tool-brand strong {
+    font-size: 12px;
+  }
+
+  .fanuc-app #mobile-screen-title.mobile-only {
+    font-size: 19px;
+  }
+
+  .fanuc-app .result-heading {
+    padding-inline: 11px;
+    gap: 8px;
+  }
+
+  .fanuc-app .result-heading h2 {
+    font-size: 15px;
+  }
+
+  .fanuc-app .category-toggle {
+    padding-inline: 8px;
+  }
+
+  .fanuc-app .result-item {
+    padding-inline: 12px;
+    gap: 10px;
+  }
+
+  .fanuc-app .result-code {
+    max-width: 89px;
+    font-size: 14px;
+  }
+
+  .fanuc-app .detail-pane {
+    padding-inline: 17px;
+  }
+
+  .fanuc-app .detail-pane h2 {
+    font-size: 24px;
+  }
+
+  .fanuc-app .detail-code {
+    font-size: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fanuc-app .mobile-nav > button {
+    transition: none;
+  }
+}
+
+@media print {
+  .fanuc-app .mobile-nav,
+  .fanuc-app .mobile-only,
+  .fanuc-app #mobile-header-back {
+    display: none !important;
+  }
+
+  body.fanuc-app {
+    padding-bottom: 0 !important;
+  }
+}

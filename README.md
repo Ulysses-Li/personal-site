@@ -94,6 +94,8 @@ personal-site/
 
 「FANUC Macro B 指令手冊」位於 `dist/tools/fanuc-macro/`，涵蓋 Macro B 與銑床／加工中心常用 G、M 指令。條目與來源分別在 `macro-data.js`、`command-data.js` 維護；支援代碼別名、變數範圍、中文及多詞搜尋、用途分類、收藏、複製與 G65 引數對照。修改後可執行 `node scripts/check-fanuc.mjs` 檢查資料。完整說明見 `docs/fanuc-macro-tool.md`。
 
+FANUC 手機版的 App 外觀集中於同目錄 `mobile.css`；固定搜尋、底部「查指令／引數表／收藏／說明」、分頁查詢記憶及詳情返回由 `app.js` 管理，800px 以下啟用。
+
 羽球工具的手機介面集中在 `dist/tools/badminton/mobile.css`（四分頁、底部導覽、觸控尺寸）與 `mobile-app.js`（切頁、焦點、操作按鈕位置）；本機 Bootstrap Icons 由 `icons.js` 管理，原始 SVG 與授權放在 `vendor/icons/`。修改手機版不需要另建一份名單、比分或儲存資料。
 
 在 `dist/content.js` 找到 `tools` 陣列，保留既有工具，再依下列格式加入新物件。以下為填寫範例，需替換成自己的名稱與可開啟網址：
