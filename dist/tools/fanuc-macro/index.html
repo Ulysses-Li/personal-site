@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef8ff">
+  <meta name="description" content="Louis Li 的 FANUC Macro B 與銑床 G/M 指令查找工具：語法、用途、範例、收藏與 G65 引數對照。">
+  <title>FANUC Macro B｜指令查找工具｜Louis Li</title>
+  <link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/theme.css">
+  <link rel="stylesheet" href="app.css">
+  <script src="macro-data.js" defer></script>
+  <script src="command-data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <!-- 01｜同頁圖示：不依賴網路字型或外部圖庫。 -->
+  <svg class="icon-sprite" aria-hidden="true" width="0" height="0"><defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 4h7a3 3 0 0 1 3 3v14a4 4 0 0 0-4-2H3zm18 0h-5a3 3 0 0 0-3 3m8-3v15h-4a4 4 0 0 0-4 2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m10 5-7 7 7 7M3 12h18"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M10 4v16"/></symbol>
+  </defs></svg>
+  <a class="skip-link" href="#workspace">跳至查找結果</a>
+  <!-- 02｜頁首與用途：維持個人網站的工具入口與配色。 -->
+  <header class="app-header">
+    <div class="shell header-inner">
+      <a class="back-link" href="../../index.html#tools"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg><span>小工具</span></a>
+      <a class="tool-brand" href="index.html" aria-label="FANUC 查找工具首頁"><span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg></span><span><strong>CNC REFERENCE</strong><small>Louis Li 的加工工具箱</small></span></a>
+      <a class="sources-link" href="#source-guide"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>資料來源</span></a>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div><p class="eyebrow">A LITTLE LESS SEARCHING.</p><h1 id="page-title">FANUC Macro B<span>指令，隨查隨用。</span></h1><p class="lead">從一行語法，找到下一個解法。巨集、G / M 指令與引數對照，放在同一本手冊裡。</p></div>
+      <div class="intro-card"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span class="intro-code">IF [#1 EQ #0] GOTO 100</span><span>先理解條件，再決定下一步。</span></div>
+    </section>
+    <!-- 03｜搜尋與分類：支援代碼簡寫、多關鍵字及中文用途。 -->
+    <section class="search-panel" aria-label="指令搜尋">
+      <label class="search-label" for="search">想查什麼指令？</label>
+      <div class="search-row"><div class="search-box"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="search" type="search" autocomplete="off" spellcheck="false" placeholder="試試 G01、#100、WHILE 或「刀長補正」"><button class="icon-button" id="clear-search" type="button" aria-label="清除搜尋" hidden><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button><kbd>/</kbd></div><span class="search-hint">代碼、中英文皆可搜尋</span></div>
+      <div class="mode-filters" id="mode-filters" aria-label="資料類型">
+        <button type="button" data-mode="all" aria-pressed="true">全部</button>
+        <button type="button" data-mode="macro" aria-pressed="false">Macro B</button>
+        <button type="button" data-mode="gcode" aria-pressed="false">G 指令</button>
+        <button type="button" data-mode="mcode" aria-pressed="false">M 指令</button>
+        <button type="button" data-mode="arguments" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-table"/></svg>引數對照</button>
+        <button type="button" data-mode="favorites" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>我的收藏<span id="favorite-count">0</span></button>
+      </div>
+    </section>
+    <p class="scope-note"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>範圍：Macro B 與<strong>銑床／加工中心</strong>常用指令。選配、變數範圍及機床廠 M 碼可能不同，請對照條目來源與現場手冊。</span></p>
+    <!-- 04｜同一份結果與詳情：桌機並排，手機以返回按鈕切換。 -->
+    <div class="workspace" id="workspace" data-reading="false" tabindex="-1">
+      <section class="browser-pane" aria-label="查找結果">
+        <div class="result-heading"><h2>指令索引</h2><div class="result-tools"><span id="results-count" role="status" aria-live="polite"></span><button class="plain-button category-toggle" id="toggle-categories" type="button" aria-controls="category-filters" aria-expanded="false">用途分類</button></div></div>
+        <div class="category-filters" id="category-filters" aria-label="依用途分類"></div>
+        <div class="entry-list" id="entry-list"></div>
+      </section>
+      <article class="detail-pane" id="entry-detail" tabindex="-1" aria-label="指令詳細資料"></article>
+    </div>
+    <section class="argument-panel" id="argument-panel" hidden tabindex="-1" aria-labelledby="argument-title"></section>
+    <!-- 05｜來源及機型範圍：每筆資料另有直接對應的來源。 -->
+    <details class="source-guide" id="source-guide"><summary><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>資料來源與適用範圍</span><span class="expand-mark" aria-hidden="true">＋</span></summary><div id="sources-content"></div></details>
+    <footer class="app-footer"><span>LOUIS LI / CNC REFERENCE</span><span>本機可用・收藏留在此瀏覽器</span></footer>
+    <noscript><p class="notice">請啟用 JavaScript 以搜尋本機資料及查看語法。</p></noscript>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

@@ -36,13 +36,15 @@ personal-site/
 │  ├─ tools.css              小工具卡片、搜尋分類與首頁入口
 │  ├─ work.css               作品頁及作品詳情的閱讀字級與響應式排版
 │  ├─ app.js                 導覽、列表、搜尋、分類、詳情與列印
-│  ├─ tools/                 自己的小工具 HTML 與對應資源（已加入 badminton/）
+│  ├─ tools/                 羽球 badminton/、FANUC 查找 fanuc-macro/ 與對應資源
 │  └─ assets/                共用 theme.css、頭像、圖示與專案截圖
 ├─ docs/
 │  ├─ support-center-case.md 代表作品的事實與畫面來源
-│  └─ badminton-tool.md      羽球工具複本、修改位置與驗證說明
+│  ├─ badminton-tool.md      羽球工具複本、修改位置與驗證說明
+│  └─ fanuc-macro-tool.md    FANUC 資料、手冊來源及工具維護方式
 ├─ scripts/
 │  ├─ preview.mjs            可選的本機預覽工具
+│  ├─ check-fanuc.mjs        FANUC 條目、來源關聯及 G65 引數對照檢查
 │  └─ publish-source.mjs     可選的 Sites 發佈工具
 └─ .openai/hosting.json      既有 Sites 身分與部署設定
 ```
@@ -55,7 +57,7 @@ personal-site/
 
 - `profile`：個人資料與聯絡入口。姓名、職稱、個人簡介與 Email 會套用到頁面；其餘固定文案與頁尾位於 `index.html`。
 - `showcase`：首頁可切換的專案畫面，包含按鈕標籤、標題、圖片路徑、說明與對應正式網址。
-- `tools`：個人小工具清單，已加入「羽球開打」。填入工具名稱、分類、用途、標籤與網址後，工具箱會自動產生卡片、分類與搜尋。
+- `tools`：個人小工具清單，已加入「羽球開打」及「FANUC Macro B 指令手冊」。填入工具名稱、分類、用途、標籤與網址後，工具箱會自動產生卡片、分類與搜尋。
 - `competencies`：四類能力，會同步顯示在首頁與履歷。
 - `projects`：每個案例保留背景、方法、證據與下一步；只有可確認的成果才加入。
 - `knowledge`：每個主題包含分類、關鍵字與文章段落。現有 8 篇為整理範本；轉成正式文章時，需同步調整 `app.js` 的範本顯示文字。
@@ -89,6 +91,8 @@ personal-site/
 ## 新增自己的小工具
 
 上方導覽「小工具」與首頁「打開工具箱」皆通往 `#tools`。目前已有「羽球開打」，程式位於 `dist/tools/badminton/`；詳細修改說明見 `docs/badminton-tool.md`。
+
+「FANUC Macro B 指令手冊」位於 `dist/tools/fanuc-macro/`，涵蓋 Macro B 與銑床／加工中心常用 G、M 指令。條目與來源分別在 `macro-data.js`、`command-data.js` 維護；支援代碼別名、變數範圍、中文及多詞搜尋、用途分類、收藏、複製與 G65 引數對照。修改後可執行 `node scripts/check-fanuc.mjs` 檢查資料。完整說明見 `docs/fanuc-macro-tool.md`。
 
 羽球工具的手機介面集中在 `dist/tools/badminton/mobile.css`（四分頁、底部導覽、觸控尺寸）與 `mobile-app.js`（切頁、焦點、操作按鈕位置）；本機 Bootstrap Icons 由 `icons.js` 管理，原始 SVG 與授權放在 `vendor/icons/`。修改手機版不需要另建一份名單、比分或儲存資料。
 

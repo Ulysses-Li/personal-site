@@ -1,0 +1,1030 @@
+/* FANUC 查找工具｜沿用 assets/theme.css；編號區塊方便日後調整。 */
+/* 01｜基礎、字型與共用元件。 */
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 1.5rem;
+}
+body {
+  margin: 0;
+  background: var(--page-gradient);
+  background-attachment: fixed;
+  color: var(--text);
+  font: 1rem/1.8 var(--sans);
+}
+button, input {
+  font: inherit;
+}
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+  color: inherit;
+}
+a {
+  color: var(--primary-dark);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+button, input, a {
+  touch-action: manipulation;
+}
+button:focus-visible, input:focus-visible, a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
+}
+[hidden] {
+  display: none !important;
+}
+h1, h2, h3, p {
+  margin-top: 0;
+}
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.icon-sprite {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+.shell {
+  width: min(1400px, calc(100% - 4rem));
+  margin-inline: auto;
+}
+.skip-link {
+  position: fixed;
+  z-index: 50;
+  top: -5rem;
+  left: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+.icon-button, .plain-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+  color: var(--primary-dark);
+  padding: 0.5rem 0.8rem;
+}
+.icon-button {
+  width: 2.75rem;
+  padding: 0.5rem;
+}
+.plain-button:hover, .icon-button:hover {
+  background: var(--surface-tint);
+}
+.empty-action {
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  background: var(--primary-dark);
+  color: white;
+}
+.eyebrow {
+  font: 0.875rem/1.7 var(--mono);
+  letter-spacing: 0.05em;
+  color: var(--primary-dark);
+}
+
+/* 02｜工具頁首與簡短介紹。 */
+.app-header {
+  padding-top: env(safe-area-inset-top,0px);
+  background: rgba(248,252,255,0.95);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  min-height: 5.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.back-link, .sources-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  font-size: 0.875rem;
+}
+.back-link {
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--line);
+}
+.sources-link {
+  margin-left: auto;
+}
+.tool-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text);
+}
+.tool-brand:hover {
+  text-decoration: none;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 14px;
+  background: var(--primary-dark);
+  color: white;
+}
+.brand-mark .icon {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+.tool-brand strong {
+  display: block;
+  font: 700 0.95rem/1.5 var(--mono);
+  letter-spacing: 0.04em;
+}
+.tool-brand small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 23rem;
+  align-items: center;
+  gap: 3rem;
+  padding: 3.25rem 0 2rem;
+}
+.intro .eyebrow {
+  margin-bottom: 0.8rem;
+}
+h1 {
+  margin-bottom: 1rem;
+  font-size: clamp(2rem,3.2vw,3rem);
+  line-height: 1.35;
+  letter-spacing: -0.045em;
+}
+h1 > span {
+  display: block;
+  color: var(--primary-dark);
+}
+.lead {
+  max-width: 47rem;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 1.125rem;
+}
+.intro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  border: 1px solid white;
+  border-radius: 24px;
+  padding: 1.6rem;
+  background: linear-gradient(130deg,rgba(255,255,255,0.8),rgba(232,229,255,0.55));
+  box-shadow: var(--shadow-soft);
+  transform: rotate(2deg);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.intro-card > .icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--primary-dark);
+}
+.intro-code {
+  font: 0.95rem/1.8 var(--mono);
+  color: var(--primary-dark);
+}
+
+/* 03｜搜尋框與資料類型。 */
+.search-panel {
+  padding: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.95);
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+.search-label {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+}
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.search-box {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.2rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: white;
+  color: var(--primary-dark);
+}
+.search-box:focus-within {
+  outline: 3px solid rgba(14,165,233,0.15);
+  border-color: var(--primary);
+}
+.search-box input {
+  min-width: 0;
+  width: 100%;
+  height: 3.25rem;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 1.125rem;
+  color: var(--text);
+}
+.search-box input::placeholder {
+  color: #6c7f94;
+}
+.search-box input::-webkit-search-cancel-button {
+  display: none;
+}
+.search-box .icon-button {
+  border: 0;
+  flex: 0 0 auto;
+}
+kbd {
+  padding: 0.05rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font: 0.875rem var(--mono);
+  color: var(--muted);
+}
+.search-hint {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.mode-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.mode-filters button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--muted);
+}
+.mode-filters button:hover {
+  background: var(--surface-tint);
+}
+.mode-filters button[aria-pressed="true"] {
+  background: var(--primary-dark);
+  color: white;
+  box-shadow: 0 4px 12px rgba(3,105,161,0.15);
+}
+#favorite-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.35rem;
+  border-radius: 7px;
+  padding-inline: 0.3rem;
+  background: rgba(14,165,233,0.1);
+  font-size: 0.875rem;
+}
+.mode-filters [aria-pressed="true"] #favorite-count {
+  background: rgba(255,255,255,0.18);
+}
+.scope-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 1.1rem 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.85;
+}
+.scope-note .icon {
+  margin-top: 0.2rem;
+  color: var(--primary-dark);
+}
+
+/* 04｜桌機索引與詳情雙欄，列表可獨立捲動。 */
+.workspace {
+  display: grid;
+  grid-template-columns: 22rem minmax(0,1fr);
+  align-items: start;
+  gap: 1.5rem;
+}
+.browser-pane {
+  position: sticky;
+  top: 1.5rem;
+  max-height: calc(100dvh - 3rem);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid white;
+  border-radius: 22px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem 0.9rem;
+}
+.result-heading h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+.result-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.category-toggle {
+  display: none;
+}
+#results-count {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 0.4rem;
+  padding: 0 1.25rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.category-filters button {
+  min-height: 2.25rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.category-filters [aria-pressed="true"] {
+  color: var(--primary-dark);
+  background: #e5f4ff;
+  border-color: var(--line-strong);
+}
+.entry-list {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.result-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 1.1rem 1.25rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  text-align: left;
+}
+.result-item:last-child {
+  border-bottom: 0;
+}
+.result-item:hover {
+  background: #f1f9ff;
+}
+.result-item[aria-current="true"] {
+  background: #e7f4ff;
+  box-shadow: inset 3px 0 var(--primary-dark);
+}
+.result-code {
+  display: inline-block;
+  flex: 0 0 auto;
+  max-width: 6.5rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 8px;
+  background: rgba(3,105,161,0.07);
+  color: var(--primary-dark);
+  font: 700 0.95rem/1.6 var(--mono);
+  overflow-wrap: anywhere;
+}
+.result-copy {
+  min-width: 0;
+  flex: 1;
+}
+.result-copy strong {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.result-copy small {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 0.25rem;
+}
+.saved-mark {
+  color: var(--primary-dark);
+  width: 1rem;
+  height: 1rem;
+  fill: rgba(14,165,233,0.15);
+  margin-top: 0.4rem;
+}
+.detail-pane {
+  min-width: 0;
+  padding: 2rem;
+  border: 1px solid white;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+.mobile-detail-back {
+  display: none;
+}
+.detail-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.detail-title-group {
+  min-width: 0;
+  flex: 1;
+}
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.detail-meta span + span::before {
+  content: "/";
+  padding-right: 0.5rem;
+  color: #9eb1c2;
+}
+.detail-code {
+  margin: 0 0 0.4rem;
+  font: 700 clamp(1.8rem,2.7vw,2.5rem)/1.4 var(--mono);
+  color: var(--primary-dark);
+  overflow-wrap: anywhere;
+}
+.detail-pane h2 {
+  font-size: 1.625rem;
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.favorite-button {
+  flex: 0 0 auto;
+}
+.favorite-button[aria-pressed="true"] {
+  background: #eee9ff;
+  color: #7050a8;
+  border-color: #d5c7ff;
+}
+.favorite-button[aria-pressed="true"] .icon {
+  fill: rgba(167,139,250,0.25);
+}
+.detail-summary {
+  font-size: 1.125rem;
+  line-height: 1.85;
+  margin: 1.25rem 0 1.5rem;
+  color: var(--muted);
+}
+.detail-section {
+  padding-top: 1.25rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.detail-section h3 {
+  font-size: 1.125rem;
+  margin: 0;
+}
+.copy-button {
+  font-size: 0.875rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.7rem;
+}
+pre {
+  margin: 0;
+  max-width: 100%;
+  padding: 1.1rem 1.25rem;
+  overflow-x: auto;
+  border: 1px solid rgba(3,105,161,0.15);
+  border-radius: 14px;
+  background: #f0f8ff;
+  color: #124d73;
+  font: 1rem/1.9 var(--mono);
+  tab-size: 2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.example-code {
+  background: #182d44;
+  color: #dff4ff;
+  border-color: transparent;
+}
+.example-note {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+}
+.notes-list {
+  margin: 0.9rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+.notes-list li {
+  margin-bottom: 0.6rem;
+}
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+.tag {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 0.15rem 0.6rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.entry-sources {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.entry-sources h3 {
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem;
+}
+.source-link {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+  margin-bottom: 0.6rem;
+}
+.source-link span {
+  display: block;
+  color: var(--muted);
+}
+.empty-state {
+  padding: 2rem 1.25rem;
+}
+.empty-state > .icon {
+  color: var(--primary-dark);
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 1rem;
+}
+.empty-state h2, .empty-state h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.6rem;
+}
+.empty-state p {
+  font-size: 1rem;
+  color: var(--muted);
+}
+.favorite-empty {
+  text-align: left;
+}
+
+/* 05｜引數對照與來源。 */
+.argument-panel {
+  padding: 2rem;
+  border: 1px solid white;
+  border-radius: 24px;
+  background: var(--surface);
+}
+.argument-panel h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+.argument-panel > p {
+  font-size: 1.125rem;
+  color: var(--muted);
+  max-width: 60rem;
+}
+.argument-example {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.argument-example > div {
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #f4faff;
+}
+.argument-example strong {
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.argument-example code {
+  font: 1rem/1.8 var(--mono);
+  overflow-wrap: anywhere;
+}
+.table-scroll {
+  overflow-x: auto;
+}
+.argument-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.argument-table th {
+  padding: 0.8rem 1rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  background: #edf7ff;
+}
+.argument-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 1rem;
+}
+.argument-table code {
+  font: 700 1.125rem var(--mono);
+  color: var(--primary-dark);
+}
+.argument-table td:last-child {
+  color: var(--muted);
+}
+.source-guide {
+  margin-top: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255,255,255,0.65);
+}
+.source-guide summary {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+}
+.source-guide summary::-webkit-details-marker {
+  display: none;
+}
+.expand-mark {
+  margin-left: auto;
+  color: var(--primary-dark);
+}
+.source-guide[open] .expand-mark {
+  transform: rotate(45deg);
+}
+#sources-content {
+  padding: 0 1.5rem 1.5rem;
+}
+#sources-content > p {
+  max-width: 70rem;
+  color: var(--muted);
+}
+.source-item {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+.source-item h3 {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+.source-item p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.app-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.toast {
+  position: fixed;
+  z-index: 10;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom,0px));
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 2rem);
+  padding: 0.8rem 1.25rem;
+  border-radius: 14px;
+  background: var(--text);
+  color: white;
+  box-shadow: var(--shadow);
+  font-size: 1rem;
+}
+.notice {
+  padding: 1rem;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+/* 筆電較矮時縮短介紹，將可操作的索引留在首屏。 */
+@media (max-height: 900px) and (min-width: 801px) {
+  .header-inner {
+    min-height: 4.25rem;
+  }
+  .intro {
+    display: block;
+    padding: 1.25rem 0;
+  }
+  .intro .eyebrow, .intro-card {
+    display: none;
+  }
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  h1 > span {
+    display: inline;
+    margin-left: 0.75rem;
+  }
+  .lead {
+    font-size: 1rem;
+    max-width: none;
+  }
+  .search-panel {
+    padding: 1rem 1.25rem;
+  }
+  .search-label {
+    font-size: 0.875rem;
+    margin-bottom: 0.35rem;
+  }
+  .mode-filters {
+    margin-top: 0.65rem;
+  }
+  .scope-note {
+    margin: 0.75rem 0 1rem;
+  }
+}
+
+/* 06｜手機：維持字級，讓結果與詳情各自使用整個寬度。 */
+@media (max-width: 1050px) {
+  .intro {
+    grid-template-columns: minmax(0,1fr) 18rem;
+    gap: 2rem;
+  }
+  .intro-card {
+    padding: 1.25rem;
+  }
+  .intro-code {
+    font-size: 0.8rem;
+  }
+  .workspace {
+    grid-template-columns: 19rem minmax(0,1fr);
+    gap: 1rem;
+  }
+  .detail-pane {
+    padding: 1.5rem;
+  }
+  .search-hint {
+    display: none;
+  }
+}
+@media (max-width: 800px) {
+  .shell {
+    width: calc(100% - 2rem);
+  }
+  .header-inner {
+    min-height: 4.5rem;
+    gap: 0.75rem;
+  }
+  .back-link {
+    padding-right: 0.75rem;
+  }
+  .tool-brand small {
+    display: none;
+  }
+  .tool-brand strong {
+    font-size: 0.875rem;
+  }
+  .brand-mark {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  .sources-link > span {
+    display: none;
+  }
+  .sources-link {
+    justify-content: center;
+    min-width: 2.75rem;
+  }
+  .intro {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 1.25rem 0;
+  }
+  .intro .eyebrow, .intro .lead {
+    display: none;
+  }
+  .intro h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0;
+  }
+  .intro-card {
+    display: none;
+  }
+  .lead {
+    font-size: 1rem;
+  }
+  .search-panel {
+    padding: 1rem;
+    border-radius: 20px;
+  }
+  .search-box {
+    gap: 0.5rem;
+    padding-inline: 0.65rem;
+  }
+  .search-box input {
+    font-size: 1rem;
+  }
+  .search-box kbd {
+    display: none;
+  }
+  .mode-filters {
+    gap: 0.4rem;
+  }
+  .mode-filters button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+  .mode-filters .icon {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .workspace {
+    grid-template-columns: minmax(0,1fr);
+  }
+  .browser-pane {
+    position: static;
+    max-height: none;
+  }
+  .result-heading {
+    padding: 0.8rem 1rem;
+  }
+  .result-tools {
+    gap: 0.5rem;
+  }
+  .category-toggle {
+    display: inline-flex;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.875rem;
+  }
+  .category-filters {
+    display: none;
+    padding-inline: 1rem;
+  }
+  .browser-pane[data-filters-open="true"] .category-filters {
+    display: flex;
+  }
+  .entry-list {
+    overflow: visible;
+  }
+  .result-item {
+    min-height: 6rem;
+  }
+  .result-copy strong {
+    font-size: 1.125rem;
+  }
+  .result-code {
+    max-width: 7rem;
+  }
+  .workspace[data-reading="false"] .detail-pane {
+    display: none;
+  }
+  .workspace[data-reading="true"] .browser-pane {
+    display: none;
+  }
+  .detail-pane {
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+  .mobile-detail-back {
+    display: inline-flex;
+    margin-bottom: 1.5rem;
+  }
+  .detail-code {
+    font-size: 2rem;
+  }
+  .detail-pane h2 {
+    font-size: 1.5rem;
+  }
+  .detail-summary {
+    font-size: 1.125rem;
+  }
+  pre {
+    padding: 1rem;
+  }
+  .argument-panel {
+    padding: 1.25rem;
+  }
+  .argument-example {
+    grid-template-columns: 1fr;
+  }
+  .argument-table td, .argument-table th {
+    padding-inline: 0.6rem;
+  }
+  .app-footer {
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom,0px));
+  }
+}
+@media (max-width: 360px) {
+  .tool-brand {
+    gap: 0.5rem;
+  }
+  .tool-brand strong {
+    font-size: 0.75rem;
+  }
+  .back-link {
+    font-size: 0.875rem;
+  }
+  .header-inner {
+    gap: 0.5rem;
+  }
+  .detail-top {
+    gap: 0.5rem;
+  }
+  .result-item {
+    padding-inline: 1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .intro-card {
+    transform: none;
+  }
+}
+@media print {
+  body {
+    background: white;
+  }
+  .app-header, .intro, .search-panel, .scope-note, .browser-pane, .source-guide, .app-footer, .toast, button {
+    display: none !important;
+  }
+  .shell {
+    width: 100%;
+  }
+  .workspace {
+    display: block;
+  }
+  .workspace[data-reading] .detail-pane {
+    display: block;
+    box-shadow: none;
+    border: 0;
+  }
+  pre {
+    white-space: pre-wrap;
+  }
+}

@@ -31,6 +31,16 @@ window.SITE_CONTENT = {
       icon: 'badminton',
       tags: ['羽球', '分組', '計分', '站位', '離線使用'],
       source: '個人工具'
+    },
+    {
+      id: 'fanuc-macro',
+      title: 'FANUC Macro B 指令手冊',
+      category: 'CNC 加工',
+      description: '搜尋 Macro B 與銑床 G／M 指令，查看語法、範例及 G65 引數對照，收藏常用條目。',
+      url: 'tools/fanuc-macro/index.html',
+      icon: 'code',
+      tags: ['FANUC', 'Macro B', 'G-code', 'M-code', '離線查找'],
+      source: '個人工具・原廠資料索引'
     }
   ],
   // ── 01｜個人資料：聯絡網址使用完整 HTTPS 網址，Email 只填信箱。 ──
