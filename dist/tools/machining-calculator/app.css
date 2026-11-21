@@ -1,0 +1,2065 @@
+/*
+ * 加工計算工具箱｜個人工作室共用主題的獨立介面。
+ * 色彩與字型由 ../../assets/theme.css 提供；本檔管理版面與互動狀態。
+ * 手機使用同一份表單與結果，四個畫面的顯示交由 app.js 的 hidden 屬性控制。
+ */
+
+/* ==========================================================================
+   01｜基本元素、共用變數與無障礙
+   ========================================================================== */
+:root {
+  --app-header-height: calc(76px + env(safe-area-inset-top, 0px));
+  --app-nav-height: 68px;
+  --app-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --panel-radius: 24px;
+  --control-radius: 13px;
+  --panel-border: rgba(148, 192, 223, 0.27);
+  --card-blue: #e8f5ff;
+  --card-cyan: #e6fbfc;
+  --card-purple: #f0ecff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--app-header-height) + 20px);
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--page-gradient);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.machining-app {
+  min-height: 100dvh;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+input,
+select,
+textarea,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+a {
+  color: var(--primary-dark);
+  text-underline-offset: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 4px;
+}
+
+::selection {
+  color: var(--text);
+  background: var(--selection);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+svg {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shell {
+  width: min(1240px, calc(100% - 64px));
+  margin-inline: auto;
+}
+
+.screen {
+  min-width: 0;
+  scroll-margin-top: calc(var(--app-header-height) + 20px);
+}
+
+main.shell {
+  padding-top: 35px;
+  padding-bottom: 60px;
+}
+
+.eyebrow,
+.section-label {
+  color: var(--primary-dark);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 12px;
+  z-index: 100;
+  padding: 12px 17px;
+  border-radius: 12px;
+  color: white;
+  background: var(--primary-dark);
+  font-weight: 700;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   02｜固定頁首、返回、單位與桌機導覽
+   單位切換只改變呈現；資料與計算行為仍由 app.js 管理。
+   ========================================================================== */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid var(--panel-border);
+  background: rgba(248, 252, 255, 0.95);
+  backdrop-filter: blur(20px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 76px;
+}
+
+.back-link,
+#screen-back {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: var(--control-radius);
+  color: var(--primary-dark);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.header-inner:has(#screen-back:not([hidden])) .back-link {
+  display: none;
+}
+
+.brand {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(14, 165, 233, 0.19);
+  border-radius: 15px;
+  color: var(--primary-dark);
+  background: linear-gradient(145deg, #ffffff, #dff4ff);
+}
+
+.brand-mark .icon {
+  width: 27px;
+  height: 27px;
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand-copy strong {
+  display: block;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+}
+
+#screen-title {
+  overflow: hidden;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unit-switch {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid rgba(148, 192, 223, 0.22);
+  border-radius: 14px;
+  background: #e9f2f9;
+}
+
+.unit-switch button {
+  min-width: 48px;
+  min-height: 44px;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 10px;
+  color: var(--muted);
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.unit-switch button[aria-pressed="true"],
+.unit-switch button[aria-selected="true"],
+.unit-switch button.is-active {
+  color: var(--primary-dark);
+  background: white;
+  box-shadow: 0 3px 10px rgba(50, 104, 146, 0.08);
+}
+
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.desktop-nav button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 9px 13px;
+  border: 0;
+  border-radius: 12px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.desktop-nav button .icon {
+  width: 19px;
+  height: 19px;
+}
+
+.desktop-nav button[aria-current="page"],
+.desktop-nav button.is-active {
+  color: var(--primary-dark);
+  background: #e4f3ff;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+/* ==========================================================================
+   03｜首頁與分類卡片
+   大圖示與短說明提供五個加工領域的入口，色差僅協助掃讀。
+   ========================================================================== */
+.hero {
+  position: relative;
+  display: block;
+  min-height: 210px;
+  margin-bottom: 24px;
+  padding: 30px 36px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 28px;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.94), rgba(226, 244, 255, 0.85) 70%, rgba(237, 233, 254, 0.8));
+  box-shadow: var(--shadow-soft);
+}
+
+.hero::after {
+  position: absolute;
+  right: -40px;
+  bottom: -115px;
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgba(14, 165, 233, 0.14);
+  border-radius: 50%;
+  box-shadow: 0 0 0 30px rgba(14, 165, 233, 0.035), 0 0 0 60px rgba(167, 139, 250, 0.035);
+  content: "";
+  pointer-events: none;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h2 {
+  margin: 8px 0 12px;
+  font-size: clamp(30px, 3.3vw, 43px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.4;
+}
+
+.hero p:not(.eyebrow):not(.section-label) {
+  max-width: 660px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.hero > .icon,
+.hero-icon .icon {
+  width: 100px;
+  height: 100px;
+  color: var(--primary-dark);
+  stroke-width: 1.05;
+}
+
+.quick-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 25px;
+  margin-bottom: 27px;
+  padding: 3px 3px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.quick-strip > span,
+.quick-strip > p,
+.quick-strip > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-strip .icon {
+  width: 18px;
+  height: 18px;
+  color: var(--primary-dark);
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.5;
+}
+
+.section-heading p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.category-grid,
+#favorites-list,
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.category-card,
+.tool-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 236px;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: var(--panel-radius);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.91);
+  box-shadow: 0 7px 25px rgba(50, 104, 146, 0.035);
+  text-align: left;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.category-card::after,
+.tool-card::after {
+  position: absolute;
+  right: 23px;
+  bottom: 24px;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  color: var(--primary-dark);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.category-card > .icon,
+.category-card .category-icon,
+.tool-card > .icon {
+  width: 51px;
+  height: 51px;
+  margin-bottom: 18px;
+  padding: 11px;
+  border: 1px solid rgba(14, 165, 233, 0.09);
+  border-radius: 16px;
+  color: var(--primary-dark);
+  background: var(--card-blue);
+}
+
+.category-card[data-category="drilling"] > .icon,
+.category-card[data-category="drilling"] .category-icon {
+  color: #087c87;
+  background: var(--card-cyan);
+}
+
+.category-card[data-category="turning"] > .icon,
+.category-card[data-category="turning"] .category-icon {
+  color: #6650a4;
+  background: var(--card-purple);
+}
+
+.category-card[data-category="thread"] > .icon,
+.category-card[data-category="thread"] .category-icon {
+  color: #38658d;
+  background: #eaf2fb;
+}
+
+.category-card[data-category="tolerance"] > .icon,
+.category-card[data-category="tolerance"] .category-icon {
+  color: #6e5a99;
+  background: #f3effb;
+}
+
+.category-card .english,
+.category-card .category-english,
+.tool-card .english {
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.075em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.category-card h2,
+.category-card h3,
+.tool-card h2,
+.tool-card h3 {
+  margin-bottom: 8px;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.5;
+}
+
+.category-card p,
+.tool-card p {
+  margin-bottom: 20px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.category-card .count,
+.category-card .category-count,
+.tool-card .count {
+  margin-top: auto;
+  padding-right: 24px;
+  color: var(--primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+.category-card > small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   04｜計算項目與輸入表單
+   最小 48px 輸入框兼顧觸控，標籤與單位保留在輸入框外。
+   ========================================================================== */
+.calculator-heading,
+.category-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.calculator-heading h2,
+.category-heading h2 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.5;
+}
+
+.calculator-heading p,
+.category-heading p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.tool-picker,
+#calculator-select {
+  min-width: 220px;
+  min-height: 48px;
+  max-width: 100%;
+  padding: 10px 36px 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--control-radius);
+  color: var(--text);
+  background: white;
+  font-size: 16px;
+}
+
+.calculator-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.94fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.submode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  width: min(100%, 480px);
+  margin-bottom: 22px;
+  padding: 5px;
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  background: #e8f2fa;
+}
+
+.submode-switch button {
+  min-width: 0;
+  min-height: 46px;
+  padding: 9px 13px;
+  border: 0;
+  border-radius: 12px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.submode-switch button[aria-pressed="true"],
+.submode-switch button[aria-selected="true"],
+.submode-switch button.is-active {
+  color: var(--primary-dark);
+  background: white;
+  box-shadow: 0 3px 12px rgba(50, 104, 146, 0.08);
+}
+
+.form-panel,
+.result-panel {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: var(--panel-radius);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-soft);
+}
+
+.form-panel > h2 {
+  margin-bottom: 22px;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.5;
+}
+
+.form-panel > p:not(.eyebrow):not(.form-note):not(.form-error) {
+  margin-bottom: 22px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.form-panel > .eyebrow {
+  margin-bottom: 8px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 21px 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.field.full-width,
+.field[data-wide="true"] {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.field > span:first-child {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.field label span,
+.field label .unit {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.field input,
+.field select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  padding: 10px 13px;
+  border: 1px solid rgba(148, 192, 223, 0.56);
+  border-radius: var(--control-radius);
+  color: var(--text);
+  background: #fbfdff;
+  font-family: var(--mono);
+  font-size: 18px;
+  line-height: 1.5;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.field select {
+  padding-right: 30px;
+  font-family: var(--sans);
+  font-size: 16px;
+}
+
+.field input::placeholder {
+  color: #7a8da2;
+  opacity: 1;
+}
+
+.input-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.input-wrap:has(.sign-toggle) input {
+  padding-right: 64px;
+}
+
+.sign-toggle {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  bottom: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--primary-dark);
+  background: #eaf5ff;
+  font-family: var(--mono);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--primary-dark);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.field input[aria-invalid="true"] {
+  border-color: #be4666;
+  background: #fff9fb;
+}
+
+.field small {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.form-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 23px;
+  padding: 13px 14px;
+  border: 1px solid rgba(14, 165, 233, 0.1);
+  border-radius: 14px;
+  color: var(--muted);
+  background: #f0f8ff;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.form-note .icon {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  color: var(--primary-dark);
+}
+
+.form-error {
+  margin-top: 19px;
+  padding: 13px 14px;
+  border: 1px solid rgba(190, 70, 102, 0.23);
+  border-radius: 14px;
+  color: #9c3150;
+  background: #fff3f6;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.form-actions,
+.calculator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.button,
+.primary-button,
+.secondary-button,
+.form-actions button,
+.calculator-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 11px 17px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--control-radius);
+  color: var(--primary-dark);
+  background: white;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+  text-decoration: none;
+}
+
+.button.primary,
+.button-primary,
+.primary-button,
+.form-actions button[type="submit"],
+#copy-result {
+  border-color: var(--primary-dark);
+  color: white;
+  background: var(--primary-dark);
+}
+
+.form-actions button .icon,
+.calculator-actions button .icon,
+.button .icon {
+  width: 19px;
+  height: 19px;
+}
+
+/* ==========================================================================
+   05｜結果、公式與計算脈絡
+   數值的標籤、數字與單位分層顯示；長公式可以捲動或折行。
+   ========================================================================== */
+.result-panel {
+  position: sticky;
+  top: calc(var(--app-header-height) + 24px);
+  background: linear-gradient(155deg, #ffffff 65%, #f6f3ff);
+}
+
+.result-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.result-head h2 {
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.5;
+}
+
+.result-head p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+#favorite-tool {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid var(--panel-border);
+  border-radius: 13px;
+  color: var(--muted);
+  background: white;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#favorite-tool[aria-pressed="true"] {
+  border-color: rgba(119, 84, 173, 0.28);
+  color: #7754ad;
+  background: #f2edff;
+}
+
+#favorite-tool[aria-pressed="true"] .icon {
+  fill: rgba(167, 139, 250, 0.16);
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.result-value {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 128px;
+  padding: 18px 16px;
+  border: 1px solid rgba(14, 165, 233, 0.13);
+  border-radius: 17px;
+  background: #edf7ff;
+}
+
+.result-value:first-child {
+  grid-column: 1 / -1;
+  min-height: 154px;
+  padding: 20px;
+  background: linear-gradient(125deg, #e1f3ff, #eaf9fd);
+}
+
+.result-value small,
+.result-value .label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--primary-hover);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.result-value strong,
+.result-value .value,
+.result-value output,
+.result-value b {
+  display: block;
+  max-width: 100%;
+  color: var(--primary-hover);
+  font-family: var(--mono);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-value:first-child strong,
+.result-value:first-child .value,
+.result-value:first-child output,
+.result-value:first-child b {
+  font-size: clamp(36px, 3.5vw, 48px);
+}
+
+.result-value .unit,
+.result-value > span:not(.value):not(.label) {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.formula-card {
+  margin-top: 21px;
+  padding: 17px 18px;
+  border: 1px solid rgba(167, 139, 250, 0.17);
+  border-radius: 16px;
+  background: rgba(244, 241, 255, 0.78);
+}
+
+.formula-card h3,
+.formula-card > strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #6650a4;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+.formula-card code {
+  display: block;
+  max-width: 100%;
+  color: #4d4073;
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.formula-card p {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.result-context {
+  margin-top: 19px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.result-context p + p {
+  margin-top: 9px;
+}
+
+.result-context ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.result-context li + li {
+  margin-top: 6px;
+}
+
+.result-context a {
+  overflow-wrap: anywhere;
+}
+
+.result-notes {
+  margin: 20px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.result-notes li + li {
+  margin-top: 9px;
+}
+
+.source-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 17px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.source-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================================
+   06｜收藏、來源與空狀態
+   ========================================================================== */
+#favorites-list .category-card,
+#favorites-list .tool-card {
+  min-height: 215px;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 36px 24px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--panel-radius);
+  background: rgba(255, 255, 255, 0.68);
+  text-align: center;
+}
+
+.empty-state > .icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 18px;
+  color: #8d73bd;
+  stroke-width: 1.5;
+}
+
+.empty-state h2,
+.empty-state h3 {
+  margin-bottom: 10px;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.empty-state p {
+  max-width: 430px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.empty-state .button,
+.empty-state button {
+  margin-top: 22px;
+}
+
+#sources-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.source-card {
+  min-width: 0;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.91);
+  box-shadow: 0 7px 25px rgba(50, 104, 146, 0.025);
+}
+
+.source-card h2,
+.source-card h3 {
+  margin-bottom: 11px;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.source-card p,
+.source-card li {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.source-card p + p {
+  margin-top: 10px;
+}
+
+.source-card a {
+  overflow-wrap: anywhere;
+}
+
+.source-card > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.source-card ul {
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
+.source-note {
+  margin-bottom: 22px;
+  padding: 18px 21px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 38px;
+  padding: 21px 2px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.app-footer > span:first-child {
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   07｜提示、滑鼠互動與中型螢幕
+   ========================================================================== */
+.toast,
+#toast {
+  position: fixed;
+  right: 20px;
+  bottom: calc(22px + var(--app-safe-bottom));
+  left: 20px;
+  z-index: 70;
+  width: max-content;
+  max-width: calc(100% - 40px);
+  margin-inline: auto;
+  padding: 13px 19px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  color: white;
+  background: #173b53;
+  box-shadow: 0 8px 25px rgba(23, 59, 83, 0.17);
+  font-size: 14px;
+  line-height: 1.8;
+  text-align: center;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .category-card:hover,
+  .tool-card:hover {
+    border-color: rgba(14, 165, 233, 0.34);
+    box-shadow: 0 15px 32px rgba(50, 104, 146, 0.085);
+    transform: translateY(-3px);
+  }
+
+  .back-link:hover,
+  #screen-back:hover,
+  .desktop-nav button:hover {
+    color: var(--primary-dark);
+    background: #e5f3ff;
+  }
+
+  .button.primary:hover,
+  .button-primary:hover,
+  .primary-button:hover,
+  #copy-result:hover {
+    border-color: var(--primary-hover);
+    background: var(--primary-hover);
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .shell {
+    width: calc(100% - 40px);
+  }
+
+  .header-inner {
+    gap: 12px;
+  }
+
+  .desktop-nav {
+    gap: 2px;
+  }
+
+  .desktop-nav button {
+    padding-inline: 10px;
+  }
+
+  .desktop-nav button .icon {
+    display: none;
+  }
+
+  .back-link > span,
+  #screen-back > span {
+    display: none;
+  }
+
+  .category-grid,
+  #favorites-list,
+  .tool-grid {
+    gap: 16px;
+  }
+
+  .category-card,
+  .tool-card {
+    padding: 22px;
+  }
+
+  .calculator-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(310px, 0.94fr);
+    gap: 18px;
+  }
+
+  .form-panel,
+  .result-panel {
+    padding: 23px;
+  }
+}
+
+/* ==========================================================================
+   08｜手機 App 框架與底部四分頁
+   一般頁首 64px；最窄尺寸的雙列頁首在下一節定義為 94px。
+   ========================================================================== */
+@media screen and (max-width: 800px) {
+  :root {
+    --app-header-height: calc(64px + env(safe-area-inset-top, 0px));
+    --panel-radius: 21px;
+  }
+
+  body.machining-app {
+    padding-bottom: calc(var(--app-nav-height) + var(--app-safe-bottom) + 16px);
+  }
+
+  .shell {
+    width: calc(100% - 32px);
+  }
+
+  .header-inner {
+    gap: 9px;
+    min-height: 64px;
+  }
+
+  .back-link,
+  #screen-back {
+    width: 44px;
+    margin-left: -7px;
+    padding: 10px;
+  }
+
+  .brand {
+    gap: 9px;
+  }
+
+  .brand-mark {
+    width: 35px;
+    height: 35px;
+    border-radius: 12px;
+  }
+
+  .brand-mark .icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .brand-copy strong {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  #screen-title {
+    font-size: 19px;
+    line-height: 1.5;
+  }
+
+  .unit-switch {
+    gap: 2px;
+    padding: 3px;
+    border-radius: 12px;
+  }
+
+  .unit-switch button {
+    min-width: 39px;
+    min-height: 44px;
+    padding: 7px 8px;
+    border-radius: 9px;
+    font-size: 13px;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  main.shell {
+    padding-top: 23px;
+    padding-bottom: 24px;
+  }
+
+  .hero {
+    gap: 15px;
+    min-height: 185px;
+    margin-bottom: 18px;
+    padding: 24px;
+    border-radius: 23px;
+  }
+
+  .hero h2 {
+    margin-top: 7px;
+    font-size: 31px;
+    line-height: 1.45;
+  }
+
+  .hero p:not(.eyebrow):not(.section-label) {
+    font-size: 16px;
+    line-height: 1.85;
+  }
+
+  .hero > .icon,
+  .hero-icon .icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .quick-strip {
+    gap: 7px 17px;
+    margin-bottom: 22px;
+    padding-inline: 2px;
+    font-size: 12px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .section-heading h2 {
+    font-size: 22px;
+  }
+
+  .category-grid,
+  #favorites-list,
+  .tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .category-card,
+  .tool-card {
+    min-height: 231px;
+    padding: 21px;
+  }
+
+  .category-card h2,
+  .category-card h3,
+  .tool-card h2,
+  .tool-card h3 {
+    font-size: 22px;
+  }
+
+  .category-card p,
+  .tool-card p {
+    font-size: 16px;
+  }
+
+  .calculator-heading,
+  .category-heading {
+    align-items: stretch;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .calculator-heading h2,
+  .category-heading h2 {
+    font-size: 25px;
+  }
+
+  .calculator-heading p,
+  .category-heading p {
+    font-size: 15px;
+  }
+
+  .tool-picker,
+  #calculator-select {
+    width: 100%;
+  }
+
+  .calculator-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .form-panel,
+  .result-panel {
+    padding: 24px;
+  }
+
+  .result-panel {
+    position: static;
+  }
+
+  .form-panel > h2,
+  .result-head h2 {
+    font-size: 22px;
+  }
+
+  .form-grid {
+    gap: 21px 18px;
+  }
+
+  .field input {
+    min-height: 52px;
+    font-size: 19px;
+  }
+
+  .field small {
+    font-size: 13px;
+  }
+
+  .form-note,
+  .result-context,
+  .formula-card p {
+    font-size: 14px;
+  }
+
+  .result-value:first-child strong,
+  .result-value:first-child .value,
+  .result-value:first-child output,
+  .result-value:first-child b {
+    font-size: 43px;
+  }
+
+  .mobile-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: center;
+    gap: 5px;
+    height: calc(var(--app-nav-height) + var(--app-safe-bottom));
+    padding: 5px max(10px, env(safe-area-inset-left, 0px)) calc(6px + var(--app-safe-bottom)) max(10px, env(safe-area-inset-right, 0px));
+    border-top: 1px solid var(--panel-border);
+    background: rgba(250, 253, 255, 0.97);
+    box-shadow: 0 -5px 19px rgba(50, 104, 146, 0.04);
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-nav button {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    min-height: 54px;
+    padding: 6px 3px;
+    border: 0;
+    border-radius: 15px;
+    color: #687e94;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    transition: color 160ms ease, background 160ms ease;
+  }
+
+  .mobile-nav .icon {
+    width: 23px;
+    height: 23px;
+  }
+
+  .mobile-nav button[aria-current="page"],
+  .mobile-nav button.is-active {
+    color: var(--primary-dark);
+    background: #e5f3ff;
+  }
+
+  .mobile-nav #favorite-count {
+    position: absolute;
+    top: 3px;
+    left: calc(50% + 7px);
+    display: inline-grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border: 2px solid #fafdff;
+    border-radius: 99px;
+    color: white;
+    background: #7754ad;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .app-footer {
+    margin-top: 30px;
+    padding-top: 18px;
+  }
+
+  .toast,
+  #toast {
+    bottom: calc(var(--app-nav-height) + var(--app-safe-bottom) + 14px);
+  }
+
+  body[data-keyboard="true"] .mobile-nav {
+    display: none;
+  }
+
+  body[data-keyboard="true"] {
+    padding-bottom: 16px;
+  }
+
+  body[data-keyboard="true"] .toast,
+  body[data-keyboard="true"] #toast {
+    bottom: calc(var(--app-safe-bottom) + 14px);
+  }
+}
+
+/* ==========================================================================
+   09｜單手操作與最窄手機
+   520px 以下分類採單欄；320px 寬頁首改成標題、單位兩列。
+   ========================================================================== */
+@media screen and (max-width: 520px) {
+  .hero {
+    min-height: 190px;
+    padding: 23px;
+  }
+
+  .hero h2 {
+    font-size: 29px;
+  }
+
+  .hero > .icon,
+  .hero-icon {
+    display: none;
+  }
+
+  .category-grid,
+  #favorites-list,
+  .tool-grid,
+  #sources-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .category-card,
+  .tool-card {
+    min-height: 0;
+    padding: 22px;
+  }
+
+  .category-card > .icon,
+  .category-card .category-icon,
+  .tool-card > .icon {
+    width: 54px;
+    height: 54px;
+    margin-bottom: 15px;
+    padding: 12px;
+  }
+
+  .category-card p,
+  .tool-card p {
+    max-width: 95%;
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+
+  .category-card .count,
+  .category-card .category-count,
+  .tool-card .count {
+    font-size: 13px;
+  }
+
+  .section-heading {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-panel,
+  .result-panel {
+    padding: 22px 19px;
+  }
+
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .field label,
+  .field > span:first-child {
+    font-size: 14px;
+  }
+
+  .field input,
+  .field select {
+    min-height: 54px;
+    padding: 11px 14px;
+  }
+
+  .form-actions,
+  .calculator-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .form-actions button,
+  .calculator-actions button {
+    min-width: 0;
+    min-height: 50px;
+    padding-inline: 10px;
+  }
+
+  .result-head {
+    gap: 10px;
+  }
+
+  .result-grid {
+    gap: 10px;
+  }
+
+  .result-value {
+    min-height: 126px;
+    padding: 16px 13px;
+  }
+
+  .result-value:first-child {
+    padding: 19px;
+  }
+
+  .result-value strong,
+  .result-value .value,
+  .result-value output,
+  .result-value b {
+    font-size: 27px;
+  }
+
+  .result-value:first-child strong,
+  .result-value:first-child .value,
+  .result-value:first-child output,
+  .result-value:first-child b {
+    font-size: 39px;
+  }
+
+  .result-value small,
+  .result-value .label {
+    font-size: 13px;
+  }
+
+  .formula-card {
+    padding: 16px;
+  }
+
+  .formula-card code {
+    font-size: 16px;
+  }
+
+  .source-card {
+    padding: 22px;
+  }
+
+  .source-card p,
+  .source-card li {
+    font-size: 15px;
+  }
+
+  #favorites-list .category-card,
+  #favorites-list .tool-card {
+    min-height: 0;
+  }
+}
+
+@media screen and (max-width: 359.98px) {
+  :root {
+    --app-header-height: calc(94px + env(safe-area-inset-top, 0px));
+  }
+
+  .header-inner {
+    position: relative;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 0 8px;
+    min-height: 94px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+
+  .brand {
+    min-height: 44px;
+  }
+
+  .brand-mark {
+    width: 31px;
+    height: 31px;
+    border-radius: 10px;
+  }
+
+  .brand-mark .icon {
+    width: 21px;
+    height: 21px;
+  }
+
+  #screen-title {
+    font-size: 19px;
+  }
+
+  .unit-switch {
+    flex-basis: 100%;
+    justify-content: flex-end;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .unit-switch button {
+    min-width: 52px;
+    min-height: 44px;
+    padding-block: 5px;
+    border: 1px solid var(--panel-border);
+    background: #e9f2f9;
+  }
+
+  .unit-switch button[aria-pressed="true"],
+  .unit-switch button[aria-selected="true"],
+  .unit-switch button.is-active {
+    background: white;
+  }
+
+  .hero {
+    padding: 21px;
+  }
+
+  .hero h2 {
+    font-size: 27px;
+  }
+
+  .category-card,
+  .tool-card,
+  .source-card {
+    padding: 20px;
+  }
+
+  .result-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .result-value {
+    min-height: 118px;
+  }
+
+  .result-value:first-child strong,
+  .result-value:first-child .value,
+  .result-value:first-child output,
+  .result-value:first-child b {
+    font-size: 35px;
+  }
+}
+
+/* ==========================================================================
+   10｜減少動態與列印
+   列印只保留當前畫面，不輸出固定導覽與操作按鈕。
+   ========================================================================== */
+/* 手機分類使用大列按鈕，五種常用計算更容易一眼選取。 */
+.mobile-hero-title {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  #home-screen .hero {
+    min-height: 0;
+    gap: 0;
+    margin-bottom: 12px;
+    padding: 16px 20px;
+  }
+
+  #home-screen .hero p,
+  .desktop-hero-title {
+    display: none;
+  }
+
+  .mobile-hero-title {
+    display: inline;
+  }
+
+  #home-title {
+    margin: 0;
+    font-size: 27px;
+    line-height: 1.4;
+  }
+
+  #home-screen .quick-strip {
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  #category-grid,
+  #favorites-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  #category-grid .category-card,
+  #favorites-list .category-card {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 0;
+    min-height: 84px;
+    padding: 12px 40px 12px 16px;
+    border-radius: 18px;
+  }
+
+  .category-card .category-icon {
+    grid-row: 1 / 3;
+    align-self: center;
+    width: 46px;
+    height: 46px;
+    margin: 0;
+    padding: 8px;
+  }
+
+  .category-card .english {
+    align-self: end;
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  #category-grid .category-card h2,
+  #favorites-list .category-card h2 {
+    align-self: start;
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.4;
+  }
+
+  .category-card p,
+  .category-card .card-action {
+    display: none;
+  }
+
+  .category-card::after {
+    top: 50%;
+    right: 20px;
+    bottom: auto;
+    transform: translateY(-50%) rotate(45deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .category-card,
+  .tool-card {
+    transform: none !important;
+  }
+}
+
+@media print {
+  :root {
+    --text: #000000;
+    --muted: #333333;
+    --primary-dark: #000000;
+    --primary-hover: #000000;
+  }
+
+  html,
+  body.machining-app {
+    min-width: 0;
+    padding: 0;
+    color: #000000;
+    background: #ffffff;
+  }
+
+  .app-header,
+  .mobile-nav,
+  .desktop-nav,
+  .skip-link,
+  .app-footer,
+  .toast,
+  #toast,
+  .form-actions,
+  .calculator-actions,
+  #favorite-tool,
+  .tool-picker,
+  #calculator-select,
+  button {
+    display: none !important;
+  }
+
+  .shell {
+    width: 100%;
+  }
+
+  main.shell {
+    padding: 0;
+  }
+
+  .calculator-layout {
+    display: block;
+  }
+
+  .form-panel,
+  .result-panel,
+  .source-card,
+  .formula-card,
+  .result-value,
+  .result-value:first-child,
+  .hero {
+    position: static;
+    margin-bottom: 18px;
+    padding: 16px;
+    border: 1px solid #888888;
+    color: #000000;
+    background: #ffffff;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  .result-value .value,
+  .result-value strong,
+  .result-value output,
+  .result-value b,
+  .formula-card code,
+  .formula-card h3 {
+    color: #000000;
+  }
+
+  .field input,
+  .field select {
+    border-color: #888888;
+    color: #000000;
+    background: #ffffff;
+    box-shadow: none;
+  }
+
+  a {
+    color: #000000;
+  }
+}

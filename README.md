@@ -36,15 +36,17 @@ personal-site/
 │  ├─ tools.css              小工具卡片、搜尋分類與首頁入口
 │  ├─ work.css               作品頁及作品詳情的閱讀字級與響應式排版
 │  ├─ app.js                 導覽、列表、搜尋、分類、詳情與列印
-│  ├─ tools/                 羽球 badminton/、FANUC 查找 fanuc-macro/ 與對應資源
+│  ├─ tools/                 羽球 badminton/、FANUC 查找 fanuc-macro/、加工 machining-calculator/
 │  └─ assets/                共用 theme.css、頭像、圖示與專案截圖
 ├─ docs/
 │  ├─ support-center-case.md 代表作品的事實與畫面來源
 │  ├─ badminton-tool.md      羽球工具複本、修改位置與驗證說明
-│  └─ fanuc-macro-tool.md    FANUC 資料、手冊來源及工具維護方式
+│  ├─ fanuc-macro-tool.md    FANUC 資料、手冊來源及工具維護方式
+│  └─ machining-calculator.md 加工計算、單位、公式來源與維護方式
 ├─ scripts/
 │  ├─ preview.mjs            可選的本機預覽工具
 │  ├─ check-fanuc.mjs        FANUC 條目、來源關聯及 G65 引數對照檢查
+│  ├─ check-machining.mjs    加工公式、輸入驗證與單位換算檢查
 │  └─ publish-source.mjs     可選的 Sites 發佈工具
 └─ .openai/hosting.json      既有 Sites 身分與部署設定
 ```
@@ -57,7 +59,7 @@ personal-site/
 
 - `profile`：個人資料與聯絡入口。姓名、職稱、個人簡介與 Email 會套用到頁面；其餘固定文案與頁尾位於 `index.html`。
 - `showcase`：首頁可切換的專案畫面，包含按鈕標籤、標題、圖片路徑、說明與對應正式網址。
-- `tools`：個人小工具清單，已加入「羽球開打」及「FANUC Macro B 指令手冊」。填入工具名稱、分類、用途、標籤與網址後，工具箱會自動產生卡片、分類與搜尋。
+- `tools`：個人小工具清單，已加入「羽球開打」、「FANUC Macro B 指令手冊」及「加工計算工具箱」。填入工具名稱、分類、用途、標籤與網址後，工具箱會自動產生卡片、分類與搜尋。
 - `competencies`：四類能力，會同步顯示在首頁與履歷。
 - `projects`：每個案例保留背景、方法、證據與下一步；只有可確認的成果才加入。
 - `knowledge`：每個主題包含分類、關鍵字與文章段落。現有 8 篇為整理範本；轉成正式文章時，需同步調整 `app.js` 的範本顯示文字。
@@ -96,6 +98,8 @@ personal-site/
 
 FANUC 手機版的 App 外觀集中於同目錄 `mobile.css`；固定搜尋、底部「查指令／引數表／收藏／說明」、分頁查詢記憶及詳情返回由 `app.js` 管理，800px 以下啟用。
 
+「加工計算工具箱」位於 `dist/tools/machining-calculator/`，提供銑削、鑽削、車削、螺紋與攻牙、公差與配合五個分類，支援公英制、即時計算、複製結果及收藏。手機使用大圖示分類列與底部「分類／計算／收藏／說明」導覽。公差依使用者輸入的圖面偏差計算，沒有內建 ISO 等級表；攻牙底孔僅提供公制 60° 切削攻牙粗估。公式核心、目錄與介面分別在 `engine.js`、`catalog.js`、`app.js` 維護，修改後執行 `node scripts/check-machining.mjs`。完整說明見 `docs/machining-calculator.md`。
+
 羽球工具的手機介面集中在 `dist/tools/badminton/mobile.css`（四分頁、底部導覽、觸控尺寸）與 `mobile-app.js`（切頁、焦點、操作按鈕位置）；本機 Bootstrap Icons 由 `icons.js` 管理，原始 SVG 與授權放在 `vendor/icons/`。修改手機版不需要另建一份名單、比分或儲存資料。
 
 在 `dist/content.js` 找到 `tools` 陣列，保留既有工具，再依下列格式加入新物件。以下為填寫範例，需替換成自己的名稱與可開啟網址：
@@ -124,7 +128,7 @@ tools: [
 
 ## 配色設定
 
-參考 [links.cwli.dev](https://links.cwli.dev/) 的淺藍、白、青色與淡紫漸層。常用色彩集中在 `assets/theme.css`，個人站與羽球工具共同載入：
+參考 [links.cwli.dev](https://links.cwli.dev/) 的淺藍、白、青色與淡紫漸層。常用色彩集中在 `assets/theme.css`，個人站、羽球、FANUC 與加工工具共同載入：
 
 - 背景基色：`#eef8ff`
 - 主要文字：`#172033`

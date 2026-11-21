@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef8ff">
+  <meta name="description" content="Louis Li 的加工計算工具箱：銑削、鑽孔、車削、螺紋與公差計算，支援公英制與常用收藏。">
+  <title>加工計算工具箱｜Louis Li</title>
+  <link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/theme.css">
+  <link rel="stylesheet" href="app.css">
+  <script src="engine.js" defer></script>
+  <script src="catalog.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body class="machining-app" data-screen="home">
+  <!-- 01｜本機線條圖示：分類沿用使用情境，視覺為本工具自行設計。 -->
+  <svg class="icon-sprite" aria-hidden="true" width="0" height="0"><defs>
+    <symbol id="i-milling" viewBox="0 0 32 32"><path d="M11 2h10v9H11zm1 9v11m4-11v11m4-11v11M11 22h10M4 28h24M7 25l-2-3m20 3 2-3"/></symbol>
+    <symbol id="i-drilling" viewBox="0 0 32 32"><path d="M12 2h8v8h-8zm1 8v14l3 5 3-5V10M13 13l6 4m-6 1 6 4M4 29h6m12 0h6"/></symbol>
+    <symbol id="i-turning" viewBox="0 0 32 32"><path d="M3 10h21v12H3zm3 0v12m18-12 5 3v6l-5 3M15 3v4m-3-2 3 2 3-2M16 29v-4l5-3"/></symbol>
+    <symbol id="i-thread" viewBox="0 0 32 32"><path d="M11 3h10v26H11zM8 7l16-3M8 12l16-3M8 17l16-3M8 22l16-3M8 27l16-3"/></symbol>
+    <symbol id="i-tolerance" viewBox="0 0 32 32"><path d="M4 5h24M8 5v18m16-18v18M8 16h16M5 28h22m-5-3 5 3-5 3m-12-6-5 3 5 3M13 10h6"/></symbol>
+    <symbol id="i-home" viewBox="0 0 32 32"><path d="m3 14 13-11 13 11M7 12v16h18V12M13 28V18h6v10"/></symbol>
+    <symbol id="i-calculator" viewBox="0 0 32 32"><rect x="7" y="3" width="18" height="26" rx="3"/><path d="M11 8h10v5H11zm0 10h2m6 0h2m-10 5h2m6 0h2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 32 32"><path d="m16 3 4 8 9 1.3-6.5 6.4L24 28l-8-4.4L8 28l1.5-9.3L3 12.3l9-1.3z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M16 14v9m0-15v2"/></symbol>
+    <symbol id="i-back" viewBox="0 0 32 32"><path d="m13 6-10 10 10 10M3 16h25"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 32 32"><rect x="11" y="11" width="17" height="18" rx="2"/><path d="M22 11V3H3v19h8"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 32 32"><path d="M6 10a11 11 0 1 1-1 10M6 3v7h7"/></symbol>
+  </defs></svg>
+  <a class="skip-link" href="#main-content">跳至工具內容</a>
+  <!-- 02｜固定頁首與顯示單位；單位改變時數值也同步換算。 -->
+  <header class="app-header">
+    <div class="shell header-inner">
+      <a class="back-link" href="../../index.html#tools" aria-label="返回個人小工具"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg></a>
+      <button class="icon-button" id="screen-back" type="button" aria-label="返回計算分類" hidden><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg></button>
+      <div class="brand"><span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-milling"/></svg></span><div class="brand-copy"><strong>CNC WORKBENCH</strong><h1 id="screen-title">加工計算工具箱</h1></div></div>
+      <nav class="desktop-nav" aria-label="工具導覽"><button type="button" data-screen="home" aria-current="page">分類</button><button type="button" data-screen="calculator">計算</button><button type="button" data-screen="favorites">收藏</button><button type="button" data-screen="sources">說明</button></nav>
+      <div class="unit-switch" role="group" aria-label="顯示單位"><button type="button" data-unit="metric" aria-pressed="true" aria-label="公制 mm">mm</button><button type="button" data-unit="imperial" aria-pressed="false" aria-label="英制 inch">in</button></div>
+    </div>
+  </header>
+  <main class="shell" id="main-content" tabindex="-1">
+    <!-- 03｜分類首頁：每一個入口都對應可操作的計算。 -->
+    <section class="screen" id="home-screen" aria-labelledby="home-title">
+      <div class="hero"><p class="eyebrow">YOUR EVERYDAY MACHINING COMPANION</p><h2 id="home-title"><span class="desktop-hero-title">把條件輸入，<br>讓計算跟上想法。</span><span class="mobile-hero-title">今天，想算什麼？</span></h2><p>轉速、進給、螺紋與尺寸配合。把現場常用的計算，放進你的工具箱。</p></div>
+      <div class="quick-strip"><svg class="icon" aria-hidden="true"><use href="#i-calculator"/></svg><span>即時計算</span><span>公英制換算</span><span>本機可用</span></div>
+      <div class="category-grid" id="category-grid"></div>
+    </section>
+    <!-- 04｜計算頁：表單保留輸入草稿，數值有效時才更新結果與公制狀態。 -->
+    <section class="screen" id="calculator-screen" hidden aria-label="加工參數計算">
+      <div class="submode-switch" id="submode-switch" aria-label="計算方式" hidden></div>
+      <div class="calculator-layout">
+        <form class="form-panel" id="calculator-form" novalidate>
+          <p class="eyebrow" id="calculator-kicker"></p><h2 id="calculator-title"></h2>
+          <div class="form-grid" id="form-fields"></div>
+          <p class="form-note" id="form-note"></p>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+          <div class="form-actions"><button class="plain-button" id="load-example" type="button"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg>載入範例</button><button class="primary-button" id="copy-result" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>複製結果</button></div>
+        </form>
+        <aside class="result-panel" aria-labelledby="result-title">
+          <div class="result-head"><div><p class="eyebrow">CALCULATION</p><h2 id="result-title">計算結果</h2></div><button class="icon-button" id="favorite-tool" type="button" aria-label="收藏目前工具" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></div>
+          <div class="result-grid" id="result-grid" aria-live="polite" aria-atomic="true"></div>
+          <p class="result-context" id="result-context"></p>
+          <div class="formula-card"><h3>計算關係</h3><code id="formula"></code><p id="formula-note"></p></div>
+          <ul class="result-notes" id="result-notes"></ul>
+          <div class="source-links" id="formula-sources"></div>
+        </aside>
+      </div>
+    </section>
+    <!-- 05｜常用收藏與來源：只儲存自己的工具偏好，不上傳輸入資料。 -->
+    <section class="screen" id="favorites-screen" hidden aria-labelledby="favorites-title"><div class="hero"><p class="eyebrow">YOUR SHORTCUTS</p><h2 id="favorites-title">常用的，放在手邊。</h2><p>在計算頁按星號，把常用工具留在這裡。</p></div><div class="category-grid" id="favorites-list"></div></section>
+    <section class="screen" id="sources-screen" hidden aria-labelledby="sources-title"><div class="hero"><p class="eyebrow">FORMULAS &amp; SCOPE</p><h2 id="sources-title">知道怎麼算，<br>也知道用在哪裡。</h2><p>公式與單位依下列資料整理。輸入的切削速度與進給值請依刀具和加工條件決定；範例值只用來示範計算。</p></div><div id="sources-list"></div></section>
+    <footer class="app-footer"><span>LOUIS LI / CNC WORKBENCH</span><span>本機工具 · 個人製作</span></footer>
+    <noscript><p>請啟用 JavaScript 以使用加工計算工具。</p></noscript>
+  </main>
+  <!-- 06｜手機 App 導覽：與桌機共用同一份表單及結果。 -->
+  <nav class="mobile-nav" aria-label="加工計算操作區">
+    <button type="button" data-screen="home" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span>分類</span></button>
+    <button type="button" data-screen="calculator"><svg class="icon" aria-hidden="true"><use href="#i-calculator"/></svg><span>計算</span></button>
+    <button type="button" data-screen="favorites"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg><span>收藏</span><small id="favorite-count" hidden aria-hidden="true"></small></button>
+    <button type="button" data-screen="sources"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>說明</span></button>
+  </nav>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

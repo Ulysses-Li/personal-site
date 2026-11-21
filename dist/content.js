@@ -41,6 +41,16 @@ window.SITE_CONTENT = {
       icon: 'code',
       tags: ['FANUC', 'Macro B', 'G-code', 'M-code', '離線查找'],
       source: '個人工具・原廠資料索引'
+    },
+    {
+      id: 'machining-calculator',
+      title: '加工計算工具箱',
+      category: 'CNC 加工',
+      description: '銑削、鑽孔、車削、螺紋與公差配合計算，支援公英制換算與常用收藏。',
+      url: 'tools/machining-calculator/index.html',
+      icon: 'calculator',
+      tags: ['轉速', '進給', '螺紋', '公差配合', '公英制'],
+      source: '個人工具・加工計算'
     }
   ],
   // ── 01｜個人資料：聯絡網址使用完整 HTTPS 網址，Email 只填信箱。 ──
