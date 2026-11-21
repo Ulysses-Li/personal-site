@@ -31,7 +31,10 @@
             <small>工程實踐與技術筆記</small>
           </span>
         </a>
-        <button class="menu-toggle" type="button" aria-label="展開導覽" aria-controls="site-nav" aria-expanded="false">選單 <span aria-hidden="true">＋</span></button>
+        <!-- 手機漢堡選單：沿用 aria-expanded，展開時由 CSS 切換為關閉圖示。 -->
+        <button class="menu-toggle" type="button" aria-label="展開導覽" aria-controls="site-nav" aria-expanded="false">
+          <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
         <nav class="site-nav" id="site-nav" aria-label="主要導覽">
           <a href="#home" data-view="home" aria-current="page">關於我</a>
           <a href="#work" data-view="work">作品案例</a>
