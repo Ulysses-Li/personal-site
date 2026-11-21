@@ -1,65 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" fill="none">
-  <!-- 原創車削插畫：水平夾頭固定圓柱，右下方車刀進行外徑切削。 -->
-  <defs>
-    <linearGradient id="turning-chuck" x1="30" y1="41" x2="74" y2="115" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F5FBFF"/>
-      <stop offset="0.5" stop-color="#AED8F0"/>
-      <stop offset="1" stop-color="#83B5D0"/>
-    </linearGradient>
-    <linearGradient id="turning-metal" x1="131" y1="48" x2="136" y2="97" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F5FBFF"/>
-      <stop offset="0.34" stop-color="#BCEAF4"/>
-      <stop offset="0.62" stop-color="#E6F6FF"/>
-      <stop offset="1" stop-color="#83B5D0"/>
-    </linearGradient>
-    <linearGradient id="turning-tool" x1="140" y1="109" x2="181" y2="141" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#C9C2F4"/>
-      <stop offset="1" stop-color="#9EACD2"/>
-    </linearGradient>
-  </defs>
-
-  <!-- 背景弧線與落地陰影；不加入文字或指示箭頭。 -->
-  <path d="M116 25C148 9 192 18 214 48" stroke="#D5EBFA" stroke-width="2" stroke-linecap="round"/>
-  <path d="M163 20C186 21 206 32 218 48" stroke="#E6DFFA" stroke-width="2" stroke-linecap="round"/>
-  <ellipse cx="113" cy="135" rx="91" ry="10" fill="#DCECF8"/>
-  <ellipse cx="167" cy="140" rx="44" ry="5" fill="#E9E4F8"/>
-
+  <!-- 原創外圓車削工程示意；以 Sandvik 外圓車削說明核對加工關係，未描摹原圖。 -->
   <g stroke="#245674" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- 夾頭厚度與三爪端面，圓形端面以等角橢圓表現。 -->
-    <path d="M47 39L68 37C84 39 96 57 96 79C96 100 84 118 68 120L47 122C31 120 20 103 20 82C20 59 31 41 47 39Z" fill="url(#turning-chuck)"/>
-    <path d="M46 40C31 43 25 62 25 82C25 102 33 118 47 121" stroke="#6E9FC3"/>
-    <ellipse cx="68" cy="79" rx="27" ry="41" fill="#C8E5F3"/>
-    <ellipse cx="69" cy="79" rx="18" ry="29" fill="#A4C7DD"/>
+    <!-- 夾頭與軸線保持水平；端面使用固定比例的橢圓投影。 -->
+    <path d="M36 34H61C76 34 87 53 87 76C87 99 76 118 61 118H36C21 118 12 99 12 76C12 53 21 34 36 34Z" fill="#93ADBF"/>
+    <path d="M36 35C23 38 18 56 18 76C18 96 24 114 36 117" stroke="#CADBE5" stroke-width="1.6"/>
+    <ellipse cx="61" cy="76" rx="26" ry="42" fill="#CADBE5"/>
+    <ellipse cx="61" cy="76" rx="17" ry="28" fill="#93ADBF" stroke-width="1.6"/>
 
-    <!-- 圓柱沿水平方向延伸，亮面與端面保留金屬實體感。 -->
-    <path d="M71 59L183 49C193 49 201 59 201 72C201 85 193 95 183 95L71 101C61 100 55 90 55 80C55 69 61 60 71 59Z" fill="url(#turning-metal)"/>
-    <path d="M80 64L181 55" stroke="#F9FEFF" stroke-width="4"/>
-    <path d="M82 91L183 86" stroke="#78B4CD" stroke-width="2"/>
-    <ellipse cx="183" cy="72" rx="18" ry="23" fill="#C8E5F3"/>
-    <ellipse cx="183" cy="72" rx="11" ry="16" stroke="#78B4CD" stroke-width="1.5"/>
-    <path d="M176 65L190 78M177 77L188 66" stroke="#B7E2ED" stroke-width="1.5"/>
+    <!-- 大徑段上下輪廓 y=52、100；縮徑段 y=62、90，均平行於水平軸線。 -->
+    <ellipse cx="61" cy="76" rx="15" ry="24" fill="#CADBE5"/>
+    <path d="M61 52H134C142 52 148 62 148 76C148 90 142 100 134 100H61Z" fill="#CADBE5"/>
+    <path d="M80 57H130" stroke="#EDF4F8" stroke-width="3"/>
+    <path d="M80 94H131" stroke="#93ADBF" stroke-width="1.6"/>
+    <ellipse cx="134" cy="76" rx="14" ry="24" fill="#EDF4F8"/>
+    <path d="M134 62H204C211 62 216 68 216 76C216 84 211 90 204 90H134Z" fill="#CADBE5"/>
+    <path d="M147 67H201" stroke="#EDF4F8" stroke-width="3"/>
+    <ellipse cx="204" cy="76" rx="12" ry="14" fill="#EDF4F8"/>
 
-    <!-- 三爪壓住工件根部，避免誤認成另一種立式刀具。 -->
-    <path d="M61 42L76 43L79 65L65 68L59 57Z" fill="#F2FBFF"/>
-    <path d="M47 82L60 78L66 91L60 104L48 100Z" fill="#C1DEEF"/>
-    <path d="M68 102L82 93L88 105L79 116L68 117Z" fill="#E9F7FF"/>
-    <path d="M65 49L72 50M51 88L58 86M73 109L80 104" stroke="#7AA6C6" stroke-width="1.5"/>
+    <!-- 同一個爪形在圓面以 0、120、240 度複製，再做相同橢圓投影。 -->
+    <g transform="translate(61 76) scale(.62 1)">
+      <path d="M-9-38H9L7-17H-7Z" fill="#EDF4F8" vector-effect="non-scaling-stroke"/>
+      <path d="M-9-38H9L7-17H-7Z" transform="rotate(120)" fill="#EDF4F8" vector-effect="non-scaling-stroke"/>
+      <path d="M-9-38H9L7-17H-7Z" transform="rotate(240)" fill="#EDF4F8" vector-effect="non-scaling-stroke"/>
+    </g>
 
-    <!-- 側向刀桿與三角刀片，刀尖接近圓柱右下緣。 -->
-    <path d="M137 125L173 104L200 114L164 138Z" fill="#E1DCF8"/>
-    <path d="M137 125L164 138V148L137 135Z" fill="#A8A9D2"/>
-    <path d="M164 138L200 114V124L164 148Z" fill="url(#turning-tool)"/>
-    <path d="M173 104L182 88L194 109Z" fill="#74DDE4"/>
-    <path d="M173 104L182 108L194 109" stroke="#287C94" stroke-width="1.5"/>
-    <ellipse cx="183" cy="102" rx="2.5" ry="2" fill="#F0FFFF" stroke-width="1.5"/>
-    <path d="M146 126L168 113" stroke="#F8F5FF" stroke-width="2"/>
-  </g>
+    <!-- 刀桿支承菱形刀片；緊固螺釘置於刀片中央，刀尖接觸縮徑外圓靠肩部。 -->
+    <path d="M158 105L177 105L207 137L190 148L159 117Z" fill="#CADBE5"/>
+    <path d="M159 117L190 148L190 139L159 109Z" fill="#93ADBF"/>
+    <path d="M177 105L207 137L190 139L162 110Z" fill="#EDF4F8"/>
+    <path d="M149 90L168 96L175 115L156 109Z" fill="#EDF4F8"/>
+    <ellipse cx="162" cy="102.5" rx="3.1" ry="2.5" fill="#93ADBF" stroke-width="1.6"/>
+    <path d="M160.5 102.5H163.5" stroke-width="1.3"/>
 
-  <!-- 少量切屑以青紫短線呈現，保留縮圖的乾淨輪廓。 -->
-  <g stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M204 97L209 94L212 98" stroke="#70C7D3"/>
-    <path d="M213 108L219 110" stroke="#A79AD5"/>
-    <path d="M205 119L211 120" stroke="#70C7D3"/>
-    <path d="M174 31L177 27" stroke="#AFD7EF"/>
+    <!-- 僅用短青線強調外圓接觸；最右端面留白，不表現端面車削。 -->
+    <path d="M149 90H155" stroke="#168AB5" stroke-width="2.8"/>
   </g>
 </svg>

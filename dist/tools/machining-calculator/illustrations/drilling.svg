@@ -1,65 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" fill="none">
-  <!-- 01｜金屬漸層與鑽槽裁切：配色與銑削、車削插圖一致。 -->
+  <!-- 01｜原創正面剖面：麻花鑽沿孔軸進入工件，孔壁貼合鑽頭外徑。 -->
   <defs>
-    <linearGradient id="drill-shank" x1="114" y1="30" x2="141" y2="30" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#83b5d0"/>
-      <stop offset=".4" stop-color="#f5fbff"/>
-      <stop offset=".75" stop-color="#c8e5f3"/>
-      <stop offset="1" stop-color="#83b5d0"/>
+    <linearGradient id="drill-metal" x1="106" y1="58" x2="134" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#93adbf"/>
+      <stop offset=".35" stop-color="#edf4f8"/>
+      <stop offset=".72" stop-color="#cadbe5"/>
+      <stop offset="1" stop-color="#93adbf"/>
     </linearGradient>
-    <linearGradient id="drill-plate" x1="73" y1="97" x2="174" y2="127" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#f5fbff"/>
-      <stop offset="1" stop-color="#c8e5f3"/>
-    </linearGradient>
-    <linearGradient id="drill-flute" x1="114" y1="78" x2="141" y2="78" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#83b5d0"/>
-      <stop offset=".4" stop-color="#f5fbff"/>
-      <stop offset="1" stop-color="#c8e5f3"/>
-    </linearGradient>
-    <clipPath id="drill-flute-clip">
-      <path d="M114 49h27v46l-13.5 19L114 95z"/>
+    <pattern id="drill-section" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M-2 2 2-2M0 10 10 0M8 12 12 8" stroke="#93adbf" stroke-width="1" opacity=".7"/>
+    </pattern>
+    <clipPath id="drill-body-clip">
+      <path d="M106 43h28v81l-14 8.4-14-8.4z"/>
     </clipPath>
   </defs>
 
-  <!-- 02｜淡色背景弧線與接地陰影，保留透明背景。 -->
-  <ellipse cx="123" cy="143" rx="87" ry="10" fill="#83b5d0" opacity=".17"/>
-  <path d="M25 95c6-26 24-48 50-59m95 4c22 13 37 31 42 53" stroke="#c8e5f3" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M37 85c6-14 14-23 25-31" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round" opacity=".38"/>
-  <circle cx="190" cy="49" r="3" fill="#a78bfa" opacity=".48"/>
-
-  <!-- 03｜薄板與孔口：板厚明顯小於銑削工件，藍色孔壁標出鑽入點。 -->
+  <!-- 02｜盲孔剖面與短錐形孔底：孔寬與刀徑同為 28，避免大孔懸空。 -->
   <g stroke="#245674" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
-    <path d="m38 107 87-28 83 29-84 29z" fill="url(#drill-plate)"/>
-    <path d="m38 107 86 30v12l-86-30z" fill="#c8e5f3"/>
-    <path d="m124 137 84-29v12l-84 29z" fill="#83b5d0"/>
-    <path d="m45 111 71 25" stroke="#f5fbff" opacity=".8"/>
-    <ellipse cx="127.5" cy="112" rx="21" ry="8" fill="#83b5d0"/>
-    <path d="M108 114c9-5 28-5 39 0" stroke="#0ea5e9"/>
-    <ellipse cx="174" cy="111" rx="9" ry="3.5" fill="#83b5d0"/>
-    <path d="M166 112c4-2 12-2 16 0" stroke="#f5fbff" stroke-width="1.6"/>
+    <path d="M26 98h80v26l14 8.4 14-8.4V98h80v50H26z" fill="#cadbe5"/>
+    <path d="M26 98h80v26l14 8.4 14-8.4V98h80v50H26z" fill="url(#drill-section)"/>
+    <path d="M32 102h67m42 0h67" stroke="#edf4f8" stroke-width="2.5"/>
   </g>
 
-  <!-- 04｜麻花鑽：雙螺旋槽與尖端輪廓，避免與平頭立銑刀混淆。 -->
+  <!-- 03｜短直柄與長工作段；無裝飾套環，長度比例對應一般麻花鑽。 -->
   <g stroke="#245674" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M114 21v30c0 6 27 6 27 0V21" fill="url(#drill-shank)"/>
-    <ellipse cx="127.5" cy="21" rx="13.5" ry="5" fill="#f5fbff"/>
-    <path d="M120 28v17" stroke="#ffffff" stroke-width="2.6" opacity=".9"/>
-    <path d="M114 46c7 4 20 4 27 0v6c-7 5-20 5-27 0z" fill="#a78bfa"/>
-    <path d="M114 53v42l13.5 19L141 95V53c-7 4-20 4-27 0Z" fill="url(#drill-flute)"/>
-    <g clip-path="url(#drill-flute-clip)">
-      <path d="M110 52c4 9 21 12 28 23s-7 17-12 24-6 12-4 19l9 1c-3-8-1-13 4-19s18-14 9-27-23-16-25-23Z" fill="#83b5d0"/>
-      <path d="M111 71c5 10 17 13 21 20s-9 15-9 21" stroke="#f5fbff" stroke-width="3.2"/>
-      <path d="M119 54c3 10 19 13 22 26m-27 0c3 8 15 12 16 18" stroke="#245674"/>
+    <path d="M106 16v27c0 4 28 4 28 0V16" fill="url(#drill-metal)"/>
+    <ellipse cx="120" cy="16" rx="14" ry="4" fill="#edf4f8"/>
+    <path d="M113 23v15" stroke="#ffffff" stroke-width="2.4" opacity=".85"/>
+    <path d="M106 43v81l14 8.4 14-8.4V43c-8 4-20 4-28 0Z" fill="url(#drill-metal)"/>
+
+    <!-- 兩道麻花槽以長曲面交替繞過刀身，刃帶連續而非一圈圈橫條。 -->
+    <g clip-path="url(#drill-body-clip)">
+      <path d="M106 39c-7 19 18 28 22 43s-20 25-20 40c0 8 6 12 11 17l11-7c-7-5-12-9-10-15 4-12 22-23 19-38s-25-26-22-40z" fill="#93adbf"/>
+      <path d="M117 40c-3 14 20 25 22 39s-15 26-19 38c-2 6 3 10 10 15" stroke="#245674"/>
+      <path d="M106 43c-3 17 18 24 22 39s-20 25-20 40" stroke="#edf4f8" stroke-width="3.2"/>
+      <path d="M133 43c10 11 12 19 4 31m-31 12c9 8 16 15 11 26" stroke="#edf4f8" stroke-width="2.5"/>
     </g>
-    <path d="m114 95 13.5 19L141 95l-13.5 6z" fill="#c8e5f3"/>
-    <path d="m127.5 101 0 13"/>
-    <path d="m114 95 13.5 6" stroke="#f5fbff" stroke-width="1.7"/>
+
+    <!-- 短鑽尖：半徑 14、尖高 8.4，近似 118°；與盲孔底相接。 -->
+    <path d="m106 124 14 8.4 14-8.4-12 3z" fill="#cadbe5"/>
+    <path d="m122 127-2 5.4" stroke-width="1.7"/>
+    <path d="m106 124 14 8.4 14-8.4" stroke="#168ab5" stroke-width="2.4"/>
   </g>
 
-  <!-- 05｜鑽孔位置旁的短捲屑，不加入箭頭或文字。 -->
-  <g stroke="#245674" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M96 101c-6-5-13 1-7 5 3 2 6-1 3-3" stroke="#0ea5e9"/>
-    <path d="M151 100c5-7 12-3 10 1-1 3-5 3-5 0" stroke="#a78bfa"/>
-    <path d="m100 114-6 2"/>
-  </g>
+  <!-- 04｜重畫剖面孔緣，明確區隔已入孔的刀段與兩側材料。 -->
+  <path d="M26 98h80v26m28 0V98h80" stroke="#245674" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

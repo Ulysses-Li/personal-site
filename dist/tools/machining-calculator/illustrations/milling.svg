@@ -1,63 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" fill="none">
-  <!-- 01｜共用金屬色：亮面、正面與陰影依同一系列配色呈現。 -->
+  <!-- 01｜原創工程示意：長螺旋平底立銑刀在開放台階末端切削。 -->
   <defs>
-    <linearGradient id="mill-shank" x1="108" y1="36" x2="143" y2="36" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#83b5d0"/>
-      <stop offset=".37" stop-color="#f5fbff"/>
-      <stop offset=".7" stop-color="#c8e5f3"/>
-      <stop offset="1" stop-color="#83b5d0"/>
+    <linearGradient id="mill-metal" x1="101" y1="66" x2="131" y2="66" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#93adbf"/>
+      <stop offset=".32" stop-color="#edf4f8"/>
+      <stop offset=".69" stop-color="#cadbe5"/>
+      <stop offset="1" stop-color="#93adbf"/>
     </linearGradient>
-    <linearGradient id="mill-top" x1="65" y1="94" x2="177" y2="126" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#f5fbff"/>
-      <stop offset="1" stop-color="#c8e5f3"/>
+    <linearGradient id="mill-land" x1="106" y1="66" x2="128" y2="85" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#edf4f8"/>
+      <stop offset="1" stop-color="#93adbf"/>
     </linearGradient>
-    <linearGradient id="mill-flute" x1="111" y1="76" x2="140" y2="87" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#c8e5f3"/>
-      <stop offset=".43" stop-color="#f5fbff"/>
-      <stop offset="1" stop-color="#83b5d0"/>
-    </linearGradient>
-    <clipPath id="mill-flute-clip">
-      <path d="M110 61h31v42c0 6-31 6-31 0z"/>
+    <pattern id="mill-section" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M-2 2 2-2M0 10 10 0M8 12 12 8" stroke="#93adbf" stroke-width="1" opacity=".65"/>
+    </pattern>
+    <clipPath id="mill-body-clip">
+      <path d="M101 49h30v70c0 5-30 5-30 0z"/>
     </clipPath>
   </defs>
 
-  <!-- 02｜透明畫布上的接地陰影與輕量背景弧線。 -->
-  <ellipse cx="125" cy="145" rx="88" ry="10" fill="#83b5d0" opacity=".17"/>
-  <path d="M23 90c4-26 24-47 52-57m91 4c25 12 44 34 48 59" stroke="#c8e5f3" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M35 85c5-14 13-25 25-33" stroke="#a78bfa" stroke-width="2.2" stroke-linecap="round" opacity=".38"/>
-  <circle cx="189" cy="47" r="3" fill="#a78bfa" opacity=".48"/>
-
-  <!-- 03｜等角金屬方塊：三個表面與頂部銑削溝槽。 -->
-  <g stroke="#245674" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
-    <path d="m39 105 85-28 82 29-81 29z" fill="url(#mill-top)"/>
-    <path d="m39 105 86 30v18l-86-31z" fill="#c8e5f3"/>
-    <path d="m125 135 81-29v18l-81 29z" fill="#83b5d0"/>
-    <path d="m45 110 74 26" stroke="#f5fbff" opacity=".8"/>
-    <path d="m134 137 65-23" stroke="#c8e5f3" opacity=".65"/>
-    <path d="M116 100c5-3 12-3 18-1l34 12c6 2 6 5 0 7-5 2-12 2-18 0l-34-12c-5-2-5-4 0-6Z" fill="#83b5d0"/>
-    <path d="m132 103 30 11" stroke="#245674" opacity=".48"/>
-  </g>
-
-  <!-- 04｜立銑刀：圓柱刀柄、平頭端刃及連續螺旋排屑槽。 -->
-  <g stroke="#245674" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M110 22v40c0 7 31 7 31 0V22" fill="url(#mill-shank)"/>
-    <ellipse cx="125.5" cy="22" rx="15.5" ry="5.5" fill="#f5fbff"/>
-    <path d="M117 29v25" stroke="#ffffff" stroke-width="2.6" opacity=".9"/>
-    <path d="M110 56c8 5 23 5 31 0v7c-8 5-23 5-31 0z" fill="#0ea5e9"/>
-    <path d="M110 63v40c0 7 31 7 31 0V63c-8 5-23 5-31 0Z" fill="url(#mill-flute)"/>
-    <g clip-path="url(#mill-flute-clip)">
-      <path d="M104 66c9 10 25 9 43 24v8c-18-15-34-14-43-24z" fill="#83b5d0"/>
-      <path d="M104 84c9 10 25 9 43 24v8c-18-15-34-14-43-24z" fill="#83b5d0"/>
-      <path d="M110 62c10 9 22 10 31 17m-31 1c10 9 22 10 31 17m-31 1c5 4 9 6 14 8" stroke="#f5fbff" stroke-width="2.5"/>
-    </g>
-    <path d="M110 102c8 5 23 5 31 0"/>
-    <path d="m116 105 5-4 5 6 5-5 5 3" stroke-width="1.7"/>
-  </g>
-
-  <!-- 05｜少量切屑讓切削位置易於辨識，縮小後仍保留清楚主體。 -->
+  <!-- 02｜工件剖面：左側為未切材料，右側台階通到外緣，並非封閉孔。 -->
   <g stroke="#245674" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="m99 101-7-4-3 4 6 4" fill="#67e8f9"/>
-    <path d="m150 93 5-6 5 2-3 5" fill="#a78bfa"/>
-    <path d="m166 101 5-1"/>
+    <path d="m28 94 15-11h73l-15 11z" fill="#edf4f8"/>
+    <path d="m101 123 15-11h111l-15 11z" fill="#edf4f8"/>
+    <path d="m212 123 15-11v24l-15 11z" fill="#93adbf"/>
+    <path d="M28 94h73v29h111v24H28z" fill="#cadbe5"/>
+    <path d="M28 94h73v29h111v24H28z" fill="url(#mill-section)"/>
+    <path d="m101 94 15-11v29l-15 11z" fill="#93adbf"/>
+    <path d="M133 123h79" stroke="#168ab5"/>
+  </g>
+
+  <!-- 03｜無彩色套圈的金屬刀柄；工作刃長明顯大於短刀柄。 -->
+  <g stroke="#245674" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M101 18v31c0 5 30 5 30 0V18" fill="url(#mill-metal)"/>
+    <ellipse cx="116" cy="18" rx="15" ry="4.5" fill="#edf4f8"/>
+    <path d="M108 25v17" stroke="#ffffff" stroke-width="2.4" opacity=".85"/>
+    <path d="M101 49v70c0 5 30 5 30 0V49c-8 4-22 4-30 0Z" fill="url(#mill-metal)"/>
+
+    <!-- 槽面以長連續曲面形成螺旋，不使用短橫帶模擬纏繞。 -->
+    <g clip-path="url(#mill-body-clip)">
+      <path d="M98 45c-2 20 23 27 26 42s-21 24-23 39h11c1-14 24-24 23-40s-21-27-26-41z" fill="#93adbf"/>
+      <path d="M110 46c5 16 26 26 25 41s-23 27-23 39" stroke="#245674"/>
+      <path d="M101 49c0 17 21 25 23 38s-20 25-23 36" stroke="#edf4f8" stroke-width="3.5"/>
+      <path d="M126 46c11 13 15 23 8 36l-1 12c17-19 17-35 4-48z" fill="url(#mill-land)"/>
+      <path d="M100 87c9 10 16 18 12 31" stroke="#edf4f8" stroke-width="2.5"/>
+    </g>
+
+    <!-- 水平端面與平底端刃貼住台階底面，左側刃接觸未切材料。 -->
+    <ellipse cx="116" cy="119" rx="15" ry="4" fill="#cadbe5"/>
+    <path d="m102 118 14 1 11-2m-11 2-6 3m6-3 9 3" stroke-width="1.7"/>
+    <path d="M101 97v22m2 4h28" stroke="#168ab5" stroke-width="2.4"/>
   </g>
 </svg>

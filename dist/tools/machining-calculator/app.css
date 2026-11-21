@@ -585,7 +585,7 @@ main.shell {
   justify-content: center;
   height: 124px;
   margin: -8px -6px 14px;
-  background: radial-gradient(ellipse at center, rgba(224, 242, 254, 0.8), transparent 68%);
+  background: transparent;
 }
 
 .category-art img {
