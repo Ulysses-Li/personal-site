@@ -1,148 +1,904 @@
 /*
- * 作品案例｜閱讀字級與比例
- * 本檔只處理作品列表與作品詳情；以 rem 尊重瀏覽器文字大小設定。
- * 桌機及手機正文均為 18px（預設根字級），輔助標籤不低於 14px。
+ * 作品案例｜大圖作品集與案例閱讀
+ * 第 01–07 區只影響 .work-view；專案對話框的既有閱讀尺度另行保留。
+ * 作品正文 18px、分類與狀態 14px，以 rem 尊重瀏覽器文字大小設定。
  */
 
 /* ==========================================================================
-   01｜頁首：收斂大標題與內文之間的字級落差。
+   01｜作品頁首：主張與右側補充說明
    ========================================================================== */
-.view[data-view="work"] .page-heading {
-  max-width: 56rem;
-  padding: 3.5rem 0 2rem;
+.work-view {
+  --work-border: rgba(148, 192, 223, 0.28);
+  --work-shadow: 0 16px 45px rgba(50, 104, 146, 0.055);
+  --work-radius: 26px;
+  padding-bottom: 4rem;
 }
 
-.view[data-view="work"] .page-heading .eyebrow {
-  font-size: 0.875rem;
-  letter-spacing: 0.06em;
-  margin-bottom: 1.25rem;
+.work-view .work-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.34fr);
+  align-items: end;
+  gap: 2.5rem;
+  padding: 3.75rem 0 2.5rem;
 }
 
-.view[data-view="work"] .page-heading h1 {
-  font-size: clamp(2.25rem, 4vw, 3.25rem);
-  line-height: 1.4;
-  letter-spacing: -0.045em;
-  margin-bottom: 1.25rem;
-}
-
-.view[data-view="work"] .page-heading > p:last-child {
-  max-width: 44rem;
-  font-size: 1.125rem;
-  line-height: 1.85;
-}
-
-/* ==========================================================================
-   02｜整理說明：主要提示、補充說明與作品內容維持一致的閱讀尺度。
-   ========================================================================== */
-.view[data-view="work"] .work-note {
-  gap: 0.5rem;
-  padding: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.view[data-view="work"] .work-note strong {
-  font-size: 1.125rem;
-  line-height: 1.7;
-}
-
-.view[data-view="work"] .work-note span {
-  max-width: 64rem;
-  font-size: 1rem;
-  line-height: 1.85;
-}
-
-/* ==========================================================================
-   03｜作品列表：正文 18px、標題 28px、分類及狀態 14px。
-   ========================================================================== */
-.view[data-view="work"] .work-entry {
-  grid-template-columns: 2.25rem minmax(0, 1fr) 13rem;
-  gap: 1.75rem;
-  padding: 2.5rem 0;
-}
-
-.view[data-view="work"] .work-number {
-  font-size: 1.125rem;
-  line-height: 1.7;
-  margin-top: 0;
-}
-
-.view[data-view="work"] .work-main {
+.work-view .work-heading > div {
   min-width: 0;
 }
 
-.view[data-view="work"] .work-main > .eyebrow {
+.work-view .work-eyebrow {
+  margin: 0 0 1.125rem;
+  color: var(--primary-dark);
+  font-family: var(--mono);
   font-size: 0.875rem;
+  font-weight: 600;
   line-height: 1.7;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.065em;
 }
 
-.view[data-view="work"] .work-main h2 {
-  font-size: 1.75rem;
+.work-view #work-title {
+  margin: 0 0 1.125rem;
+  color: var(--text);
+  font-size: clamp(2rem, 3.6vw, 3.125rem);
+  font-weight: 800;
   line-height: 1.5;
-  letter-spacing: -0.025em;
-  overflow-wrap: anywhere;
-  margin: 0 0 0.75rem;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
 }
 
-.view[data-view="work"] .work-main > p {
-  max-width: 44rem;
+.work-view .work-lead {
+  max-width: 43rem;
+  margin: 0;
+  color: var(--muted);
   font-size: 1.125rem;
-  line-height: 1.85;
-  margin-bottom: 1.25rem;
+  line-height: 1.9;
 }
 
-.view[data-view="work"] .tag-list {
-  gap: 0.5rem;
+.work-view .work-heading-note {
+  max-width: 18rem;
+  margin: 0 0 0.25rem;
+  color: var(--muted);
+  font-size: 1.125rem;
+  line-height: 1.9;
 }
 
-.view[data-view="work"] .tag {
-  padding: 0.25rem 0.625rem;
+.work-view .work-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 3.75rem;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   02｜代表作品：六成畫面、四成案例說明
+   真實截圖承擔視覺重心，不使用模擬程式碼或多餘的裝飾圖層。
+   ========================================================================== */
+.work-view .project-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--work-border);
+  border-radius: var(--work-radius);
+  background: var(--surface-strong);
+  box-shadow: var(--work-shadow);
+}
+
+.work-view .project-visual {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 1.75rem;
+  border-right: 1px solid var(--work-border);
+  background: linear-gradient(145deg, #e7f3ff 0%, #eef8ff 62%, #f1edff 100%);
+}
+
+.work-view .project-browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  min-height: 2.5rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid rgba(148, 192, 223, 0.3);
+  border-bottom: 0;
+  border-radius: 0.875rem 0.875rem 0 0;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.work-view .project-browser-bar > span:not(.project-address) {
+  flex: 0 0 auto;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: 50%;
+  background: #afc4d6;
+  font-size: 0;
+}
+
+.work-view .project-browser-bar > span:nth-child(2) {
+  background: #c2b8de;
+}
+
+.work-view .project-browser-bar > span:nth-child(3) {
+  background: #a9d8df;
+}
+
+.work-view .project-address {
+  min-width: 0;
+  margin-left: 0.5rem;
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--mono);
   font-size: 0.875rem;
   line-height: 1.6;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.view[data-view="work"] .work-actions {
-  grid-column: auto;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.25rem;
+.work-view .project-screen {
+  min-width: 0;
+  overflow: hidden;
+  aspect-ratio: 16 / 11;
+  border: 1px solid rgba(148, 192, 223, 0.3);
+  border-top: 0;
+  border-radius: 0 0 0.875rem 0.875rem;
+  background: white;
+  box-shadow: 0 12px 25px rgba(50, 104, 146, 0.08);
 }
 
-.view[data-view="work"] .status-note {
+.work-view .project-screen > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.work-view .work-preview-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.125rem;
+}
+
+.work-view .work-preview-tab {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid rgba(148, 192, 223, 0.35);
+  border-radius: 0.75rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.74);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.65;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.work-view .work-preview-tab[aria-pressed="true"] {
+  border-color: var(--primary-dark);
+  color: white;
+  background: var(--primary-dark);
+}
+
+.work-view .work-preview-caption {
+  min-height: 2.7em;
+  margin: 0.75rem 0 0;
+  color: var(--muted);
   font-size: 0.875rem;
   line-height: 1.8;
 }
 
-.view[data-view="work"] .work-actions .text-link {
-  min-height: 2.75rem;
+.work-view .project-feature-copy {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  min-width: 0;
+  padding: 2.125rem;
+  padding-top: 1.5rem;
+}
+
+/* 專案名稱先於畫面出現在 DOM；手機可直接依相同順序閱讀。 */
+.work-view .project-feature-intro {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  min-width: 0;
+  padding: 2.125rem 2.125rem 0;
+}
+
+.work-view .project-feature .project-feature-intro h2 {
+  margin-bottom: 0;
+}
+
+.work-view .project-feature-intro .project-meta {
+  margin-bottom: 1.125rem;
+}
+
+.work-view .project-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.875rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.work-view .project-kind {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.work-view .project-status {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 0.1875rem 0.625rem;
+  border: 1px solid rgba(167, 139, 250, 0.19);
+  border-radius: 0.5rem;
+  color: #68548f;
+  background: #f3effc;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.work-view .project-eyebrow,
+.work-view .project-category {
+  margin: 0 0 0.625rem;
+  color: var(--primary-dark);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.8;
+  letter-spacing: 0.025em;
+}
+
+.work-view .project-feature h2 {
+  margin: 0 0 1.125rem;
+  font-size: clamp(1.875rem, 2.7vw, 2.125rem);
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.work-view .project-summary {
+  margin: 0 0 1.375rem;
+  color: var(--muted);
+  font-size: 1.125rem;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.work-view .project-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.work-view .project-highlights > span {
+  padding-left: 0.625rem;
+  border-left: 2px solid rgba(14, 165, 233, 0.5);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.75;
+}
+
+.work-view .tag-list {
+  gap: 0.5rem;
+}
+
+.work-view .tag {
+  padding: 0.25rem 0.625rem;
+  border-color: rgba(148, 192, 223, 0.3);
+  border-radius: 0.5rem;
+  color: var(--muted);
+  background: #f8fbff;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.work-view .project-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1.875rem;
+}
+
+.work-view .project-actions .button,
+.work-view .work-closing .button-outline {
+  min-height: 3rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.875rem;
   font-size: 1rem;
   line-height: 1.6;
+}
+
+.work-view .project-live {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   padding-block: 0.5rem;
-}
-
-.view[data-view="work"] .home-note {
-  padding-block: 2.5rem;
-}
-
-.view[data-view="work"] .home-note h2 {
-  font-size: 1.5rem;
+  color: var(--primary-dark);
+  font-size: 1rem;
+  font-weight: 600;
   line-height: 1.6;
-}
-
-.view[data-view="work"] .home-note p {
-  max-width: 44rem;
-  font-size: 1rem;
-  line-height: 1.85;
-}
-
-.view[data-view="work"] .home-note .text-link {
-  min-height: 2.75rem;
-  font-size: 1rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(3, 105, 161, 0.3);
+  text-underline-offset: 0.375rem;
 }
 
 /* ==========================================================================
-   04｜作品詳情：以內容類型限定樣式，不影響共用容器中的技術筆記。
+   03｜持續累積：筆記大卡與三項實作目錄
+   ========================================================================== */
+.work-view .work-collection {
+  min-width: 0;
+}
+
+.work-view .work-collection-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.work-view .work-collection-heading h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+}
+
+.work-view .work-collection-heading p {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.125rem;
+  line-height: 1.85;
+}
+
+.work-view .project-collection-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.work-view .project-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--work-border);
+  border-radius: var(--work-radius);
+  background: white;
+  box-shadow: var(--work-shadow);
+}
+
+.work-view .project-card-visual {
+  min-width: 0;
+  padding: 1.5rem 1.5rem 0;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border-bottom: 1px solid var(--work-border);
+  background: linear-gradient(140deg, #e8f3ff, #efedfc);
+}
+
+.work-view .project-card-visual > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(148, 192, 223, 0.3);
+  border-bottom: 0;
+  border-radius: 0.75rem 0.75rem 0 0;
+  object-fit: cover;
+  object-position: center top;
+  box-shadow: 0 12px 25px rgba(50, 104, 146, 0.08);
+}
+
+.work-view .project-card-copy {
+  padding: 1.75rem;
+}
+
+.work-view .project-card-copy .project-meta {
+  margin-bottom: 1.25rem;
+}
+
+.work-view .project-card-copy h3 {
+  margin: 0 0 0.875rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.work-view .project-card-copy .project-summary {
+  margin-bottom: 1.25rem;
+}
+
+.work-view .project-detail {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  margin-top: 1.125rem;
+  padding: 0.5rem 0;
+  border: 0;
+  border-bottom: 1px solid rgba(3, 105, 161, 0.28);
+  border-radius: 0;
+  color: var(--primary-dark);
+  background: transparent;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.6;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.work-view .project-directory {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.work-view .project-link-card {
+  display: grid;
+  grid-template-columns: 3.75rem minmax(0, 1fr);
+  align-items: start;
+  gap: 1.125rem;
+  min-width: 0;
+  padding: 1.625rem;
+  border: 1px solid var(--work-border);
+  border-radius: 1.375rem;
+  background: white;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.work-view .project-monogram {
+  display: grid;
+  place-items: center;
+  width: 3.75rem;
+  height: 3.75rem;
+  border: 1px solid rgba(14, 165, 233, 0.12);
+  border-radius: 1rem;
+  color: var(--primary-dark);
+  background: #eaf5ff;
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.015em;
+}
+
+.work-view .project-link-card:nth-child(2) .project-monogram {
+  border-color: rgba(167, 139, 250, 0.14);
+  color: #68548f;
+  background: #f1edfb;
+}
+
+.work-view .project-link-card:nth-child(3) .project-monogram {
+  border-color: rgba(14, 165, 233, 0.12);
+  color: #247185;
+  background: #eaf9fb;
+}
+
+.work-view .project-link-copy {
+  min-width: 0;
+}
+
+.work-view .project-link-copy h3 {
+  margin: 0 0 0.625rem;
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.work-view .project-link-copy .project-category,
+.work-view .project-link-copy .project-eyebrow {
+  margin-bottom: 0.375rem;
+}
+
+.work-view .project-link-copy .project-summary {
+  margin-bottom: 0.75rem;
+}
+
+.work-view .project-link-copy .project-status {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: var(--muted);
+  background: transparent;
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.work-view .project-link-copy .project-detail {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  margin-top: 0.375rem;
+}
+
+/* ==========================================================================
+   04｜頁尾邀請與互動回饋
+   ========================================================================== */
+.work-view .work-closing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 2rem;
+  row-gap: 0.75rem;
+  margin-top: 3.75rem;
+  padding: 2rem 2.25rem;
+  border: 1px solid var(--work-border);
+  border-radius: var(--work-radius);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.work-view .work-closing > div {
+  grid-column: 1;
+  min-width: 0;
+}
+
+.work-view .work-closing h2 {
+  grid-column: 1;
+  margin: 0 0 0.75rem;
+  font-size: 1.625rem;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: -0.035em;
+}
+
+.work-view .work-closing p {
+  grid-column: 1;
+  max-width: 45rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.125rem;
+  line-height: 1.9;
+}
+
+.work-view .work-closing .button-outline {
+  grid-column: 2;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-strong);
+  color: var(--primary-dark);
+  background: white;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.work-view button:focus-visible,
+.work-view a:focus-visible {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .work-view .work-preview-tab:not([aria-pressed="true"]):hover {
+    border-color: var(--primary-dark);
+    color: var(--primary-dark);
+    background: white;
+  }
+
+  .work-view .project-link-card:hover {
+    border-color: rgba(3, 105, 161, 0.34);
+    box-shadow: 0 8px 24px rgba(50, 104, 146, 0.045);
+  }
+
+  .work-view .project-detail:hover,
+  .work-view .project-live:hover {
+    border-color: var(--primary-hover);
+    color: var(--primary-hover);
+    text-decoration-color: var(--primary-hover);
+  }
+
+  .work-view .project-actions .button-dark:hover {
+    transform: none;
+  }
+
+  .work-view .work-closing .button-outline:hover {
+    border-color: var(--primary-dark);
+    background: #eef7ff;
+  }
+}
+
+/* ==========================================================================
+   05｜平板與手機：900px 以下依閱讀順序改為單欄
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .work-view .work-heading {
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.3fr);
+    gap: 1.75rem;
+  }
+
+  .work-view .project-visual {
+    padding: 1.25rem;
+  }
+
+  .work-view .project-feature-copy {
+    padding: 1.75rem;
+  }
+
+  .work-view .project-link-card {
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    gap: 0.875rem;
+    padding: 1.375rem;
+  }
+
+  .work-view .project-monogram {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 0.875rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .work-view .project-feature-intro,
+  .work-view .project-feature-copy,
+  .work-view .project-visual {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .work-view .project-feature-intro {
+    padding: 1.75rem 1.75rem 1.5rem;
+  }
+
+  .work-view .work-heading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.125rem;
+    padding-top: 2.75rem;
+    padding-bottom: 2rem;
+  }
+
+  .work-view .work-heading-note {
+    max-width: 43rem;
+  }
+
+  .work-view .project-feature,
+  .work-view .project-collection-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .work-view .project-visual {
+    padding: 1.75rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--work-border);
+  }
+
+  .work-view .project-feature-copy {
+    padding: 2rem;
+  }
+
+  .work-view .project-feature h2 {
+    font-size: 2rem;
+  }
+
+  .work-view .project-meta {
+    margin-bottom: 1.25rem;
+  }
+
+  .work-view .work-preview-caption {
+    min-height: 0;
+  }
+
+  .work-view .project-card-visual {
+    aspect-ratio: 16 / 9;
+    padding: 1.75rem 1.75rem 0;
+  }
+
+  .work-view .project-card-copy {
+    padding: 2rem;
+  }
+
+  .work-view .project-link-card {
+    grid-template-columns: 3.75rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1.75rem;
+  }
+
+  .work-view .project-monogram {
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 1rem;
+  }
+
+  .work-view .work-closing {
+    padding: 1.875rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .work-view .work-heading-note {
+    display: none;
+  }
+
+  .work-view .project-feature-intro {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .work-view {
+    --work-radius: 22px;
+    padding-bottom: 2rem;
+  }
+
+  .work-view .work-heading {
+    gap: 1rem;
+    padding: 2.25rem 0 1.75rem;
+  }
+
+  .work-view .work-eyebrow {
+    margin-bottom: 0.875rem;
+  }
+
+  .work-view #work-title {
+    margin-bottom: 1rem;
+    font-size: clamp(2rem, 7.5vw, 2.375rem);
+    line-height: 1.5;
+  }
+
+  .work-view .work-heading-note {
+    font-size: 1.125rem;
+  }
+
+  .work-view .work-gallery {
+    gap: 2.75rem;
+  }
+
+  .work-view .project-visual {
+    padding: 1rem;
+  }
+
+  .work-view .project-browser-bar {
+    gap: 0.3125rem;
+    min-height: 2.375rem;
+    padding-inline: 0.625rem;
+  }
+
+  .work-view .project-address {
+    margin-left: 0.375rem;
+    font-size: 0.875rem;
+  }
+
+  .work-view .work-preview-tabs {
+    gap: 0.375rem;
+    margin-top: 0.875rem;
+  }
+
+  .work-view .work-preview-tab {
+    flex-basis: calc(33.333% - 0.375rem);
+    padding: 0.625rem 0.375rem;
+    font-size: 0.875rem;
+  }
+
+  .work-view .project-feature-copy,
+  .work-view .project-card-copy {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .work-view .project-feature h2 {
+    font-size: 1.875rem;
+  }
+
+  .work-view .project-actions {
+    gap: 0.625rem 1.125rem;
+    margin-top: 1.5rem;
+  }
+
+  .work-view .project-highlights {
+    gap: 0.75rem 1rem;
+  }
+
+  .work-view .work-collection-heading {
+    gap: 0.625rem;
+    margin-bottom: 1.125rem;
+  }
+
+  .work-view .work-collection-heading h2 {
+    font-size: 1.625rem;
+  }
+
+  .work-view .project-collection-grid {
+    gap: 1rem;
+  }
+
+  .work-view .project-card-visual {
+    padding: 1rem 1rem 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  .work-view .project-card-copy h3 {
+    font-size: 1.625rem;
+  }
+
+  .work-view .project-link-card {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 0.875rem;
+    padding: 1.375rem 1.125rem;
+    border-radius: 1.25rem;
+  }
+
+  .work-view .project-monogram {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.8125rem;
+    font-size: 0.875rem;
+  }
+
+  .work-view .project-link-copy h3 {
+    font-size: 1.375rem;
+  }
+
+  .work-view .project-link-copy .project-summary {
+    line-height: 1.85;
+  }
+
+  .work-view .work-closing {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.875rem;
+    margin-top: 2.75rem;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .work-view .work-closing h2 {
+    font-size: 1.5rem;
+  }
+
+  .work-view .work-closing .button-outline {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+    margin-top: 0.375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .work-view .project-link-card {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .work-view .project-actions .button {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   06｜減少動態：作品頁的切換與按鈕不額外加入移動效果
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .work-view .work-preview-tab,
+  .work-view .project-link-card,
+  .work-view .project-detail,
+  .work-view .project-actions .button {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   07｜作品詳情：保留既有正文、標題與標籤閱讀字級
    ========================================================================== */
 .detail-dialog[data-detail-kind="project"] {
   max-width: 54rem;
@@ -197,74 +953,9 @@
 }
 
 /* ==========================================================================
-   05｜平板與手機：改變欄位配置，正文及標籤保持可讀字級。
+   08｜作品詳情手機版：保留既有間距與標題比例
    ========================================================================== */
-@media (max-width: 1100px) {
-  .view[data-view="work"] .work-entry {
-    grid-template-columns: 2.25rem minmax(0, 1fr);
-    column-gap: 1.25rem;
-    row-gap: 1.25rem;
-  }
-
-  .view[data-view="work"] .work-actions {
-    grid-column: 2;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem 1.5rem;
-  }
-}
-
 @media (max-width: 650px) {
-  .view[data-view="work"] .page-heading {
-    padding: 2.25rem 0 1.5rem;
-  }
-
-  .view[data-view="work"] .page-heading .eyebrow {
-    margin-bottom: 1rem;
-  }
-
-  .view[data-view="work"] .page-heading h1 {
-    font-size: clamp(2rem, 7.8vw, 2.25rem);
-  }
-
-  .view[data-view="work"] .work-note {
-    padding: 1.125rem;
-  }
-
-  .view[data-view="work"] .work-entry {
-    grid-template-columns: 1.75rem minmax(0, 1fr);
-    gap: 0 0.75rem;
-    padding: 1.75rem 0;
-  }
-
-  .view[data-view="work"] .work-number {
-    font-size: 0.875rem;
-  }
-
-  /* 讓摘要與標籤取得整列寬度，編號只與分類並排。 */
-  .view[data-view="work"] .work-main {
-    display: contents;
-  }
-
-  .view[data-view="work"] .work-main > :not(.eyebrow) {
-    grid-column: 1 / -1;
-  }
-
-  .view[data-view="work"] .work-main > .eyebrow {
-    margin-bottom: 0.75rem;
-  }
-
-  .view[data-view="work"] .work-main h2 {
-    font-size: 1.5625rem;
-  }
-
-  .view[data-view="work"] .work-actions {
-    grid-column: 1 / -1;
-    margin-top: 1.25rem;
-  }
-
   .detail-dialog[data-detail-kind="project"] #detail-content {
     padding: 1.5rem 1.25rem 1.75rem;
   }
@@ -279,7 +970,7 @@
 }
 
 /* ==========================================================================
-   06｜列印：沿用原本的精簡列印版，避免螢幕用的大字級改變履歷格式。
+   09｜列印：沿用原本精簡履歷，不輸出作品畫廊
    ========================================================================== */
 @media print {
   .view[data-view="work"] {

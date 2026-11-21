@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="studio.css">
     <!-- 小工具收藏、分類與首頁入口；工具清單集中於 content.js。 -->
     <link rel="stylesheet" href="tools.css">
-    <!-- 作品頁閱讀比例：標題、摘要、標籤與案例詳情集中於 work.css。 -->
+    <!-- 作品展示：代表作、專案縮圖、卡片與案例詳情集中於 work.css。 -->
     <link rel="stylesheet" href="work.css">
     <script src="content.js" defer></script>
     <script src="app.js" defer></script>
@@ -110,25 +110,24 @@
         <section class="studio-skill-section" aria-labelledby="practice-title"><div class="section-heading reveal"><div><p class="studio-section-label">MY TOOLBOX</p><h2 id="practice-title">不同的技術，同一種解題習慣。</h2></div><a class="text-link" href="#resume">看完整能力 <span aria-hidden="true">↗</span></a></div><div class="practice-grid" id="practice-grid"></div></section>
         <section class="studio-contact-band reveal"><div><p class="studio-section-label">LET'S CONNECT</p><h2>聊加工，也聊新的可能。</h2><p>技術交流、工具開發，或是下一個值得投入的問題。</p></div><a class="button button-dark" href="mailto:louis962911@gmail.com">與我聯絡 <span aria-hidden="true">↗</span></a></section>
       </section>
-      <!-- 04｜作品案例頁：案例列表由 content.js 的 projects 載入。 -->
-      <section class="view" data-view="work" hidden aria-labelledby="work-title">
-        <div class="page-heading">
-          <p class="eyebrow">SELECTED WORK / 作品案例</p>
-          <h1 id="work-title">做過的事，<br>留下解題的脈絡。</h1>
-          <p>從問題背景、採用方法到驗證證據，讓作品說明我如何思考與實作。</p>
-        </div>
-        <div class="work-note">
-          <strong>從實際作品，逐步留下完整案例。</strong>
-          <span>以公司外銷技術支援網站作為代表案例；其餘作品與個人技術整理，持續補上背景、方法與實作證據。</span>
-        </div>
-        <div class="work-list" id="work-list"></div>
-        <section class="home-note">
+      <!-- 04｜作品案例頁：實際畫面、代表專案與持續整理的案例分層呈現。 -->
+      <section class="view work-view" data-view="work" hidden aria-labelledby="work-title">
+        <header class="work-heading">
           <div>
-            <h2>一個好案例，從一個真實問題開始。</h2>
-            <p>問題背景 → 我的角色 → 解決方法 → 交付成果 → 驗證證據</p>
+            <p class="work-eyebrow">SELECTED WORK / 作品案例</p>
+            <h1 id="work-title">讓作品，<br>說明我的做法。</h1>
+            <p class="work-lead">把加工經驗、技術支援與網頁開發，做成可以使用的作品。</p>
           </div>
-          <a class="text-link" href="mailto:louis962911@gmail.com">聊聊技術與合作 <span aria-hidden="true">↗</span></a>
-        </section>
+          <p class="work-heading-note">從需求、方法到實際畫面，<br>看看我如何把問題往前推進。</p>
+        </header>
+        <div class="work-gallery" id="work-list"></div>
+        <aside class="work-closing">
+          <div>
+            <h2>下一個作品，從一個真實問題開始。</h2>
+            <p>聊加工、工具開發，或值得一起解開的新問題。</p>
+          </div>
+          <a class="button button-outline" href="mailto:louis962911@gmail.com">聊聊技術與合作</a>
+        </aside>
       </section>
       <!-- 05｜個人小工具：工具資料、分類與網址集中於 content.js 的 tools。 -->
       <section class="view tools-view" data-view="tools" hidden aria-labelledby="tools-title">

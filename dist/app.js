@@ -94,23 +94,79 @@
       </article>
     `).join('');
 
-    $('#work-list').innerHTML = data.projects.map((project, index) => `
-      <article class="work-entry">
-        <span class="work-number">${String(index + 1).padStart(2, '0')}</span>
-        <div class="work-main">
-          <span class="eyebrow">${escape(project.category)}</span>
-          <h2>${escape(project.title)}</h2>
-          <p>${escape(project.summary)}</p>
-          <div class="tag-list">${tags(project.tags)}</div>
+    renderWorkGallery();
+  }
+
+  // 03-1｜作品展示：真實截圖與內容共用資料，保留每個案例的既有詳情網址。
+  function renderWorkGallery() {
+    const featured = data.projects.find(project => project.featured) || data.projects[0];
+    if (!featured) { $('#work-list').replaceChildren(); return; }
+    const notebook = data.projects.find(project => project.id === 'engineering-notebook' && project !== featured);
+    const directory = data.projects.filter(project => project !== featured && project !== notebook);
+    const previews = (data.showcase || []).filter(item => (featured.previewIds || []).includes(item.id));
+    const preview = previews[0] || (featured.cover ? { image: featured.cover, label: featured.title, description: '實際專案畫面' } : null);
+    const detailButton = (project, className = 'project-detail') => `<button class="${className}" type="button" data-project="${escape(project.id)}">${project.status.includes('案例待補') ? '查看整理架構' : '閱讀專案'}</button>`;
+    const liveLink = /^https:\/\//i.test(featured.url) ? `<a class="project-live" href="${escape(featured.url)}" target="_blank" rel="noopener noreferrer">開啟網站</a>` : '';
+    const marks = { 'personal-website': 'WEB', study: 'STUDY', 'cnc-tools': 'CNC' };
+
+    $('#work-list').innerHTML = `
+      <article class="project-feature" data-project-card="${escape(featured.id)}">
+        <header class="project-feature-intro">
+          <div class="project-meta"><span class="project-kind">代表作品</span><span class="project-status">${escape(featured.status)}</span></div>
+          <p class="project-eyebrow">${escape(featured.category)}</p>
+          <h2>${escape(featured.title)}</h2>
+        </header>
+        <div class="project-visual">
+          <div class="project-browser-bar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span class="project-address">${escape(featured.previewTitle || featured.title)}</span></div>
+          <div class="project-screen">${preview ? `<img id="work-preview-image" src="${escape(preview.image)}" alt="${escape(preview.label + '，實際專案畫面')}" width="1280" height="900">` : `<span class="project-monogram" aria-hidden="true">WEB</span>`}</div>
+          <div class="work-preview-tabs" role="group" aria-label="切換專案畫面">${previews.map((item, index) => `<button class="work-preview-tab" type="button" data-work-preview="${escape(item.id)}" aria-pressed="${index === 0}" aria-controls="work-preview-image">${escape(item.label)}</button>`).join('')}</div>
+          <p class="work-preview-caption" id="work-preview-caption" aria-live="polite">${escape(preview?.description || '')}</p>
         </div>
-        <div class="work-actions">
-          <span class="status-note">${escape(project.status)}</span>
-          <button class="text-link" type="button" data-project="${escape(project.id)}">
-            ${project.status.includes('案例待補') ? '查看整理架構' : '查看案例'} ↗
-          </button>
+        <div class="project-feature-copy">
+          <p class="project-summary">${escape(featured.summary)}</p>
+          <div class="project-highlights">${(featured.highlights || []).map(highlight => `<span>${escape(highlight)}</span>`).join('')}</div>
+          <div class="tag-list">${tags(featured.tags)}</div>
+          <div class="project-actions">${detailButton(featured, 'button button-dark')}${liveLink}</div>
         </div>
       </article>
-    `).join('');
+      <section class="work-collection" aria-labelledby="work-collection-title">
+        <header class="work-collection-heading"><h2 id="work-collection-title">持續累積的實作</h2><p>個人網站、學習整理，以及工作裡需要的小幫手。</p></header>
+        <div class="project-collection-grid">
+          ${notebook ? `<article class="project-card project-notebook" data-project-card="${escape(notebook.id)}">
+            <div class="project-card-visual"><img src="${escape(notebook.cover)}" alt="${escape(notebook.coverAlt)}" width="1388" height="900" loading="lazy"></div>
+            <div class="project-card-copy">
+              <div class="project-meta"><span class="project-kind">個人專案</span><span class="project-status">${escape(notebook.status)}</span></div>
+              <p class="project-eyebrow">${escape(notebook.category)}</p><h3>${escape(notebook.title)}</h3><p class="project-summary">${escape(notebook.summary)}</p>
+              <div class="tag-list">${tags(notebook.tags)}</div>${detailButton(notebook)}
+            </div>
+          </article>` : ''}
+          <div class="project-directory">${directory.map(project => `<article class="project-link-card" data-project-card="${escape(project.id)}">
+            <span class="project-monogram" aria-hidden="true">${marks[project.id] || 'WEB'}</span>
+            <div class="project-link-copy"><p class="project-eyebrow">${escape(project.category)}</p><h3>${escape(project.title)}</h3><p class="project-summary">${escape(project.summary)}</p><span class="project-status">${escape(project.status)}</span>${detailButton(project)}</div>
+          </article>`).join('')}</div>
+        </div>
+      </section>`;
+
+    // 方向鍵只處理這組預覽按鈕，避免影響首頁獨立的作品舞台。
+    $('.work-preview-tabs').addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      const buttons = [...document.querySelectorAll('[data-work-preview]')];
+      const index = buttons.indexOf(event.target);
+      if (index < 0) return;
+      event.preventDefault();
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + buttons.length) % buttons.length;
+      buttons[next].focus();
+      setWorkPreview(buttons[next].dataset.workPreview);
+    });
+  }
+
+  function setWorkPreview(id) {
+    const item = (data.showcase || []).find(preview => preview.id === id);
+    if (!item || !$('#work-preview-image')) return;
+    $('#work-preview-image').src = item.image;
+    $('#work-preview-image').alt = `${item.label}，實際專案畫面`;
+    $('#work-preview-caption').textContent = item.description;
+    document.querySelectorAll('[data-work-preview]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.workPreview === id)));
   }
 
   // ============================================================
@@ -408,6 +464,9 @@
 
       const previewButton = event.target.closest('[data-preview]');
       if (previewButton) setPreview(previewButton.dataset.preview);
+
+      const workPreviewButton = event.target.closest('[data-work-preview]');
+      if (workPreviewButton) setWorkPreview(workPreviewButton.dataset.workPreview);
 
       const toolCategoryButton = event.target.closest('[data-tool-category]');
       if (toolCategoryButton) {

@@ -124,6 +124,10 @@ window.SITE_CONTENT = {
   projects: [
     {
       id: 'support-center',
+      featured: true,
+      highlights: ['需求與流程規劃', '加工知識整理', '迭代驗收'],
+      previewTitle: 'NINE9 / SUPPORT CENTER',
+      previewIds: ['portal', 'cutting', 'nc'],
       title: 'Nine9 Support Center',
       category: '外銷技術支援網站',
       summary: '為公司外銷技術支援設計的網站，整合產品分類、切削資料與 NC 程式工具，讓加工資訊能在同一個入口查找與操作。',
@@ -138,6 +142,9 @@ window.SITE_CONTENT = {
     },
     {
       id: 'engineering-notebook',
+      // 本站實際首頁截圖；更新視覺時可替換同名圖片。
+      cover: 'assets/personal-site-preview.jpg',
+      coverAlt: 'Louis Li 個人網站首頁：自我介紹與 Support Center 作品展示',
       title: '個人工程履歷與技術知識庫',
       category: '個人網站',
       summary: '整合個人介紹、作品案例、可搜尋與分類的技術索引，以及可列印履歷，作為持續維護的個人網站。',
