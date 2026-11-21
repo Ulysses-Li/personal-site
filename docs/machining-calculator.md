@@ -11,9 +11,16 @@
 | `dist/tools/machining-calculator/app.js` | 表單、顯示單位、模式切換、錯誤與結果、收藏 |
 | `dist/tools/machining-calculator/engine.js` | 純數學核心與輸入驗證；不讀取 DOM 或儲存資料 |
 | `dist/tools/machining-calculator/catalog.js` | 五個分類、公式短說明、適用範圍與官方來源 |
+| `dist/tools/machining-calculator/illustrations/` | 五張原創加工 SVG 插圖，依分類 ID 命名 |
 | `scripts/check-machining.mjs` | 14 組核心回歸檢查，不開瀏覽器、不使用網路、不改寫檔案 |
 
 分類 `id`、工具 `id` 與 `method` 是穩定識別。修改標題與說明時，保留這些識別，才能維持網址、收藏及方法對應。
+
+## 分類插圖
+
+`illustrations/` 的五張圖依序為立銑刀切削方塊、麻花鑽鑽孔、車刀加工圓柱、螺栓螺帽，以及游標卡尺量測。均為本站原創向量圖，透明底、`viewBox="0 0 240 160"`，不需要字型或外部圖片。
+
+首頁與收藏頁共用 `app.js` 的 `cards()`，依分類 ID 載入同名 SVG。圖片已有相鄰的分類文字，故使用空白 `alt` 與裝飾標記，避免輔助閱讀重複朗讀。大小由 `app.css` 的 `.category-art` 控制：桌機 186 × 124px、手機 100 × 68px，操作導覽的小圖示維持獨立設定。
 
 ## 公式與範圍
 

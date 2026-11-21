@@ -100,6 +100,8 @@ FANUC 手機版的 App 外觀集中於同目錄 `mobile.css`；固定搜尋、�
 
 「加工計算工具箱」位於 `dist/tools/machining-calculator/`，提供銑削、鑽削、車削、螺紋與攻牙、公差與配合五個分類，支援公英制、即時計算、複製結果及收藏。手機使用大圖示分類列與底部「分類／計算／收藏／說明」導覽。公差依使用者輸入的圖面偏差計算，沒有內建 ISO 等級表；攻牙底孔僅提供公制 60° 切削攻牙粗估。公式核心、目錄與介面分別在 `engine.js`、`catalog.js`、`app.js` 維護，修改後執行 `node scripts/check-machining.mjs`。完整說明見 `docs/machining-calculator.md`。
 
+加工工具首頁與收藏頁的五張原創加工插圖放在同目錄 `illustrations/`，使用 SVG 保持放大清晰；桌機與手機的插圖尺寸由 `app.css` 的 `.category-art` 調整。
+
 羽球工具的手機介面集中在 `dist/tools/badminton/mobile.css`（四分頁、底部導覽、觸控尺寸）與 `mobile-app.js`（切頁、焦點、操作按鈕位置）；本機 Bootstrap Icons 由 `icons.js` 管理，原始 SVG 與授權放在 `vendor/icons/`。修改手機版不需要另建一份名單、比分或儲存資料。
 
 在 `dist/content.js` 找到 `tools` 陣列，保留既有工具，再依下列格式加入新物件。以下為填寫範例，需替換成自己的名稱與可開啟網址：

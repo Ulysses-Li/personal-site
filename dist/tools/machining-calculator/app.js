@@ -156,7 +156,8 @@
 
   // ── 05｜分類、收藏與畫面導覽：五個工具都直接開啟可用表單。 ──
   function cards(items) {
-    return items.map(item => `<button class="category-card" type="button" data-category="${item.id}"><span class="category-icon">${icon(item.icon)}</span><span class="english">${esc(item.english.toUpperCase())}</span><h2>${esc(item.title)}</h2><p>${esc(item.description)}</p><span class="card-action">開啟計算${favorites.has(item.id) ? ' · 已收藏' : ''}</span></button>`).join('');
+    // 分類使用本機原創加工插圖；文字已說明用途，因此圖片不重複朗讀。
+    return items.map(item => `<button class="category-card" type="button" data-category="${item.id}"><span class="category-art" aria-hidden="true"><img src="illustrations/${esc(item.id)}.svg" alt="" width="240" height="160" draggable="false"></span><span class="english">${esc(item.english.toUpperCase())}</span><h2>${esc(item.title)}</h2><p>${esc(item.description)}</p><span class="card-action">開啟計算${favorites.has(item.id) ? ' · 已收藏' : ''}</span></button>`).join('');
   }
   function renderCards() {
     $('category-grid').innerHTML = cards(catalog.categories);

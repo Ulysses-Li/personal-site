@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" fill="none">
+  <!-- 螺紋與攻牙｜原創螺栓與螺帽插圖；透明底保留主站配色。 -->
+  <defs>
+    <linearGradient id="bolt" x1="91" y1="56" x2="117" y2="112" gradientUnits="userSpaceOnUse"><stop stop-color="#f5fbff"/><stop offset="1" stop-color="#83b5d0"/></linearGradient>
+    <linearGradient id="nut" x1="141" y1="100" x2="188" y2="132" gradientUnits="userSpaceOnUse"><stop stop-color="#c8e5f3"/><stop offset="1" stop-color="#83b5d0"/></linearGradient>
+  </defs>
+  <ellipse cx="119" cy="139" rx="91" ry="10" fill="#badced" opacity=".28"/>
+  <path d="M29 96a57 57 0 0 1 57-66M187 33a47 47 0 0 1 25 42" stroke="#b9dbef" stroke-width="1.5" stroke-dasharray="3 6" stroke-linecap="round"/>
+  <g stroke="#245674" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- 加寬牙形間距，在手機縮圖仍可辨識螺紋。 -->
+    <g transform="rotate(-28 101 78)">
+      <path d="M90 51h23v77l-11 9-12-9Z" fill="url(#bolt)"/>
+      <path d="m91 68 22-7m-22 17 22-7m-22 17 22-7m-22 17 22-7m-22 17 22-7m-22 17 22-7m-22 17 22-7"/>
+      <path d="m78 31 23-13 25 14v21l-24 13-24-14Z" fill="#83b5d0"/>
+      <path d="m78 31 24 14 24-13-25-14Z" fill="#f5fbff"/>
+      <path d="M102 45v21M78 31v21l24 14V45Z" fill="#c8e5f3"/>
+      <path d="m92 31 10-5 10 6-10 5Z" fill="#dce9fa" stroke="#83b5d0" stroke-width="1.6"/>
+    </g>
+    <!-- 六角螺帽與內牙。 -->
+    <path d="m142 98 25-14 25 14v26l-25 14-25-14Z" fill="url(#nut)"/>
+    <path d="m142 98 25 14 25-14-25-14Z" fill="#f5fbff"/>
+    <path d="M167 112v26m-25-40 25 14 25-14"/>
+    <ellipse cx="167" cy="98" rx="12" ry="7" fill="#5c8da8"/>
+    <path d="M156 100q11-6 22 0m-20 3q9-4 18 0" stroke="#c8e5f3" stroke-width="1.6"/>
+    <path d="m45 131 6-3m143-62 5 3" stroke="#a78bfa" stroke-width="3"/>
+  </g>
+</svg>

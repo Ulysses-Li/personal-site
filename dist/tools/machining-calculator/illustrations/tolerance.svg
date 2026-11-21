@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" fill="none">
+  <!-- 公差與配合｜原創游標卡尺與圓柱工件，著重尺寸量測的辨識性。 -->
+  <defs>
+    <linearGradient id="workpiece" x1="84" y1="87" x2="84" y2="121" gradientUnits="userSpaceOnUse"><stop stop-color="#f5fbff"/><stop offset=".48" stop-color="#c8e5f3"/><stop offset="1" stop-color="#83b5d0"/></linearGradient>
+    <linearGradient id="caliper" x1="48" y1="45" x2="179" y2="108" gradientUnits="userSpaceOnUse"><stop stop-color="#f5fbff"/><stop offset="1" stop-color="#c8e5f3"/></linearGradient>
+  </defs>
+  <ellipse cx="122" cy="137" rx="91" ry="10" fill="#badced" opacity=".28"/>
+  <circle cx="123" cy="80" r="59" stroke="#d6e4fa" stroke-width="1.5" stroke-dasharray="3 6"/>
+  <g stroke="#245674" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- 金屬圓柱與端面，兩側由卡尺外量爪接觸。 -->
+    <path d="M70 86h87v34H70a10 17 0 0 1 0-34Z" fill="url(#workpiece)"/>
+    <ellipse cx="157" cy="103" rx="11" ry="17" fill="#c8e5f3"/>
+    <ellipse cx="157" cy="103" rx="5" ry="8" fill="#83b5d0" stroke-width="1.6"/>
+    <path d="M77 92h65" stroke="#fff" stroke-width="3"/>
+    <!-- 卡尺主尺、外量爪與數位讀值窗；沒有文字避免縮圖噪點。 -->
+    <path d="M45 42h157v17H45Z" fill="#c8e5f3"/>
+    <path d="M45 42V25h9l8 17m86 0 8-17h9v17" fill="#c8e5f3"/>
+    <path d="M45 42h18v70l-10 15h-8V42Zm106 0h26v85h-8l-12-15V69h-6Z" fill="url(#caliper)"/>
+    <path d="M56 73v38m114-38v38" stroke="#a78bfa" stroke-width="3"/>
+    <path d="M69 45v6m10-6v9m10-9v6m10-6v9m10-9v6m10-6v9m10-9v6m10-6v9m44-9v6m10-6v9" stroke-width="1.5"/>
+    <rect x="142" y="51" width="44" height="23" rx="4" fill="#eef3ff"/>
+    <rect x="148" y="57" width="25" height="11" rx="2" fill="#a6c6e5" stroke="#83b5d0" stroke-width="1.5"/>
+    <path d="M179 62h1" stroke="#a78bfa" stroke-width="3"/>
+    <path d="M69 132h84" stroke="#83b5d0" stroke-width="1.5" stroke-dasharray="3 4"/>
+  </g>
+</svg>
