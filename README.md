@@ -177,9 +177,25 @@ git commit -m "更新個人履歷與作品內容"
 git log --oneline -5
 ```
 
-`git commit` 會把版本保存在這台電腦；推送遠端與發佈網站是另外的步驟。本機檔案修改後，先前線上預覽不會自動更新。
+`git commit` 會把版本保存在這台電腦；完成下方的 GitHub 推送後，正式網站才會更新。本機預覽仍會直接讀取本機檔案。
 
 程式碼、註解與文件採 UTF-8；本儲存庫也設定 Git 提交與紀錄輸出使用 UTF-8，中文檔名直接顯示。
+
+## 上傳與發布 GitHub Pages
+
+正式網站：[https://lab.cwli.dev/](https://lab.cwli.dev/)。原始碼儲存庫：[Ulysses-Li/personal-site](https://github.com/Ulysses-Li/personal-site)。
+
+在本機修改、檢查並提交完成後執行：
+
+```powershell
+git push origin main
+```
+
+`.github/workflows/pages.yml` 會自動驗證 FANUC、加工計算、螺紋與 ISO 公差資料，再將 `dist/` 裡的網站內容發布到根網址。驗證失敗時不會執行發布。可在儲存庫的 [Actions](https://github.com/Ulysses-Li/personal-site/actions) 查看進度，也可手動執行「發布個人網站」。
+
+GitHub Pages 的發布來源使用 **GitHub Actions**，自訂網域保留 `lab.cwli.dev`，並啟用 HTTPS。不要改回 `main / (root)` 的分支發布，否則根目錄的 README 會再次被當成首頁。根目錄的 `CNAME` 保存網域名稱；工作流程會將它放入網站封裝。
+
+網站檔案繼續在本機的 `dist/` 維護，正式網址不需要加 `/dist/`。`.openai/hosting.json` 與 `scripts/publish-source.mjs` 保留原 Sites 設定，與這個 GitHub Pages 發布流程分開。
 
 ## 第一版已實作
 
