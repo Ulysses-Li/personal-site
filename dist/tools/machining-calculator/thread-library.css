@@ -612,6 +612,16 @@
   white-space: normal;
 }
 
+.thread-library .thread-reference-range {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 100%;
+}
+.thread-library .thread-reference-range > span {
+  white-space: nowrap;
+}
+
 .thread-library #thread-dimension-note {
   margin: 12px 0 0;
   color: var(--muted);

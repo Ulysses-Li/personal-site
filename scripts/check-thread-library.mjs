@@ -89,8 +89,36 @@ check('19 筆 NPT 參考模型使用原始牙距，未改限界',()=>{
   }
 });
 check('NPTF 與其他牙系不套用 NPT 計算模型',()=>{
-  assert.equal(records.filter(row=>row.profileReference).length,19);
-  for(const row of records.filter(item=>item.family==='nptf'))assert.equal(row.profileReference,null);
+  assert.equal(records.filter(row=>row.profileReference?.kind==='maximum-basic-height').length,19);
+  for(const row of records.filter(item=>item.family==='nptf'))assert.notEqual(row.profileReference.kind,'maximum-basic-height');
+});
+check('NPTF1/16 內外牙截形範圍各自計算',()=>{
+  const row=get('nptf-1-16'),profile=row.profileReference;
+  assert.deepEqual(profile.members.internal.majorMm,{min:7.692644,max:7.779004});
+  assert.deepEqual(profile.members.internal.minorMm,{min:6.4135,max:6.50494});
+  assert.deepEqual(profile.members.external.majorMm,{min:7.779004,max:7.870444});
+  assert.deepEqual(profile.members.external.minorMm,{min:6.50494,max:6.5913});
+  assert.match(profile.formulaByMember.internal,/2fr/);assert.match(profile.formulaByMember.external,/2fc/);
+});
+check('NPTF 使用徑向截短表，不誤用平寬F',()=>{
+  const expected={27:[.03208,.0017,.0035,.0035,.0052],18:[.04811,.0026,.0043,.0043,.0061],14:[.06186,.0026,.0043,.0043,.0061],11.5:[.07531,.0035,.0052,.0052,.0078],8:[.10825,.0052,.0069,.0069,.0095]};
+  const rows=records.filter(row=>row.profileReference?.kind==='dryseal-truncation-range');assert.equal(rows.length,12);
+  for(const row of rows){const values=row.profileReference.sourceInches;assert.deepEqual([values.sharpH,values.crest.min,values.crest.max,values.root.min,values.root.max],expected[row.tpi]);}
+});
+check('截形參考不回填工件限界或原始基本大徑',()=>{
+  for(const row of records.filter(item=>item.family==='nptf')){
+    assert.equal(row.internal,null);assert.equal(row.external,null);assert.equal(row.basic.major,null);assert.equal(row.basic.minorInternal,null);assert.equal(row.basic.minorExternal,null);
+    for(const side of Object.values(row.profileReference.members)){
+      valid(side.majorMm.min);valid(side.majorMm.max);valid(side.minorMm.min);valid(side.minorMm.max);
+      assert.ok(side.majorMm.min<=side.majorMm.max&&side.minorMm.min<=side.minorMm.max);
+      assert.ok(side.majorMm.min>row.basic.pitch&&side.minorMm.max<row.basic.pitch);
+    }
+  }
+});
+check('NPTF1/2 參考小徑符合官方顯示精度',()=>{
+  const profile=get('nptf-1-2').profileReference;
+  assert.equal(profile.members.internal.minorMm.min.toFixed(3),'18.333');assert.equal(profile.members.internal.minorMm.max.toFixed(3),'18.419');
+  assert.equal(profile.members.external.majorMm.max.toFixed(3),'21.211');
 });
 check('Tr／Pg 不以公稱值冒充基本徑',()=>{
   const rows=records.filter(row=>row.nominalOnly);assert.equal(rows.length,27);

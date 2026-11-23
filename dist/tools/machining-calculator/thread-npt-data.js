@@ -3,7 +3,7 @@
  * 依 NIST 官方保存的 NBS H28（1957）Part II 歷史基本尺寸表整理。
  * 已渲染並目視核對工件基本尺寸表的表頭，未摘錄後段的量規製造尺寸表。
  * E₁ 為指定平面的基本節徑；管材外徑 D 另存，不當成該平面的螺紋大徑。
- * NPT 的最大基本牙高模型另存 profileReference，不回填原表基本徑或工件限界。
+ * NPT 牙高模型與 NPTF 截形範圍另存 profileReference，不回填原表基本徑或工件限界。
  */
 (function publishThreadNptData() {
   'use strict';
@@ -22,8 +22,15 @@
       id: 'nptf-nbs-h28-1957-basic',
       title: 'NBS H28（1957）Part II｜NPTF 乾密封工件基本尺寸',
       url: handbookUrl,
-      page: '印刷頁 21–22／PDF 第 31–32 頁；§3 與 Table VIII.4「Basic dimensions of Dryseal American Standard taper pipe thread, NPTF」',
-      scope: '獨立採 NPTF 工件基本表，不由 NPT 推定；該表收錄 1/16–3。未摘錄 Tables VIII.15–21 的量規尺寸，也未推算乾密封牙頂、牙底截形或公差界限。'
+      page: '印刷頁 21–22／PDF 第 31–32 頁，§3 與表 VIII.4 的 E1／L1；印刷頁 19–20／PDF 第 29–30 頁，圖 VIII.1 與表 VIII.2 的工件截形',
+      scope: 'NPTF 的 E1／L1 與工件徑向截短 f 獨立採表，不由 NPT 推定。固定基本 E1 後，按牙頂 fc、牙底 fr 分別計算內／外牙截形參考範圍；未納入 ±1 轉等完整製造許差。不是後段量規表值，亦非製造驗收限界。'
+    },
+    {
+      id: 'yamawa-nptf-minor-check',
+      title: 'YAMAWA YEU23｜NPTF 內牙 E₁ 位置小徑交叉核對',
+      url: 'https://www.yamawa.eu/wp-content/uploads/Update_YEU23/files/basic-html/page713.html',
+      page: '印刷頁 711／電子頁 713，Pipe End（Basic Diameter Position E1）小徑欄，1/16-27 與 1/2-14 列',
+      scope: '僅交叉核對固定基本位置的小徑：1/16 為 6.414–6.505 mm，1/2 為 18.333–18.419 mm；與 NBS 截形推導的顯示精度一致。預鑽與絲攻尺寸屬其他欄位。'
     },
     {
       id: 'baer-npt-reference-check',
@@ -124,6 +131,36 @@
     };
   }
 
+  // NPTF 表 VIII.2：H 為尖 V 高度，fc／fr 是徑向截短 f，不是平寬 F。
+  // 內牙的大徑對應牙底、外牙的大徑對應牙頂，因此不能共用同一組範圍。
+  // 各欄：TPI、H、fc最小、fc最大、fr最小、fr最大；長度單位 inch。
+  const drysealTruncations=[
+    [27,0.03208,0.0017,0.0035,0.0035,0.0052],
+    [18,0.04811,0.0026,0.0043,0.0043,0.0061],
+    [14,0.06186,0.0026,0.0043,0.0043,0.0061],
+    [11.5,0.07531,0.0035,0.0052,0.0052,0.0078],
+    [8,0.10825,0.0052,0.0069,0.0069,0.0095]
+  ];
+  function drysealProfile(e1Inch,tpi) {
+    const [,sharpH,crestMin,crestMax,rootMin,rootMax]=drysealTruncations.find(row=>row[0]===tpi);
+    const majorRange=(min,max)=>({min:mm(e1Inch+sharpH-2*max),max:mm(e1Inch+sharpH-2*min)});
+    const minorRange=(min,max)=>({min:mm(e1Inch-sharpH+2*min),max:mm(e1Inch-sharpH+2*max)});
+    return {
+      kind:'dryseal-truncation-range',
+      sourceId:'nptf-nbs-h28-1957-basic',
+      sourceInches:{sharpH,crest:{min:crestMin,max:crestMax},root:{min:rootMin,max:rootMax}},
+      members:{
+        internal:{majorMm:majorRange(rootMin,rootMax),minorMm:minorRange(crestMin,crestMax)},
+        external:{majorMm:majorRange(crestMin,crestMax),minorMm:minorRange(rootMin,rootMax)}
+      },
+      formulaByMember:{
+        internal:'內牙大徑參考 = E₁ + H − 2fr；內牙小徑參考 = E₁ − H + 2fc',
+        external:'外牙大徑參考 = E₁ + H − 2fc；外牙小徑參考 = E₁ − H + 2fr'
+      },
+      scope:'固定基本 E₁ 的歷史截形參考範圍。H 為尖 V 牙高，fc／fr 分別為牙頂／牙底的徑向截短，採 NPTF 表 VIII.2。未加入量規旋合位置、錐度等完整製造許差，不能當作工件整體驗收上下限。'
+    };
+  }
+
   function makeRecords(family, rows, sourceId) {
     const code = family.toUpperCase();
     return rows.map(([size, tpi, e1Inch, l1Inch, pipeOutsideInch]) => ({
@@ -149,8 +186,8 @@
         minorInternal: null,
         minorExternal: null
       },
-      // NPTF 的截形另有規定，不能套用此 NPT 參考模型。
-      profileReference:family==='npt'?maximumBasicProfile(e1Inch,tpi):null,
+      // 兩種參考分開：NPT 用對稱牙高模型，NPTF 用其獨立截短表及內外牙映射。
+      profileReference:family==='npt'?maximumBasicProfile(e1Inch,tpi):drysealProfile(e1Inch,tpi),
       symbols: { pitch: 'E₁' },
       referenceLabel: '基準平面基本尺寸',
       referenceEdition: 'NBS H28 · 1957 基本表',
@@ -165,9 +202,9 @@
       },
       internal: null,
       external: null,
-      sourceIds: [sourceId, 'vermont-npt-reference-plane', ...(family==='npt'&&['1/2','1'].includes(size)?['baer-npt-reference-check']:[])],
+      sourceIds: [sourceId, 'vermont-npt-reference-plane', ...(family==='npt'&&['1/2','1'].includes(size)?['baer-npt-reference-check']:[]),...(family==='nptf'&&['1/16','1/2'].includes(size)?['yamawa-nptf-minor-check']:[])],
       scope: family === 'nptf'
-        ? '依 NBS H28（1957）表 VIII.4 摘錄的歷史 NPTF 工件基本值。只收 E₁／L1 與牙距；管材外徑 D 另列。未收基準面大、小徑及指定等級製造限界；不以 NPT 截形或量規尺寸代替。'
+        ? '依 NBS H28（1957）表 VIII.4 摘錄 E₁／L1；大、小徑另依表 VIII.2 的 NPTF 專用截短值計算固定基本 E₁ 的參考範圍。內外牙分開，未納入完整製造許差；原始 basic 大、小徑與工件限界仍未收錄。'
         : '依 NBS H28（1957）表 VII.2 摘錄 E₁／L1 與牙距，管材外徑 D 另列。大、小徑另提供 h=0.8P 最大基本牙高模型的計算參考；原表大、小徑欄及製造限界未收錄，不是量規製造尺寸。'
     }));
   }
