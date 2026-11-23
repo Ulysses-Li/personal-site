@@ -25,12 +25,23 @@ personal-site/
 ├─ 開啟網站.html             雙擊開啟本機網站
 ├─ README.md                 本說明與 Git 使用方式
 ├─ QA.md                     驗證紀錄與限制
+├─ CHANGELOG.md              改版摘要；與 data/version.js 同步
 ├─ .editorconfig             UTF-8 與兩格縮排設定
 ├─ .gitattributes            Git 文字換行與圖片格式設定
 ├─ .gitignore                Git 排除暫存檔與憑證
 ├─ dist/                     完整網站；可直接開啟與修改
-│  ├─ index.html             五個頁面的版面與固定文案
-│  ├─ content.js             個人資料、能力、作品、技術主題、履歷
+│  ├─ index.html             主內容版面與頁首／頁尾掛載點
+│  ├─ data/                  結構化設定，日常改文字與連結優先到這裡
+│  │  ├─ site.js             網站名稱與共用個人資料
+│  │  ├─ header.js           頁首品牌、導覽、聯絡按鈕
+│  │  ├─ footer.js           頁尾短句、版權與連結標籤
+│  │  └─ version.js          版本號、日期與改版摘要
+│  ├─ components/            共用頁首頁尾的 HTML 與行為
+│  │  ├─ shared.js           文字跳脫與連結處理
+│  │  ├─ header.js           頁首呈現、漢堡選單與選中狀態
+│  │  ├─ footer.js           頁尾呈現與版權年份
+│  │  └─ site-shell.js       共用元件掛載；先於 app.js 載入
+│  ├─ content.js             能力、作品、技術主題、履歷；引用共用 profile
 │  ├─ styles.css             共用版面、手機版、列印版
 │  ├─ studio.css             個人工作室首頁、作品舞台與微互動
 │  ├─ tools.css              小工具卡片、搜尋分類與首頁入口
@@ -48,6 +59,7 @@ personal-site/
 │  │     └─ thread-library.css   螺紋查表的獨立響應式版面
 │  └─ assets/                共用 theme.css、頭像、圖示與專案截圖
 ├─ docs/
+│  ├─ project-structure.md   主站資料／元件分層、修改位置與版次流程
 │  ├─ support-center-case.md 代表作品的事實與畫面來源
 │  ├─ badminton-tool.md      羽球工具複本、修改位置與驗證說明
 │  ├─ fanuc-macro-tool.md    FANUC 資料、手冊來源及工具維護方式
@@ -55,6 +67,7 @@ personal-site/
 ├─ scripts/
 │  ├─ preview.mjs            可選的本機預覽工具
 │  ├─ check-fanuc.mjs        FANUC 條目、來源關聯及 G65 引數對照檢查
+│  ├─ check-site-shell.mjs   頁首／頁尾資料、元件、載入與版本結構檢查
 │  ├─ check-machining.mjs    加工公式、輸入驗證與單位換算檢查
 │  ├─ check-thread-data.mjs  螺紋限界／基本牙型、合併資料與來源檢查
 │  ├─ check-thread-library.mjs 全部擴充牙系、管牙基準與搜尋檢查
@@ -66,9 +79,11 @@ personal-site/
 
 ## 維護內容
 
-主要編輯 `dist/content.js`：
+主站頁首、頁尾與個人資料已拆分：`dist/data/site.js` 管理姓名與聯絡資料，`header.js` 管理導覽，`footer.js` 管理頁尾，`version.js` 管理版次；HTML 與選單程式放在 `dist/components/`。詳細修改範例與版本流程見 [主站結構說明](docs/project-structure.md)，每次改版摘要放在 [CHANGELOG.md](CHANGELOG.md)。
 
-- `profile`：個人資料與聯絡入口。姓名、職稱、個人簡介與 Email 會套用到頁面；其餘固定文案與頁尾位於 `index.html`。
+作品與知識內容繼續編輯 `dist/content.js`：
+
+- `profile`：引用 `data/site.js` 的同一份資料；姓名、職稱、簡介與聯絡方式請改 `data/site.js`，不用另外複製到本檔。
 - `showcase`：首頁可切換的專案畫面，包含按鈕標籤、標題、圖片路徑、說明與對應正式網址。
 - `tools`：個人小工具清單，已加入「羽球開打」、「FANUC Macro B 指令手冊」及「加工計算工具箱」。填入工具名稱、分類、用途、標籤與網址後，工具箱會自動產生卡片、分類與搜尋。
 - `competencies`：四類能力，會同步顯示在首頁與履歷。
@@ -82,12 +97,16 @@ personal-site/
 
 | 想修改什麼 | 編輯位置 |
 | --- | --- |
-| 姓名、職稱、簡介、聯絡方式 | `content.js` 的 `profile` |
+| 姓名、職稱、簡介、聯絡方式、網站名稱 | `data/site.js` 的 `profile`／`siteName` |
+| 頁首品牌、選單文字與順序、聯絡按鈕 | `data/header.js` |
+| 頁尾短句、版權起始年、連結標籤 | `data/footer.js` |
+| 頁首／頁尾 HTML 與漢堡選單行為 | `components/header.js`／`components/footer.js` |
+| 主站版次與改版摘要 | `data/version.js`／根目錄 `CHANGELOG.md` |
 | 首頁專長與履歷能力 | `content.js` 的 `competencies` |
 | 新增作品、補上成果與證據 | `content.js` 的 `projects` |
 | 新增技術主題與文章段落 | `content.js` 的 `knowledge` |
 | 履歷摘要、技術與待補資料 | `content.js` 的 `resume` |
-| 首頁大標題、固定介紹、頁尾 | `index.html` 的繁體中文分區 |
+| 首頁大標題、主內容固定介紹 | `index.html` 的繁體中文分區 |
 | 首頁展示的專案畫面與連結 | `content.js` 的 `showcase` |
 | 新增自己的小工具 | `content.js` 的 `tools`；本機程式放在 `dist/tools/` |
 | 主站與工具的背景、文字、按鈕及卡片色彩 | `assets/theme.css` 的共用色彩變數 |

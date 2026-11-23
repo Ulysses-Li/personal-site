@@ -1,7 +1,8 @@
 /**
  * 個人網站互動程式
  *
- * 修改內容請先到 content.js；版面在 index.html，配色在 styles.css。
+ * 作品與筆記在 content.js；個人資料／頁首頁尾在 data/，元件在 components/。
+ * 主頁版面在 index.html，配色與響應式樣式沿用原 CSS。
  * 本檔負責把資料放進頁面，以及導覽、搜尋、分類、詳情視窗與履歷列印。
  * 所有功能都在瀏覽器本機執行，不需要伺服器或套件。
  */
@@ -12,7 +13,8 @@
   // 01. 取得內容資料、共用工具與頁面狀態
   // ============================================================
   const data = window.SITE_CONTENT;
-  if (!data) return;
+  const shell = window.SiteShell;
+  if (!data || !shell) return;
 
   const $ = (selector) => document.querySelector(selector);
 
@@ -31,13 +33,10 @@
 
   const dialog = $('#detail-dialog');
   const categories = ['全部', ...new Set(data.knowledge.map((note) => note.category))];
-  const titles = {
-    home: '工程實踐與技術筆記',
-    work: '作品案例',
-    tools: '小工具',
-    notes: '技術知識庫',
-    resume: '個人履歷'
-  };
+  // 頁面標題與導覽共用資料；隱藏導覽入口不會刪除原有深連結。
+  const titles = Object.fromEntries(window.SITE_HEADER.navigation.map(item => [
+    item.id, item.pageTitle || (item.id === 'home' ? window.SITE_SETTINGS.siteName : item.label)
+  ]));
 
   let activeView = null;
   let selectedCategory = '全部';
@@ -50,10 +49,9 @@
   }));
 
   // ============================================================
-  // 02. 個人資料：將 content.js 的設定套用到共用位置
+  // 02. 個人資料：套用 data/site.js 的共用資料；頁首品牌由元件建立
   // ============================================================
   function renderProfile() {
-    $('.brand-copy strong').textContent = data.profile.name.toUpperCase();
     $('.studio-name').innerHTML = `${escape(data.profile.name)}<span class="name-period">.</span>`;
     $('.studio-signature strong').textContent = data.profile.name;
     $('.studio-signature img').alt = data.profile.name;
@@ -62,7 +60,8 @@
     $('#resume-title').textContent = data.profile.name;
     $('.resume-heading > div > p:last-child').textContent = data.profile.role;
 
-    document.querySelectorAll('a[href^="mailto:"]').forEach((link) => {
+    // 頁首頁尾的聯絡連結由各自元件管理；這裡只更新主內容。
+    document.querySelectorAll('main a[href^="mailto:"]').forEach((link) => {
       link.href = `mailto:${data.profile.email}`;
       if (link.classList.contains('resume-email')) {
         link.textContent = data.profile.email;
@@ -70,7 +69,7 @@
     });
 
     // data-profile-link 指向 profile 中同名欄位，讓聯絡資料集中維護。
-    document.querySelectorAll('[data-profile-link]').forEach((link) => {
+    document.querySelectorAll('main [data-profile-link]').forEach((link) => {
       const value = data.profile[link.dataset.profileLink];
       if (typeof value !== 'string' || !/^https:\/\//i.test(value)) return;
 
@@ -387,12 +386,6 @@
   // ============================================================
   // 08. 網址導覽：#home、#work、#tools、#notes、#resume 與詳情深連結
   // ============================================================
-  function closeMenu() {
-    $('#site-nav').classList.remove('is-open');
-    $('.menu-toggle').setAttribute('aria-expanded', 'false');
-    $('.menu-toggle').setAttribute('aria-label', '展開導覽');
-  }
-
   function route({ initial = false } = {}) {
     let parts;
     try {
@@ -410,14 +403,10 @@
       section.hidden = !current;
       section.classList.toggle('is-active', current);
     });
-    document.querySelectorAll('.site-nav a[data-view]').forEach((link) => {
-      if (link.dataset.view === view) link.setAttribute('aria-current', 'page');
-      else link.removeAttribute('aria-current');
-    });
+    shell.header.setActive(view);
 
     document.title = `${data.profile.name}｜${titles[view]}`;
     activeView = view;
-    closeMenu();
 
     let item = null;
     if (view === 'work') {
@@ -473,10 +462,6 @@
         selectedToolCategory = toolCategoryButton.dataset.toolCategory;
         renderTools();
       }
-
-      if (!event.target.closest('.site-header')) closeMenu();
-      const sameRouteLink = event.target.closest('a[href^="#"]');
-      if (sameRouteLink?.getAttribute('href') === location.hash) closeMenu();
     });
 
     $('#knowledge-search').addEventListener('input', renderNotes);
@@ -494,15 +479,7 @@
       $('#knowledge-search').focus();
     });
 
-    $('.menu-toggle').addEventListener('click', () => {
-      const open = $('.menu-toggle').getAttribute('aria-expanded') !== 'true';
-      $('.menu-toggle').setAttribute('aria-expanded', String(open));
-      $('.menu-toggle').setAttribute('aria-label', open ? '收合導覽' : '展開導覽');
-      $('#site-nav').classList.toggle('is-open', open);
-    });
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeMenu();
-    });
+    // 頁首元件自行管理漢堡選單、Escape、同頁連結及點擊外部的關閉行為。
 
     $('.dialog-close').addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (event) => {

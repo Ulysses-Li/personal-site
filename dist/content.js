@@ -1,7 +1,7 @@
 /*
- * 網站內容資料｜日常更新優先修改本檔案
+ * 作品與知識內容資料｜基本資料、頁首與頁尾請到 data/ 維護
  *
- * 01 個人資料 profile       → 姓名、職稱、簡介與聯絡方式
+ * 01 個人資料 profile       → 引用 data/site.js，姓名與聯絡方式只在該檔維護
  * 02 互動展示 showcase      → 代表作畫面、切換標籤與正式入口
  * 03 專業能力 competencies  → 首頁與履歷共用的能力介紹
  * 04 作品案例 projects      → 作品列表及案例詳情
@@ -53,17 +53,8 @@ window.SITE_CONTENT = {
       source: '個人工具・加工計算'
     }
   ],
-  // ── 01｜個人資料：聯絡網址使用完整 HTTPS 網址，Email 只填信箱。 ──
-  profile: {
-    name: 'Louis Li',
-    role: '產品管理部工程師',
-    headline: '把現場問題，整理成可用的方法。',
-    intro: '我在製造業做技術支援，也把加工經驗轉成數位工具。最近正在設計公司外銷的技術支援網站，讓刀具資料與加工方法更容易被理解、被使用。',
-    email: 'louis962911@gmail.com',
-    github: 'https://github.com/Ulysses-Li',
-    website: 'https://cwli.dev',
-    line: 'https://line.me/ti/p/P0eXqNnDh-'
-  },
+  // ── 01｜保留 profile 介面，資料共用 data/site.js，不複製第二份。 ──
+  profile: window.SITE_SETTINGS.profile,
   // ── 02｜代表作互動展示：image 使用本機圖片路徑，url 指向對應的正式功能頁。 ──
   // id 對應展示切換項目；更新畫面時保留檔名，或同步修改 image 路徑。
   showcase: [

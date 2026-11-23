@@ -16,35 +16,23 @@
     <link rel="stylesheet" href="tools.css">
     <!-- 作品展示：代表作、專案縮圖、卡片與案例詳情集中於 work.css。 -->
     <link rel="stylesheet" href="work.css">
+    <!-- 資料層：基本資料、頁首、頁尾與版次，先於元件載入。 -->
+    <script src="data/site.js" defer></script>
+    <script src="data/header.js" defer></script>
+    <script src="data/footer.js" defer></script>
+    <script src="data/version.js" defer></script>
     <script src="content.js" defer></script>
+    <!-- 共用元件先建立節點，主程式再啟動導覽、列表與搜尋。 -->
+    <script src="components/shared.js" defer></script>
+    <script src="components/header.js" defer></script>
+    <script src="components/footer.js" defer></script>
+    <script src="components/site-shell.js" defer></script>
     <script src="app.js" defer></script>
   </head>
   <body class="portfolio-studio">
     <a class="skip-link" href="#main-content">跳至主要內容</a>
-    <!-- 02｜共用頁首與導覽：五個頁面由 app.js 依網址 hash 切換。 -->
-    <header class="site-header">
-      <div class="container header-inner">
-        <a class="brand" href="#home" aria-label="Louis Li 首頁">
-          <span class="brand-mark">L.</span>
-          <span class="brand-copy">
-            <strong>LOUIS LI</strong>
-            <small>工程實踐與技術筆記</small>
-          </span>
-        </a>
-        <!-- 手機漢堡選單：沿用 aria-expanded，展開時由 CSS 切換為關閉圖示。 -->
-        <button class="menu-toggle" type="button" aria-label="展開導覽" aria-controls="site-nav" aria-expanded="false">
-          <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
-        </button>
-        <nav class="site-nav" id="site-nav" aria-label="主要導覽">
-          <a href="#home" data-view="home" aria-current="page">關於我</a>
-          <a href="#work" data-view="work">作品案例</a>
-          <a href="#tools" data-view="tools">小工具</a>
-          <a href="#notes" data-view="notes">技術知識庫</a>
-          <a href="#resume" data-view="resume">個人履歷</a>
-        </nav>
-        <a class="nav-contact" href="mailto:louis962911@gmail.com">與我聯絡 <span aria-hidden="true">↗</span></a>
-      </div>
-    </header>
+    <!-- 02｜共用頁首掛載點：內容在 data/header.js，結構與漢堡選單在 components/header.js。 -->
+    <header class="site-header" data-site-header></header>
     <main id="main-content" class="container" tabindex="-1">
       <!-- 03｜個人工作室首頁：真實作品預覽、錯落入口與專業能力。 -->
       <section class="view is-active studio-home" data-view="home" aria-labelledby="home-title">
@@ -231,13 +219,8 @@
         <p class="work-note">請啟用 JavaScript 以使用作品、知識搜尋與履歷功能。聯絡方式：<a href="mailto:louis962911@gmail.com">louis962911@gmail.com</a>。</p>
       </noscript>
     </main>
-    <!-- 08｜共用頁尾：版權與 GitHub 入口。 -->
-    <footer class="site-footer">
-      <div class="container footer-inner">
-        <span>© 2026 LOUIS LI <span class="footer-dot">/</span> 工程實踐與技術筆記</span>
-        <span>持續整理，持續向前。 <a data-profile-link="github" href="https://github.com/Ulysses-Li" target="_blank" rel="noopener noreferrer" aria-label="Louis Li 的 GitHub">GITHUB ↗</a></span>
-      </div>
-    </footer>
+    <!-- 08｜共用頁尾掛載點：文字在 data/footer.js，結構在 components/footer.js。 -->
+    <footer class="site-footer" data-site-footer></footer>
     <!-- 09｜共用詳情視窗：app.js 依點選項目填入案例或技術筆記。 -->
     <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-title">
       <button class="dialog-close" type="button" aria-label="關閉內容">關閉 <span aria-hidden="true">×</span></button>

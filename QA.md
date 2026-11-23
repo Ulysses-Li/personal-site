@@ -2,6 +2,16 @@
 
 更新日期：2026-11-23
 
+## 主站頁首／頁尾結構拆分（2026-11-23）
+
+- 依使用者標記的 `.site-header` 與 `.site-footer`，將文字與設定分離到 `dist/data/site.js`、`header.js`、`footer.js`、`version.js`；元件 HTML、漢堡行為與掛載程式放在 `dist/components/`。
+- `content.js` 保留同一個 `profile` 引用，品牌、首頁與履歷共用姓名及聯絡方式。`app.js` 改由資料建立頁面標題，透過頁首元件同步選中狀態；不再重複綁定漢堡事件。
+- 外層 header／footer 仍是 body 直接子元素，原 CSS、手機斷點、sticky 與列印隱藏規則保留。工具的操作頁首與計算模組未改動。
+- 新增 `scripts/check-site-shell.mjs`，12／12 組通過，檢查資料結構、載入順序、本機資源、元件輸出、原有路由、共用個人資料、重新掛載清理、連結處理及版次關聯。語法與 diff 空白檢查通過。
+- HTTP 瀏覽器 18 項檢查通過：五頁導覽、案例詳情、聯絡／GitHub、手機漢堡開關、Escape、同頁連結、點外部、切頁關閉、主內容焦點、body 結構與 sticky；430／900／1391px 無橫向溢出。沒有 JavaScript 錯誤或警告，臨時尺寸已恢復。
+- 自動化瀏覽器的 URL 安全政策僅允許 HTTP／HTTPS，`file://` 直接開啟測試遭阻擋，未改用其他瀏覽器或方式繞過。直接開檔能力僅以 classic script、載入順序及離線 VM 檢查確認，未記作真實 file 瀏覽器測試。
+- 首次建立維護版次 `1.0.0`，根目錄 `CHANGELOG.md` 記錄摘要；既有歷史仍在 Git。繁體中文修改對照與版次流程見 `docs/project-structure.md`。證據在忽略目錄 `.preview/site-shell-desktop.jpg`、`.preview/site-shell-qa.json`。
+
 ## 國際公差查表（2026-11-23）
 
 - 公差入口由手動偏差計算改為查表、孔軸配合與 IT 寬度三種模式；舊頁保留在 `#tolerance-calculator`。支援大小寫代號搜尋、基本尺寸／尺寸段、微米與 mm／in、示意、附來源複製、規格收藏及深連結。
