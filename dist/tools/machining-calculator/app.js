@@ -80,7 +80,7 @@
     $('calculator-kicker').textContent = cat.english.toUpperCase();
     $('calculator-title').textContent = tool.title;
     $('form-fields').innerHTML = fields().map(item => `<div class="field"><label for="field-${item.key}">${esc(item.label)} <span>${esc(item.symbol)}</span><small>${esc(unitFor(item.kind))}</small></label><div class="input-wrap"><input id="field-${item.key}" data-field="${item.key}" type="number" inputmode="decimal" step="${item.kind === 'count' ? '1' : 'any'}" ${item.signed ? '' : 'min="0"'} required value="${esc(inputNumber(fromMetric(values[current][item.key], item.kind)))}" aria-describedby="help-${item.key}">${item.signed ? `<button class="sign-toggle" type="button" data-sign="${item.key}" aria-label="切換${esc(item.label)}正負號">±</button>` : ''}</div><small id="help-${item.key}">${esc(item.help)}</small></div>`).join('');
-    $('form-note').textContent = current === 'tolerance' ? '依圖面輸入偏差，單位見各欄標示。此工具不代查 ISO 公差等級。' : current === 'thread' ? '預鑽為公制 60° 切削攻牙的 D−P 粗估；TPI 僅換算牙距，不代表已選定螺紋標準。' : 'Vc 與進給值請依刀具資料及加工條件輸入；預填值僅作計算示例。';
+    $('form-note').textContent = current === 'tolerance' ? '依圖面自行輸入帶正負號的偏差；查 H7、g6 等代號，可按頁首返回公差查表。' : current === 'thread' ? '預鑽為公制 60° 切削攻牙的 D−P 粗估；TPI 僅換算牙距，不代表已選定螺紋標準。' : 'Vc 與進給值請依刀具資料及加工條件輸入；預填值僅作計算示例。';
     const modes = current === 'thread' ? [['pitch', '依螺距'], ['tpi', '依 TPI']] : current === 'tolerance' ? [['limits', '尺寸上下限'], ['fit', '孔軸配合']] : [];
     $('submode-switch').hidden = modes.length === 0;
     $('submode-switch').innerHTML = modes.map(([id, label]) => `<button type="button" data-submode="${id}" aria-pressed="${id === (current === 'thread' ? threadBasis : toleranceMode)}">${label}</button>`).join('');
@@ -157,12 +157,12 @@
   // ── 05｜分類、收藏與畫面導覽：五個工具都直接開啟可用表單。 ──
   function cards(items) {
     // 分類使用本機原創加工插圖；文字已說明用途，因此圖片不重複朗讀。
-    return items.map(item => `<button class="category-card" type="button" data-category="${item.id}"><span class="category-art" aria-hidden="true"><img src="illustrations/${esc(item.id)}.svg" alt="" width="240" height="160" draggable="false"></span><span class="english">${esc(item.english.toUpperCase())}</span><h2>${esc(item.title)}</h2><p>${esc(item.description)}</p><span class="card-action">${item.id==='thread'?'查找螺紋':'開啟計算'}${favorites.has(item.id) ? ' · 已收藏' : ''}</span></button>`).join('');
+    return items.map(item => `<button class="category-card" type="button" data-category="${item.id}"><span class="category-art" aria-hidden="true"><img src="illustrations/${esc(item.id)}.svg" alt="" width="240" height="160" draggable="false"></span><span class="english">${esc(item.english.toUpperCase())}</span><h2>${esc(item.title)}</h2><p>${esc(item.description)}</p><span class="card-action">${item.id==='thread'?'查找螺紋':item.id==='tolerance'?'查找公差':'開啟計算'}${favorites.has(item.id) ? ' · 已收藏' : ''}</span></button>`).join('');
   }
   function renderCards() {
     $('category-grid').innerHTML = cards(catalog.categories);
     const items = catalog.categories.filter(item => favorites.has(item.id));
-    $('favorites-list').innerHTML = items.length ? cards(items) : `<div class="empty-state">${icon('star')}<h3>還沒有收藏計算工具。</h3><p>在計算頁按星號即可加入；螺紋規格則可在查表頁收藏。</p><button class="primary-button" type="button" data-screen="home">瀏覽分類</button></div>`;
+    $('favorites-list').innerHTML = items.length ? cards(items) : `<div class="empty-state">${icon('star')}<h3>還沒有收藏計算工具。</h3><p>在計算頁按星號即可加入；螺紋與公差規格可在查表頁收藏。</p><button class="primary-button" type="button" data-screen="home">瀏覽分類</button></div>`;
     $('favorite-count').textContent = favorites.size;
     $('favorite-count').hidden = favorites.size === 0;
   }
@@ -171,33 +171,36 @@
     $('favorite-tool').setAttribute('aria-label', `${favorites.has(current) ? '取消收藏' : '收藏'}${current === 'thread' ? '螺紋工具' : `${categories.get(current).title}計算`}`);
   }
   function syncHeader() {
-    $('screen-title').textContent = screen === 'calculator' ? (current==='thread'?'螺距與攻牙換算':categories.get(current).title + '計算') : { home: '加工計算工具箱', threads:'螺紋資料', favorites: '我的收藏', sources: '公式與說明' }[screen];
-    $('screen-back').hidden = !['calculator','threads'].includes(screen);
-    $('screen-back').setAttribute('aria-label',screen==='calculator'&&current==='thread'?'返回螺紋資料':'返回工具分類');
-    document.querySelector('.desktop-nav [data-screen="calculator"]').textContent = current==='thread'?'查找':'計算';
-    document.querySelector('.mobile-nav [data-screen="calculator"] span').textContent = current==='thread'?'查找':'計算';
+    $('screen-title').textContent = screen === 'calculator' ? (current==='thread'?'螺距與攻牙換算':current==='tolerance'?'自行輸入公差':categories.get(current).title + '計算') : { home: '加工計算工具箱', threads:'螺紋資料', tolerances:'國際公差資料', favorites: '我的收藏', sources: '公式與說明' }[screen];
+    $('screen-back').hidden = !['calculator','threads','tolerances'].includes(screen);
+    $('screen-back').setAttribute('aria-label',screen==='calculator'&&current==='thread'?'返回螺紋資料':screen==='calculator'&&current==='tolerance'?'返回公差查表':'返回工具分類');
+    document.querySelector('.desktop-nav [data-screen="calculator"]').textContent = ['thread','tolerance'].includes(current)?'查找':'計算';
+    document.querySelector('.mobile-nav [data-screen="calculator"] span').textContent = ['thread','tolerance'].includes(current)?'查找':'計算';
     document.querySelectorAll('[data-unit]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.unit === unit)));
     document.querySelectorAll('nav [data-screen]').forEach(button => {
-      if (button.dataset.screen === screen || (screen==='threads'&&button.dataset.screen==='calculator')) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
+      if (button.dataset.screen === screen || (['threads','tolerances'].includes(screen)&&button.dataset.screen==='calculator')) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
     });
   }
   function show(next, { updateURL = true } = {}) {
-    if (!['home', 'calculator', 'threads', 'favorites', 'sources'].includes(next)) return;
+    if (!['home', 'calculator', 'threads', 'tolerances', 'favorites', 'sources'].includes(next)) return;
     if (next === 'calculator' && screen === next && renderedCategory === current) { window.scrollTo({ top: 0, behavior: 'instant' }); return; }
     screen = next;
     document.body.dataset.screen = screen;
     for (const name of ['home', 'calculator', 'favorites', 'sources']) $(name + '-screen').hidden = name !== screen;
     $('thread-library').hidden = screen !== 'threads';
+    $('tolerance-library').hidden = screen !== 'tolerances';
     if (screen === 'calculator') renderForm();
     if (screen === 'threads') { window.ThreadLibrary.setUnit(unit); window.ThreadLibrary.open(location.hash); }
+    if (screen === 'tolerances') { window.IsoTolerance.setUnit(unit); window.IsoTolerance.open(location.hash); }
+    $('iso-global-saved').hidden = screen !== 'favorites' || !$('iso-global-list').children.length;
     renderCards(); syncHeader();
-    if (updateURL) { try { history.replaceState(null, '', screen==='threads'?'#'+window.ThreadLibrary.getHash():screen === 'calculator' ? (current==='thread'?'#thread-calculator':'#'+current) : '#' + screen); } catch { /* 直接開檔不支援網址修改時仍可使用。 */ } }
+    if (updateURL) { try { history.replaceState(null, '', screen==='tolerances'?'#'+window.IsoTolerance.getHash():screen==='threads'?'#'+window.ThreadLibrary.getHash():screen === 'calculator' ? (current==='thread'?'#thread-calculator':current==='tolerance'?'#tolerance-calculator':'#'+current) : '#' + screen); } catch { /* 直接開檔不支援網址修改時仍可使用。 */ } }
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
-  function openCategory(id) { if (categories.has(id)) { current = id; show(id==='thread'?'threads':'calculator'); } }
+  function openCategory(id) { if (categories.has(id)) { current = id; show(id==='thread'?'threads':id==='tolerance'?'tolerances':'calculator'); } }
   function renderSources() {
-    const threadSources=window.ThreadLibrary.getSources();
-    $('sources-list').innerHTML = `<section class="source-card"><h3>公差與配合的範圍</h3><p>公差與配合工具依圖面偏差計算。螺紋資料另以來源標示的工件等級查表；基本牙型、預鑽孔徑及量規尺寸不混作螺紋限界。</p></section><section class="source-card"><h3>單位與收藏</h3><p>1 in = 25.4 mm；1 ft = 0.3048 m。切換 mm／in 會同步換算顯示數值。工具偏好與常用螺紋規格只保存在這個網址的瀏覽器；計算數值留在目前開啟期間。</p></section>` + [...catalog.sources,...threadSources].map(source => `<section class="source-card"><h3><a href="${esc(safeURL(source.url))}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a></h3><p>${esc(source.scope)}</p></section>`).join('');
+    const threadSources=window.ThreadLibrary.getSources(), isoSources=window.IsoTolerance.getSources();
+    $('sources-list').innerHTML = `<section class="source-card"><h3>公差與配合的範圍</h3><p>孔／軸公差查表收錄 GB/T 1800.2—2020 原表（修改採用 ISO 286-2:2010，納入 2013 勘誤）；IT 寬度取自 Schaeffler 2025 手冊的 ISO 286-1:2010 表。各筆標示來源與頁碼；未收錄或疑誤格不外推。手動偏差計算另保留為輔助功能。螺紋資料依各自來源查表。</p></section><section class="source-card"><h3>單位與收藏</h3><p>1 in = 25.4 mm；1 ft = 0.3048 m。切換 mm／in 會同步換算顯示數值。公差快速搜尋與標準尺寸段固定用 mm；表單尺寸依目前單位輸入。收藏與公差查詢偏好只保存在這個網址的瀏覽器。</p></section>` + [...catalog.sources,...threadSources,...isoSources].map(source => `<section class="source-card"><h3><a href="${esc(safeURL(source.url))}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a></h3>${source.version?`<p>${esc(source.version)}</p>`:''}<p>${esc(source.scope)}</p></section>`).join('');
   }
 
   // ── 06｜即時輸入與顯示切換：無效草稿不會被靜默替換為範例值。 ──
@@ -207,11 +210,12 @@
     const button = event.target.closest('button');
     if (!button || button.disabled) return;
     if (button.dataset.category) openCategory(button.dataset.category);
-    else if (button.dataset.screen) show(button.dataset.screen==='calculator'&&current==='thread'?'threads':button.dataset.screen);
-    else if (button.id === 'screen-back') show(screen==='calculator'&&current==='thread'?'threads':'home');
+    else if (button.dataset.screen) show(button.dataset.screen==='calculator'&&current==='thread'?'threads':button.dataset.screen==='calculator'&&current==='tolerance'?'tolerances':button.dataset.screen);
+    else if (button.id === 'screen-back') show(screen==='calculator'&&current==='thread'?'threads':screen==='calculator'&&current==='tolerance'?'tolerances':'home');
     else if (button.dataset.unit) {
       if (unit === button.dataset.unit) return;
       if (screen === 'calculator' && formDirty && !calculate()) { toast('請先修正輸入，再切換單位。'); return; }
+      if (screen === 'tolerances' && !window.IsoTolerance.canSetUnit()) { toast('請先修正基本尺寸，再切換單位。'); return; }
       try {
         for (const input of Object.values(values)) {
           for (const [key, value] of Object.entries(input)) fromMetric(value, key === 'teeth' ? 'count' : key === 'cuttingSpeed' ? 'speed' : 'length', button.dataset.unit);
@@ -220,6 +224,7 @@
       unit = button.dataset.unit; savePreferences(); syncHeader();
       if (screen === 'calculator') renderForm();
       if (screen === 'threads') window.ThreadLibrary.setUnit(unit);
+      if (screen === 'tolerances') window.IsoTolerance.setUnit(unit);
     } else if (button.dataset.submode) {
       if (formDirty && !calculate()) { toast('請先修正目前輸入。'); return; }
       if (current === 'thread') threadBasis = button.dataset.submode;
@@ -256,6 +261,8 @@
     let hash = ''; try { hash = decodeURIComponent(location.hash.slice(1)); } catch { /* 無效網址回到首頁。 */ }
     if (hash==='thread'||hash.startsWith('thread/')) { current='thread';show('threads',{updateURL:false}); }
     else if(hash==='thread-calculator') {current='thread';show('calculator',{updateURL:false});}
+    else if(hash==='tolerance'||hash.startsWith('tolerance/')) {current='tolerance';show('tolerances',{updateURL:false});}
+    else if(hash==='tolerance-calculator') {current='tolerance';show('calculator',{updateURL:false});}
     else if (categories.has(hash)) { current = hash; show('calculator', { updateURL: false }); }
     else show(['favorites', 'sources'].includes(hash) ? hash : 'home', { updateURL: false });
   }
@@ -265,6 +272,11 @@
     onToast:toast,
     onRoute:hash=>{if(screen==='threads'){try{history.replaceState(null,'','#'+hash);}catch{/* 直接開檔時仍可查表。 */}}},
     onConverter:record=>{current='thread';threadBasis='pitch';values.thread={majorDiameter:record.diameterMm,pitch:record.pitchMm};show('calculator');}
+  });
+  window.IsoTolerance.mount({
+    onToast:toast,
+    onRoute:hash=>{if(screen==='tolerances'){try{history.replaceState(null,'','#'+hash);}catch{/* 直接開檔時仍可查表。 */}}},
+    onManual:()=>{current='tolerance';show('calculator');}
   });
   renderSources(); route();
 })();

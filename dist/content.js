@@ -46,10 +46,10 @@ window.SITE_CONTENT = {
       id: 'machining-calculator',
       title: '加工計算工具箱',
       category: 'CNC 加工',
-      description: '加工參數計算、螺紋規格查找與公差配合，支援公英制換算與常用收藏。',
+      description: '加工參數計算、螺紋資料與 ISO 孔軸公差查表，支援公英制換算與常用收藏。',
       url: 'tools/machining-calculator/index.html',
       icon: 'calculator',
-      tags: ['轉速', '進給', '螺紋資料', '公差配合', '公英制'],
+      tags: ['轉速', '進給', '螺紋資料', 'ISO 公差', '公英制'],
       source: '個人工具・加工計算'
     }
   ],

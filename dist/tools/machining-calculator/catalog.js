@@ -57,13 +57,13 @@
       },
       {
         id: 'tolerance', title: '公差與配合', english: 'Tolerance & Fit',
-        description: '把圖面偏差換成尺寸上下限，檢查孔軸間隙範圍。',
+        description: '查找 ISO 孔軸公差、IT 等級與尺寸上下限，快速比較配合範圍。',
         icon: 'tolerance', color: '#bf638d',
         tools: [
           {
             id: 'dimension-limits', title: '圖面尺寸上下限', method: 'limits',
             formula: '最大尺寸 = 基本尺寸 + 上偏差；最小尺寸 = 基本尺寸 + 下偏差',
-            notes: ['偏差需連同正負號輸入，沒有內建 ISO 公差或配合等級表。'],
+            notes: ['本頁依圖面自行輸入偏差；H7、g6 等代號請使用公差查表入口。'],
             sourceIds: []
           },
           {

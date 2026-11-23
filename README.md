@@ -122,9 +122,9 @@ FANUC 手機版的 App 外觀集中於同目錄 `mobile.css`；固定搜尋、�
 
 查表支援 Unicode／全形字元、乘號、完整分數尺寸、編號牙與前後置牙系，例如 `Ｍ１０×１．５`、`¼-20 UNC`、`UNC #6-32`、`BA 0`／`0BA`、`PT 1/2`／`1/2 PT`、`NPT 1/4`。NPT 與 NPTF 分開比對；`R` 選外牙、`Rc`／`Rp`／`PS` 選內牙，Rp 外牙停用。可切 mm／in、收藏規格，並複製尺寸、基準說明、單位及來源；規格收藏同時出現在工具的主「收藏」頁。`#thread` 進入查表，`#thread/metric-coarse-m10-p1-5/internal` 等網址可直接開指定規格與內外牙。
 
-舊公制螺距／TPI 與切削攻牙 `D−P` 粗估仍保留於 `#thread-calculator`，也可從公制查表規格開啟；它不產生工件小徑限界。公差與配合仍依使用者輸入的圖面偏差計算，沒有內建 ISO 孔軸配合等級表。原公式核心、目錄與介面在 `engine.js`、`catalog.js`、`app.js`；螺紋搜尋規則由 `thread-search.js` 提供，查表與收藏由 `thread-ui.js` 管理。
+舊公制螺距／TPI 與切削攻牙 `D−P` 粗估仍保留於 `#thread-calculator`，也可從公制查表規格開啟；它不產生工件小徑限界。公差入口已改為國際公差查表：孔 2,826／軸 2,984 筆，各 28 帶；另有 IT01、IT0、IT1–IT18 共 260 筆寬度。支援代號搜尋、尺寸段、孔軸配合、單位、收藏及來源版本。孔軸資料為 GB/T 1800.2—2020（修改採用 ISO 286-2:2010、含 2013 勘誤），IT 寬度依 Schaeffler 2025 的 ISO 286-1:2010 原表；只查已收錄組合至 500 mm，空白不外推。手動偏差計算保留在 `#tolerance-calculator`。檔案與資料限制見 [公差維護說明](docs/iso-tolerance.md)。
 
-本機偏好分成兩鍵：`cwli-machining-preferences-v1` 保存顯示單位與工具分類收藏；`cwli-thread-reference-v1` 保存所選螺紋、內外牙及規格收藏。原計算輸入只留在本次開啟期間。修改後執行 `node scripts/check-machining.mjs`、`node scripts/check-thread-data.mjs` 及 `node scripts/check-thread-library.mjs`；前兩者保留原核心 14 組與原 102 筆資料的 18 組檢查，新增檢查負責完整擴充資料與搜尋。完整資料範圍與維護方式見 `docs/machining-calculator.md`。
+本機偏好使用三鍵：`cwli-machining-preferences-v1` 保存顯示單位與工具收藏；`cwli-thread-reference-v1` 保存螺紋與規格收藏；`cwli-iso-tolerance-v1` 保存公差查詢與規格收藏。原手動計算輸入只留在本次開啟期間。修改後執行 `node scripts/check-machining.mjs`、`node scripts/check-thread-data.mjs`、`node scripts/check-thread-library.mjs` 及 `node scripts/check-iso-tolerance.mjs`，分別檢查原核心、螺紋與公差。完整維護方式見 `docs/machining-calculator.md` 及 `docs/iso-tolerance.md`。
 
 2026-11-23 本輪保存在本機，未推送遠端或發佈線上版本。完整資料庫與搜尋的 50 組檢查、原資料 18 組、原計算 14 組皆通過；本次 NPTF 截形範圍另完成 12 項介面檢查。各次歷史驗證與最新截圖位置見 `QA.md`。
 

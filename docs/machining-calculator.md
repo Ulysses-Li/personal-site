@@ -4,6 +4,8 @@
 
 工具位於 `dist/tools/machining-calculator/index.html`，可直接在本機瀏覽器開啟，也可由網站的「個人小工具」入口進入。所有計算在瀏覽器執行，不會上傳輸入數值。
 
+公差分類現已改為 **國際公差查表**，支援孔／軸偏差、尺寸段、孔軸配合與 IT 寬度。孔 2,826／軸 2,984 筆，IT 260 筆，資料至 500 mm；版本與限制詳見 [公差查表維護說明](iso-tolerance.md)。原手動偏差計算保留為輔助入口 `#tolerance-calculator`。公差資料、純核心、UI 與樣式分為 `iso-*-data.js`、`tolerance-engine.js`、`tolerance-ui.js`、`tolerance-library.css`，共用 `app.js` 的單位與導覽。
+
 ## 檔案分工
 
 | 檔案 | 維護內容 |
@@ -218,6 +220,7 @@ node --check scripts/check-thread-library.mjs
 node scripts/check-machining.mjs
 node scripts/check-thread-data.mjs
 node scripts/check-thread-library.mjs
+node scripts/check-iso-tolerance.mjs
 ```
 
 原計算核心 14 組與原始螺紋資料 18 組保留為回歸檢查。前者涵蓋固定計算值、單位、配合與輸入極值；後者涵蓋原 36＋66 筆的唯一 ID、來源映射、上下限、基本值與空限界分離、M10×1.5、1/4-20、BA 0、G 1/2、BSF 1/4 基準，以及 classic script／CommonJS 匯出一致。它們原有的通過紀錄不涵蓋本輪所有擴充資料。
