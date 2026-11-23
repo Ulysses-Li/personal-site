@@ -16,33 +16,57 @@
 | `dist/tools/machining-calculator/illustrations/` | 五張原創加工 SVG 插圖，依分類 ID 命名 |
 | `dist/tools/machining-calculator/thread-data.js` | 36 筆 M／MF／UNC／UNF 工件螺紋限界、基本尺寸與 OSG 來源 |
 | `dist/tools/machining-calculator/thread-extra-data.js` | 66 筆 BA／BSW／BSF／G 基本牙型與來源，不提供等級限界 |
-| `dist/tools/machining-calculator/thread-ui.js` | 搜尋、牙系／規格／內外牙、查表單位、規格收藏與複製來源 |
+| `dist/tools/machining-calculator/thread-extended-data.js` | 173 筆擴充規格：公制／統一牙／G、24 筆新增公制工件限界、Tr／Pg 公稱資料 |
+| `dist/tools/machining-calculator/thread-bsp-data.js` | 30 筆 R／Rc／Rp 基本尺寸、成員限制、直徑錐度與 R 外牙距離 a |
+| `dist/tools/machining-calculator/thread-npt-data.js` | 31 筆 NPT／NPTF 的 1957 歷史基本節徑 E₁、L1 與來源版本 |
+| `dist/tools/machining-calculator/thread-search.js` | 不依賴 DOM 的牙系代號、前後置別名、完整尺寸、編號與牙距搜尋 |
+| `dist/tools/machining-calculator/thread-ui.js` | 合併資料、用途分流、規格／內外牙、基準面、查表單位、規格收藏與複製來源 |
 | `dist/tools/machining-calculator/thread-library.css` | 螺紋查表的獨立桌機、手機與尺寸表格版面 |
 | `scripts/check-machining.mjs` | 14 組核心回歸檢查，不開瀏覽器、不使用網路、不改寫檔案 |
 | `scripts/check-thread-data.mjs` | 18 組限界、基本牙型、合併身份、來源及匯出檢查 |
+| `scripts/check-thread-library.mjs` | 完整擴充資料的筆數、牙系、限界／空值、基準面、成員及搜尋回歸檢查 |
 
 分類 `id`、工具 `id` 與 `method` 是穩定識別。修改標題與說明時，保留這些識別，才能維持網址、收藏及方法對應。
 
 ## 螺紋資料庫的範圍
 
-五個工具維持原有分類順序；其中 `thread` 分類現在開啟「螺紋資料」查表，不直接進入攻牙粗估。資料合併後共有 8 牙系、102 個規格：
+五個工具維持原有分類順序；其中 `thread` 分類開啟「螺紋資料」查表，不直接進入攻牙粗估。五份資料檔合併後共有 **15 牙系、336 個規格**：原始 36＋66 筆、直牙擴充 173 筆、BSP 管牙 30 筆、美制錐管牙 31 筆。用途入口分為一般牙、管牙與其他，並可選全部。
 
 | 牙系 | 筆數 | 資料性質 |
 | --- | ---: | --- |
-| M 公制粗牙 | 10 | 工件內牙 6H／外牙 6g 的已收錄限界 |
-| MF 公制細牙 | 6 | 同為 M × P 標註，工件內牙 6H／外牙 6g |
-| UNC | 10 | 工件內牙 2B／外牙 2A 的已收錄限界 |
-| UNF | 10 | 工件內牙 2B／外牙 2A 的已收錄限界 |
+| M 公制粗牙 | 40 | 部分收錄工件限界，其餘為基本牙型；等級依筆顯示 |
+| MF 公制細牙 | 70 | 同為 M × P 標註；部分工件限界，其餘為基本牙型 |
+| UNC | 29 | 原 10 筆有 2B／2A 工件限界，擴充部分為基本牙型 |
+| UNF | 24 | 原 10 筆有 2B／2A 工件限界，擴充部分為基本牙型 |
+| UNEF | 18 | 僅統一超細牙基本牙型，無等級限界 |
 | BA | 17 | BA 0–16，僅基本牙型 |
 | BSW | 22 | 僅基本牙型 |
 | BSF | 9 | 僅基本牙型 |
-| G／BSPP | 18 | 僅平行管螺紋基本牙型 |
+| G／BSPP | 19 | 僅平行管螺紋基本牙型，與 Rp 分開 |
+| R／Rc・BSPT | 15 | 1/16″–6″ 基準平面基本尺寸；R 外錐牙／Rc 內錐牙，PT 為歷史查找名稱 |
+| Rp | 15 | 1/16″–6″ 平行內管牙基本尺寸；PS 為歷史查找名稱，無 Rp 外牙 |
+| NPT | 19 | 1/16″–12″；1957 歷史基本表的 E₁／L1，不含大、小徑或限界 |
+| NPTF | 12 | 1/16″–3″；由 NPTF 獨立表採 E₁／L1，不從 NPT 外推 |
+| Tr | 17 | 30° 公制梯形牙；僅公稱直徑與牙距 |
+| Pg | 10 | 80° 電線管牙；僅公稱外徑與 TPI，號數不是毫米外徑 |
 
-`thread-data.js` 的 36 筆工件資料，內牙收錄有效徑及小徑 MIN/MAX，外牙收錄大徑及有效徑 MIN/MAX。內牙大徑與外牙小徑限界未列，保存為 `null`。畫面顯示「—」，不從基本牙型、`D−P`、推薦底孔、絲攻製造公差或量規尺寸補值。
+**60 筆資料有已核對的工件限界**：`thread-data.js` 原有 36 筆，加上 `thread-extended-data.js` 新增 24 筆公制資料。內牙收錄有效徑及小徑 MIN/MAX，外牙收錄大徑及有效徑 MIN/MAX；內牙大徑與外牙小徑限界未列，保存為 `null`。公差等級由每筆 `internal.className`／`external.className` 決定：M1、M1.1、M1.2、M1.4 為 5H／6h，其餘已收錄公制限界為 6H／6g，UNC／UNF 已收錄限界為 2B／2A。不能把所有公制規格固定標成 6H／6g。
 
-`thread-extra-data.js` 的 66 筆資料以 `basic` 保存基本大徑、節徑、內牙小徑與外牙小徑；`internal`／`external` 均為 `null`。BA 的 D／P 採 Dormer 表值，BSW／BSF 的尺寸與 TPI 採 Thürmer 表，G 外徑與 TPI 採專用管牙表；節徑與小徑另依基本牙型幾何推算，畫面明示為基本值。G 公稱尺寸不能直接換成外徑，例如 G 1/2 的基本外徑為 20.955 mm，並非 12.7 mm。
+**其餘 276 筆是基本或公稱資料，沒有指定等級限界。** `basic` 與 `internal`／`external` 的限界分開保存。BA 的 D／P 採 Dormer 表值，BSW／BSF 的尺寸與 TPI 採 Thürmer 表，G 外徑與 TPI 採專用管牙表；部分節徑與小徑另依對應基本牙型推算。公制及 UN 擴充基本幾何也明示為基本值。G 公稱尺寸不能直接換成外徑，例如 G 1/2 的基本外徑為 20.955 mm，並非 12.7 mm。
+
+其中 Tr 17 筆與 Pg 10 筆僅保存公稱直徑、牙距或 TPI；`nominalOnly: true`，所有 `basic` 直徑與內外牙限界均為 `null`。Tr 不套用 60° 牙型，Pg 號數不直接當毫米外徑。不得從公稱值、`D−P`、推薦底孔、絲攻製造公差或量規尺寸補造工件尺寸。
 
 基本值和限界使用不同欄位、不同表頭。內外小徑分開維護，介面依 `member` 選擇 `minorInternal` 或 `minorExternal`，不假設它們必須相同。牙型圖只示意尺寸位置，沒有依數值或角度比例繪製。
+
+## 管牙的成員、錐度與基準位置
+
+`thread-bsp-data.js` 採 REX 原廠表列的 JIS B 0203 基本尺寸，來源註明摘自 2006 年版 JIS 手冊。R／Rc 共用 `bspt` 牙系：R 是外錐牙、Rc 是內錐牙；Rp 是另一個僅支援內牙的平行牙系，用來配合 R，與 G 分開。PT／PS 只提供歷史名稱搜尋，不能據此宣稱所有歷史尺寸、公差與量規可互換。
+
+R／Rc、NPT、NPTF 的 `geometry` 為 `tapered`；`taper.diameterRatio: 16` 表示**直徑變化與軸向長度之比為 1:16**，不是半徑錐度，也不是牙型角。錐牙的直徑隨軸向位置改變，必須連同 `referencePlane` 理解。R 外牙由管端量距離 `a` 到基準面；Rc 內牙以管口端面為基準。`referenceLengthMembers: ['external']` 讓 `a` 只在 R 外牙顯示，不當作 Rc 攻牙深度。Rp 為 `parallel`、`taper: null`，外牙選項停用。
+
+`thread-npt-data.js` 分別摘錄 NBS H28（1957）Part II 的 NPT 與 NPTF 工件基本表，介面顯示 **「NBS H28 · 1957 基本表」**版本標示；這是歷史基本資料，不是現行標準完整表或製造驗收限界。表列 `E₁` 為 `L1` 手緊旋合基準平面的基本節徑。大、小徑及其限界未收錄，保留 `null`。管材外徑另存 `pipeOutsideDiameterMm`，不放入 `diameterMm` 或 `basic.major`，也不反推大、小徑。NPTF 的乾密封截形另有規定，不能沿用 NPT 的牙頂、牙底或公差。
+
+基本牙型、基準平面與公稱欄位缺值都顯示「—」，不代表零。新增管牙時，須同時核對 `supportedMembers`、`memberDesignations`、`referenceLabel`、錐度及基準距離的成員適用範圍。
 
 ## 查找、分享網址與規格收藏
 
@@ -51,15 +75,20 @@
 - `#thread`：開啟查表，沿用目前或已儲存的規格選擇。
 - `#thread/metric-coarse-m10-p1-5/internal`：直接開 M10 × 1.5 內牙；最後一段可換成 `external`。
 - `#thread/g-1-2/external`：直接開 G 1/2 外牙基本牙型。
+- `#thread/bspt-1-2/internal`：開 Rc 1/2；改為 `external` 則是 R 1/2。
+- `#thread/rp-1-2/internal`：開 Rp 1/2 平行內牙；不能切成 Rp 外牙。
+- `#thread/npt-1-2/external`：開 NPT 1/2 的歷史基準平面資料。
 - `#thread-calculator`：開啟保留的公制螺距／TPI 與 `D−P` 預鑽粗估。
 
 一般格式為 `#thread/{record.id}/{internal|external}`。修改紀錄 ID 會影響分享網址與收藏，因此應保持穩定。
 
-搜尋會正規化 Unicode、全形字元、乘號、引號與分數斜線；支援 `Ｍ１０×１．５`、`MF10 × 1.25`、`1/4-20 UNC`、`¼-20 UNC`、`G 1/2`、`BA 0`／`0BA` 等寫法。分數以完整公稱尺寸比對，避免把 `1/4` 當成 `1 1/4`；BA 號數也不以部分數字混配。輸入搜尋時會切到全部牙系，再依關鍵字篩選；沒有結果時隱藏尺寸內容並提供清除與重設。
+搜尋由 `thread-search.js` 先辨識完整牙系與公稱尺寸，再比對牙距／TPI。它會正規化 Unicode、全形字元、乘號、引號與分數斜線，支援 `Ｍ１０×１．５`、`MF10 × 1.25`、`¼-20 UNC`、`UNC #6-32`、`BA 0`／`0BA`、`PT 1/2`／`1/2 PT`、`NPT 1/4`／`1/4 NPT`、`NPTF 1/4`、`PS 1/2` 等寫法。NPT 不會部分命中 NPTF；分數以完整公稱尺寸比對，避免把 `1/4` 當成 `1 1/4`，BA 號數與編號統一牙也分開處理。
+
+輸入搜尋會切到全部用途與全部牙系，再依關鍵字篩選；選「一般牙／管牙／其他」或牙系時則清除搜尋字詞。`R` 代號會選外牙，`Rc`／`Rp`／`PS` 會選內牙，PT 僅作牙系別名；選到只支援內牙的 Rp 時會自動維持內牙。沒有結果時隱藏尺寸內容並提供清除與重設。
 
 內外牙、mm／in 及規格選擇共用原始公制資料。星號收藏以規格 ID 保存，在查表頁「常用規格」與工具主「收藏」頁都可重新開啟。複製內容包含規格、內外牙、公差等級或基本牙型標示、單位、尺寸及來源網址。只有公制 M／MF 顯示「公制攻牙換算」，把該筆公稱直徑與牙距帶入獨立粗估畫面。
 
-資料檔只提供 `THREAD_DATA`／`THREAD_EXTRA_DATA`；`thread-ui.js` 合併後由 `window.ThreadLibrary` 串接 `mount()`、`open()`、`setUnit()`、`getHash()`。載入順序須為核心與目錄、兩份螺紋資料、`thread-ui.js`，最後才是 `app.js`，全部使用本機 classic script。
+五份資料檔分別提供 `THREAD_DATA`、`THREAD_EXTRA_DATA`、`THREAD_BSP_DATA`、`THREAD_NPT_DATA`、`THREAD_EXTENDED_DATA`，均可供 Node 載入；`thread-search.js` 提供 `THREAD_SEARCH`。`thread-ui.js` 依穩定 ID 合併資料後，由 `window.ThreadLibrary` 串接 `mount()`、`open()`、`setUnit()`、`getHash()`。載入順序為 `engine.js`、`catalog.js`、五份資料、`thread-search.js`、`thread-ui.js`、`app.js`，全部使用本機 classic script，不需 fetch 或 CDN。
 
 ## 分類插圖
 
@@ -108,10 +137,10 @@
 
 ## 同一份 UI 的模式與單位
 
-桌機和手機共用畫面。`app.js` 動態渲染原計算欄位，`thread-ui.js` 渲染查表與規格收藏，沒有另一份手機計算或標準資料。
+桌機和手機共用畫面。`app.js` 動態渲染原計算欄位，`thread-ui.js` 渲染查表與規格收藏，`thread-search.js` 提供兩者可檢查的純搜尋規則，沒有另一份手機計算或標準資料。
 
 - 手機首頁保留五個分類列與底部導覽；選到螺紋分類後，原「計算」入口顯示為「查找」。共用樣式在 `app.css`，查表樣式在 `thread-library.css`。
-- 查表頁提供牙系、規格與內外牙選擇；保留的公制換算頁才使用「依螺距／依 TPI」切換。
+- 查表頁先依一般牙／管牙／其他用途分流，再選牙系、規格與內外牙；成員可用性由資料決定。保留的公制換算頁才使用「依螺距／依 TPI」切換。
 - 公差頁以「尺寸上下限／孔軸配合」切換；兩種模式共用基本尺寸，保留各自的偏差欄位。
 - 顯示單位 `mm／in` 只改顯示與輸入換算，長度用 `25.4 mm/in`，切削速度用 `0.3048 m/ft`，刀刃數與 TPI 不換算。
 - 計算成功後保存本次開啟期間的公制原值；切換顯示單位不以顯示時的四捨五入數字覆寫原值。
@@ -145,15 +174,19 @@
 - [Sandvik Coromant 螺紋與攻牙公式](https://www.sandvik.coromant.com/en-gb/knowledge/machining-formulas-definitions/threading-formulas-definitions)：基本預鑽粗估，並區分切削與成形攻牙。
 - [Sandvik Coromant 螺紋應用指南](https://cdn2.sandvik.coromant.com/files/a53b485b-be0f-019d-8100-3f0d1619b9fa/5370939c-6de5-4b34-a938-2fa290a42316/c-2920-031.pdf)：印刷頁 118 的螺距／TPI 換算。
 
-螺紋資料的官方連結集中在兩份資料檔的 `sources`，並保留以下版本與範圍：
+螺紋資料的官方連結集中在五份資料檔的 `sources`，並保留以下版本與範圍：
 
 | 資料來源 | 本站採用範圍 |
 | --- | --- |
-| OSG Gauge Stock List，印刷 101／PDF 102 | 公制工件限界及基本尺寸；表引 JIS B0205-4、B0209-2/3:2001 |
+| OSG Gauge Stock List，印刷 101／PDF 102 | 公制工件限界及基本尺寸；表引 JIS B0205-4、B0209-2/3:2001。M1–M1.4 的 5H／6h 與其他列的 6H／6g 分別保存 |
 | OSG USA CFD Die Products，印刷 23／PDF 25 | UN 2A 工件大徑與有效徑限界；不採推薦毛胚欄 |
 | OSG USA Tapping Guide Vol.3 2024 | PDF 1 的 2B 小徑、PDF 2 的 2B 有效徑；不採推薦絲攻與百分比底孔欄 |
-| Dormer Pramet 螺紋技術海報 | BA 的 D／P 列值、47.5° BA 與 55° Whitworth 基本牙型依據；不把 D1min 列當本工具的等級限界 |
-| Thürmer Tools BSW／BSF 表及 G 圖表 | 規格／TPI，以及 G 的實際基本外徑；不使用底孔建議欄 |
+| Dormer Pramet 螺紋技術海報 | BA 的 D／P、47.5° BA、55° Whitworth 與 60° M／UN 基本牙型依據，及核對 M4×0.5；不把 D1min 列當本工具的等級限界 |
+| Thürmer Tools 官方規格表及 G 圖表 | 公制／UNC／UNF／UNEF／BSW／BSF／Tr／Pg 規格、牙距或 TPI，以及 G 的實際基本外徑；不使用底孔建議欄。M4×0.35 疑義列排除，改採 Dormer 已列的 M4×0.5 |
+| REX F50A 原廠手冊，印刷 22／PDF 24 表 11 | 引用 2006 年版 JIS 手冊的 JIS B 0203 R／Rc／Rp 基本徑與 R 外牙基準距離 a；不採管材外徑或軸向許差作直徑限界 |
+| OSG《管用ねじ規格と工具について》No.3，2019.12 修訂 | 印刷 2、4、6／PDF 4、6、8：55°、1:16、成員配合與 PT／PS 舊稱背景；不據此保證舊今量規可互換 |
+| NIST 保存的 NBS H28（1957）Part II | NPT 表 VII.2，印刷 5–6／PDF 15–16；NPTF 表 VIII.4，印刷 21–22／PDF 31–32。僅採各自工件基本表的 E₁／L1，明示歷史版本，不採後段量規製造尺寸 |
+| Vermont Gage〈NPT Taper Pipe Thread Inspection〉 | 核對 NPT 的 60°、1:16、E₁／L1 定義與 NPTF 的差異；不作逐尺寸數值來源 |
 
 這是已核對範圍的摘錄，不是完整標準或所有尺寸等級。UN 原表 inch 限界換算 mm，不表示精度增加。新增資料時應先核對工件／刀具／量規種類、內外牙、等級與頁碼；缺值保持 `null`，基本牙型推算只能放在 `basic`。
 
@@ -167,15 +200,23 @@ node --check dist/tools/machining-calculator/catalog.js
 node --check dist/tools/machining-calculator/app.js
 node --check dist/tools/machining-calculator/thread-data.js
 node --check dist/tools/machining-calculator/thread-extra-data.js
+node --check dist/tools/machining-calculator/thread-extended-data.js
+node --check dist/tools/machining-calculator/thread-bsp-data.js
+node --check dist/tools/machining-calculator/thread-npt-data.js
+node --check dist/tools/machining-calculator/thread-search.js
 node --check dist/tools/machining-calculator/thread-ui.js
 node --check scripts/check-machining.mjs
 node --check scripts/check-thread-data.mjs
+node --check scripts/check-thread-library.mjs
 node scripts/check-machining.mjs
 node scripts/check-thread-data.mjs
+node scripts/check-thread-library.mjs
 ```
 
-原計算核心 14 組與螺紋資料 18 組目前皆通過。前者涵蓋固定計算值、單位、配合與輸入極值；後者涵蓋 36＋66 筆的唯一 ID、來源映射、上下限、基本值與空限界分離、M10×1.5、1/4-20、BA 0、G 1/2、BSF 1/4 基準，以及 classic script／CommonJS 匯出一致。程式與資料檢查不代表實際加工驗證。
+原計算核心 14 組與原始螺紋資料 18 組保留為回歸檢查。前者涵蓋固定計算值、單位、配合與輸入極值；後者涵蓋原 36＋66 筆的唯一 ID、來源映射、上下限、基本值與空限界分離、M10×1.5、1/4-20、BA 0、G 1/2、BSF 1/4 基準，以及 classic script／CommonJS 匯出一致。它們原有的通過紀錄不涵蓋本輪所有擴充資料。
 
-調整表單、查找、導覽、單位或模式後，另在本機瀏覽器檢查五個分類、螺紋搜尋與分享網址、內外牙、空值、複製來源、兩種收藏、原公制換算與公差模式。可從網站根目錄執行 `node scripts/preview.mjs`，依終端機顯示的網址預覽。
+新增 `check-thread-library.mjs` 的 43 組檢查已通過，涵蓋完整 336 筆／15 牙系、60 筆工件限界、空尺寸、Tr／Pg 公稱資料、內外牙能力、R 的 a／Rc 基準面、NPT／NPTF 歷史 E₁／L1、完整代號及尺寸搜尋、classic script 載入與匯出。原資料 18 組與原計算 14 組也已通過。程式與資料檢查不代表實際加工驗證。
 
-2026-11-23 本輪 58 項 UI 檢查通過；已檢視 320、390、430、768、900、1024px 與預設 1391px 桌機版，頁面及尺寸表沒有橫向溢出。手機精確搜尋單筆時不顯示重複結果，多筆搜尋選取後移至資料標題；原四類計算與公制攻牙換算仍正常。瀏覽器沒有 JavaScript 錯誤或警告，臨時視窗尺寸已恢復。詳細範圍與本機截圖位置見根目錄 `QA.md`。
+調整表單、查找、導覽、單位或模式後，另在本機瀏覽器檢查五個分類、用途分流、完整螺紋搜尋與分享網址、Rp 外牙停用、R／Rc 基準面、歷史版本標示、空值、複製來源、兩種收藏、原公制換算與公差模式。可從網站根目錄執行 `node scripts/preview.mjs`，依終端機顯示的網址預覽。
+
+2026-11-23 本輪 58 項 UI 檢查通過，涵蓋十五牙系完整選單、用途分流、管牙別名、內外牙與 Rp 能力限制、R／Rc 基準面、NPT E₁／L1 與獨立管材外徑、實際剪貼簿、單位往返及收藏深連結。已檢查 320、390、430、768、1024、1391px 查表頁，沒有橫向溢出；手機選規格後修正重複的頁首間距。瀏覽器沒有 JavaScript 錯誤或警告，臨時視窗尺寸已恢復。截圖與細節見根目錄 `QA.md`；舊初版紀錄另外保留。

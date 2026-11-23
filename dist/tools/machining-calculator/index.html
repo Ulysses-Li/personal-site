@@ -14,6 +14,10 @@
   <script src="catalog.js" defer></script>
   <script src="thread-data.js" defer></script>
   <script src="thread-extra-data.js" defer></script>
+  <script src="thread-bsp-data.js" defer></script>
+  <script src="thread-npt-data.js" defer></script>
+  <script src="thread-extended-data.js" defer></script>
+  <script src="thread-search.js" defer></script>
   <script src="thread-ui.js" defer></script>
   <script src="app.js" defer></script>
 </head>
@@ -78,7 +82,8 @@
       <div class="thread-workspace">
         <aside class="thread-picker" aria-label="查找螺紋規格">
           <label class="thread-search-label" for="thread-search">搜尋螺紋（全牙系）</label>
-          <div class="thread-search-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6"/></svg><input id="thread-search" type="search" placeholder="M10×1.5、1/4-20、BA 0…" autocomplete="off" spellcheck="false"><button id="thread-search-clear" type="button" aria-label="清除螺紋搜尋" hidden>×</button></div>
+          <div class="thread-search-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6"/></svg><input id="thread-search" type="search" placeholder="PT 1/2、NPT 1/4、M10…" autocomplete="off" spellcheck="false"><button id="thread-search-clear" type="button" aria-label="清除螺紋搜尋" hidden>×</button></div>
+          <div class="thread-kind-list" id="thread-kind-list" role="group" aria-label="螺紋用途"></div>
           <div class="thread-family-list" id="thread-family-list" role="group" aria-label="螺紋牙系"></div>
           <label for="thread-size">尺寸與牙距</label><select id="thread-size" aria-describedby="thread-result-count"></select>
           <p id="thread-result-count" aria-live="polite"></p>
@@ -88,7 +93,8 @@
         <article class="thread-detail" id="thread-detail" aria-labelledby="thread-selected-title">
           <div class="thread-detail-head"><div><p class="thread-selected-kicker" id="thread-selected-kicker"></p><h2 id="thread-selected-title"></h2><p id="thread-selected-summary"></p></div><button class="icon-button" id="thread-save" type="button" aria-label="收藏目前規格" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></div>
           <div class="thread-member-switch" role="group" aria-label="內牙或外牙"><button type="button" data-thread-member="internal" aria-pressed="true">內牙</button><button type="button" data-thread-member="external" aria-pressed="false">外牙</button></div>
-          <div class="thread-facts"><dl><dt>基本大徑</dt><dd id="thread-major-fact"></dd></dl><dl><dt>牙距 / 換算 TPI</dt><dd id="thread-pitch-fact"></dd></dl><dl><dt>牙型角</dt><dd id="thread-angle-fact"></dd></dl></div>
+          <div class="thread-facts"><dl><dt id="thread-major-label">基本大徑</dt><dd id="thread-major-fact"></dd></dl><dl><dt>牙距 / 換算 TPI</dt><dd id="thread-pitch-fact"></dd></dl><dl><dt>牙型角</dt><dd id="thread-angle-fact"></dd></dl></div>
+          <section class="thread-reference" id="thread-reference" hidden aria-label="錐度與基準平面"></section>
           <div class="thread-limits-heading"><h3 id="thread-dimensions-title">尺寸範圍</h3><span id="thread-class"></span></div>
           <div class="thread-table-wrap"><table class="thread-dimension-table"><caption class="sr-only" id="thread-table-caption">所選螺紋尺寸資料</caption><thead id="thread-dimension-head"></thead><tbody id="thread-dimensions"></tbody></table></div>
           <p id="thread-dimension-note"></p>

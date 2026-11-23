@@ -40,6 +40,10 @@ personal-site/
 │  │  └─ machining-calculator/
 │  │     ├─ thread-data.js       M／MF／UNC／UNF 工件螺紋限界與來源
 │  │     ├─ thread-extra-data.js BA／BSW／BSF／G 基本牙型與來源
+│  │     ├─ thread-extended-data.js 公制／統一牙擴充、Tr／Pg 公稱規格
+│  │     ├─ thread-bsp-data.js   R／Rc／Rp 管牙基本尺寸、錐度與基準面
+│  │     ├─ thread-npt-data.js   NPT／NPTF 歷史基本節徑與 L1
+│  │     ├─ thread-search.js     牙系別名、完整尺寸與牙距的純搜尋規則
 │  │     ├─ thread-ui.js         螺紋搜尋、內外牙、單位、規格收藏與複製
 │  │     └─ thread-library.css   螺紋查表的獨立響應式版面
 │  └─ assets/                共用 theme.css、頭像、圖示與專案截圖
@@ -53,6 +57,7 @@ personal-site/
 │  ├─ check-fanuc.mjs        FANUC 條目、來源關聯及 G65 引數對照檢查
 │  ├─ check-machining.mjs    加工公式、輸入驗證與單位換算檢查
 │  ├─ check-thread-data.mjs  螺紋限界／基本牙型、合併資料與來源檢查
+│  ├─ check-thread-library.mjs 全部擴充牙系、管牙基準與搜尋檢查
 │  └─ publish-source.mjs     可選的 Sites 發佈工具
 └─ .openai/hosting.json      既有 Sites 身分與部署設定
 ```
@@ -89,8 +94,9 @@ personal-site/
 | 首頁錯落卡片、漂浮標籤、畫面舞台 | `studio.css` 的繁體中文分區 |
 | 小工具的卡片與搜尋分類版面 | `tools.css` 的繁體中文分區 |
 | 作品頁的代表作、專案卡片、縮圖與詳情字級 | `work.css` 的繁體中文分區 |
-| 螺紋工件限界與基本牙型 | `tools/machining-calculator/thread-data.js`／`thread-extra-data.js` |
-| 螺紋查表、規格收藏與版面 | `tools/machining-calculator/thread-ui.js`／`thread-library.css` |
+| 螺紋工件限界、基本牙型與公稱規格 | `tools/machining-calculator/thread-data.js`、`thread-extra-data.js`、`thread-extended-data.js` |
+| R／Rc／Rp 與 NPT／NPTF 管牙資料 | `tools/machining-calculator/thread-bsp-data.js`／`thread-npt-data.js` |
+| 螺紋搜尋、查表、規格收藏與版面 | `tools/machining-calculator/thread-search.js`、`thread-ui.js`、`thread-library.css` |
 | 手機與列印版面 | `styles.css` 的響應式與列印區塊 |
 | 搜尋、切頁與詳情行為 | `app.js` 的編號功能區塊 |
 
@@ -106,17 +112,21 @@ personal-site/
 
 FANUC 手機版的 App 外觀集中於同目錄 `mobile.css`；固定搜尋、底部「查指令／引數表／收藏／說明」、分頁查詢記憶及詳情返回由 `app.js` 管理，800px 以下啟用。
 
-「加工計算工具箱」位於 `dist/tools/machining-calculator/`，提供銑削、鑽削、車削、螺紋資料、公差與配合五個分類，支援公英制、結果複製及收藏。螺紋入口現在開啟可搜尋的資料庫：8 個牙系、102 個規格，包括 M、MF（公制細牙）、UNC、UNF、BA、BSW、BSF、G／BSPP。
+「加工計算工具箱」位於 `dist/tools/machining-calculator/`，提供銑削、鑽削、車削、螺紋資料、公差與配合五個分類，支援公英制、結果複製及收藏。螺紋入口目前收錄 **15 個牙系、336 個規格**，可依「一般牙／管牙／其他」用途及牙系查找。
 
-其中 36 筆 M／MF／UNC／UNF 收錄 OSG 工件螺紋限界；內牙為 6H／2B，外牙為 6g／2A。另 66 筆 BA／BSW／BSF／G 僅提供基本牙型，不含指定等級的最小／最大公差。來源沒列的界限以「—」顯示，不以基本尺寸、預鑽孔或量規尺寸補值。版本、頁碼及官方連結集中在 `thread-data.js`、`thread-extra-data.js` 的 `sources`。
+資料包含 M 粗牙 40、MF 細牙 70、UNC 29、UNF 24、UNEF 18、BA 17、BSW 22、BSF 9、G／BSPP 19、R／Rc 15、Rp 15、NPT 19、NPTF 12、Tr 17、Pg 10 筆。R／Rc 與 Rp 收錄 1/16″–6″；NPT 至 12″，NPTF 至 3″。PT、PS 作歷史名稱查找，分別導向 R／Rc、Rp，不建立重複規格，也不宣稱所有舊版公差與量規相同。
 
-查表支援 Unicode／全形字元、乘號、分數尺寸與 BA 號數，例如 `Ｍ１０×１．５`、`1/4-20 UNC`、`¼-20 UNC`、`BA 0`／`0BA`。可切內外牙與 mm／in、收藏規格，並複製尺寸、單位及來源；規格收藏同時出現在工具的主「收藏」頁。`#thread` 進入查表，`#thread/metric-coarse-m10-p1-5/internal` 等網址可直接開指定規格與內外牙。
+其中 **60 筆** M／MF／UNC／UNF 收錄已核對的工件限界；公差等級依各筆顯示，新增 M1–M1.4 為內牙 5H／外牙 6h，其餘已收錄公制為 6H／6g、統一牙為 2B／2A。其餘 **276 筆** 為基本牙型、基準平面或公稱資料；Tr 17 筆與 Pg 10 筆僅有公稱規格及牙距。來源未列的限界或尺寸以「—」顯示，不以基本尺寸、預鑽孔、絲攻或量規尺寸補值。
 
-舊公制螺距／TPI 與切削攻牙 `D−P` 粗估仍保留於 `#thread-calculator`，也可從公制查表規格開啟；它不產生工件小徑限界。公差與配合仍依使用者輸入的圖面偏差計算，沒有內建 ISO 孔軸配合等級表。原公式核心、目錄與介面在 `engine.js`、`catalog.js`、`app.js`，螺紋查找另由 `thread-ui.js` 管理。
+管牙尺寸連同基準面呈現：R 為外錐牙、Rc 為內錐牙，Rp 僅內平行牙；錐管牙的直徑錐度為 1:16。R 外牙距離 `a` 只在外牙顯示；NPT／NPTF 顯示 `L1` 平面的基本節徑 `E₁`，並醒目標示採用 **NBS H28（1957）歷史基本表**，未收錄的大、小徑保留空值，不以管材外徑代替。來源版本、頁碼與官方連結集中在五份螺紋資料檔的 `sources`。
 
-本機偏好分成兩鍵：`cwli-machining-preferences-v1` 保存顯示單位與工具分類收藏；`cwli-thread-reference-v1` 保存所選螺紋、內外牙及規格收藏。原計算輸入只留在本次開啟期間。修改後執行 `node scripts/check-machining.mjs`（14 組）及 `node scripts/check-thread-data.mjs`（18 組）；目前兩者皆通過。完整資料範圍與維護方式見 `docs/machining-calculator.md`。
+查表支援 Unicode／全形字元、乘號、完整分數尺寸、編號牙與前後置牙系，例如 `Ｍ１０×１．５`、`¼-20 UNC`、`UNC #6-32`、`BA 0`／`0BA`、`PT 1/2`／`1/2 PT`、`NPT 1/4`。NPT 與 NPTF 分開比對；`R` 選外牙、`Rc`／`Rp`／`PS` 選內牙，Rp 外牙停用。可切 mm／in、收藏規格，並複製尺寸、基準說明、單位及來源；規格收藏同時出現在工具的主「收藏」頁。`#thread` 進入查表，`#thread/metric-coarse-m10-p1-5/internal` 等網址可直接開指定規格與內外牙。
 
-2026-11-23 本輪更新保存在本機；未推送遠端或發佈線上版本。58 項瀏覽器檢查通過，已檢視桌機及手機版；驗證範圍與紀錄見 `QA.md`。
+舊公制螺距／TPI 與切削攻牙 `D−P` 粗估仍保留於 `#thread-calculator`，也可從公制查表規格開啟；它不產生工件小徑限界。公差與配合仍依使用者輸入的圖面偏差計算，沒有內建 ISO 孔軸配合等級表。原公式核心、目錄與介面在 `engine.js`、`catalog.js`、`app.js`；螺紋搜尋規則由 `thread-search.js` 提供，查表與收藏由 `thread-ui.js` 管理。
+
+本機偏好分成兩鍵：`cwli-machining-preferences-v1` 保存顯示單位與工具分類收藏；`cwli-thread-reference-v1` 保存所選螺紋、內外牙及規格收藏。原計算輸入只留在本次開啟期間。修改後執行 `node scripts/check-machining.mjs`、`node scripts/check-thread-data.mjs` 及 `node scripts/check-thread-library.mjs`；前兩者保留原核心 14 組與原 102 筆資料的 18 組檢查，新增檢查負責完整擴充資料與搜尋。完整資料範圍與維護方式見 `docs/machining-calculator.md`。
+
+2026-11-23 本輪擴充保存在本機，未推送遠端或發佈線上版本。完整資料庫與搜尋的 43 組檢查、原資料 18 組、原計算 14 組，以及本輪 58 項瀏覽器檢查皆通過；已檢視手機、平板與桌機查表。最新結果與截圖位置見 `QA.md`。
 
 加工工具首頁與收藏頁的五張原創加工插圖放在同目錄 `illustrations/`，使用 SVG 保持放大清晰；桌機與手機的插圖尺寸由 `app.css` 的 `.category-art` 調整。
 

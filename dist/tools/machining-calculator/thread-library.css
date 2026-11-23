@@ -197,6 +197,64 @@
   background: var(--primary-dark);
 }
 
+/* 用途先分流；管牙代號增多時不必逐一滑過全部一般牙。 */
+.thread-library .thread-kind-list {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 3px;
+  margin: 14px 0 0;
+  padding: 3px;
+  border-radius: 12px;
+  background: #edf3fa;
+}
+.thread-library .thread-kind-list button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 3px;
+  border: 0;
+  border-radius: 9px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+}
+.thread-library .thread-kind-list button[aria-pressed="true"] {
+  color: var(--primary-dark);
+  background: white;
+  box-shadow: 0 2px 6px #2c648e0d;
+}
+
+/* 錐度與基準平面靠近尺寸表；較長說明按需展開。 */
+.thread-library .thread-reference {
+  margin: 0 0 18px;
+  padding: 14px 16px 7px;
+  border: 1px solid #c6dfef;
+  border-radius: 14px;
+  background: #f0f8fe;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.thread-library .thread-reference-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  color: var(--primary-hover);
+}
+.thread-library .thread-reference-head span { font-size: 12px; }
+.thread-library .thread-reference p { margin: 7px 0; }
+.thread-library .thread-reference summary {
+  display: list-item;
+  min-height: 44px;
+  padding-block: 10px;
+  color: var(--primary-dark);
+  font-weight: 700;
+  cursor: pointer;
+}
+.thread-library .thread-reference-number { font-family: var(--mono); font-weight: 700; }
+.thread-library .thread-reference small { font-size: 13px; color: var(--muted); }
+
 .thread-library #thread-size {
   display: block;
   width: 100%;
@@ -310,7 +368,8 @@
   border-radius: var(--thread-radius);
   background: white;
   box-shadow: var(--shadow-soft);
-  scroll-margin-top: calc(var(--app-header-height) + 20px);
+  /* html 已設定頁首 scroll-padding；避免選規格後重複保留兩份頁首高度。 */
+  scroll-margin-top: 0;
 }
 
 .thread-library .thread-detail-head {
@@ -337,6 +396,11 @@
   line-height: 1.45;
   letter-spacing: -0.035em;
   overflow-wrap: anywhere;
+}
+
+/* 標題只接受程式化焦點以供朗讀；互動控制仍保留上方 focus-visible 外框。 */
+.thread-library #thread-selected-title:focus {
+  outline: none;
 }
 
 .thread-library #thread-selected-summary {
@@ -1007,6 +1071,7 @@
   }
 
   .thread-library .thread-search-wrap,
+  .thread-library .thread-kind-list,
   .thread-library .thread-family-list,
   .thread-library #thread-result-count,
   .thread-library .thread-match-list,
