@@ -607,6 +607,11 @@
   line-height: 1.6;
 }
 
+.thread-library .thread-dimension-table .thread-reference-kind {
+  font-family: var(--sans);
+  white-space: normal;
+}
+
 .thread-library #thread-dimension-note {
   margin: 12px 0 0;
   color: var(--muted);

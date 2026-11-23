@@ -3,6 +3,7 @@
  * 依 NIST 官方保存的 NBS H28（1957）Part II 歷史基本尺寸表整理。
  * 已渲染並目視核對工件基本尺寸表的表頭，未摘錄後段的量規製造尺寸表。
  * E₁ 為指定平面的基本節徑；管材外徑 D 另存，不當成該平面的螺紋大徑。
+ * NPT 的最大基本牙高模型另存 profileReference，不回填原表基本徑或工件限界。
  */
 (function publishThreadNptData() {
   'use strict';
@@ -14,8 +15,8 @@
       id: 'npt-nbs-h28-1957-basic',
       title: 'NBS H28（1957）Part II｜NPT 工件基本尺寸',
       url: handbookUrl,
-      page: '印刷頁 5–6／PDF 第 15–16 頁；Table VII.2「Basic dimensions of American Standard taper pipe threads, NPT」',
-      scope: '採工件基本表的 NPS、TPI、管材外徑 D、手緊旋合長度 L1 與該平面節徑 E1；保留歷史版本身分，不冒稱現行標準完整尺寸或製造驗收限界。'
+      page: '印刷頁 5–6／PDF 第 15–16 頁，表 VII.2 的 E1／L1；印刷頁 2–4／PDF 第 12–14 頁，§2、圖 VII.1 與表 VII.1 的牙型及截短範圍',
+      scope: 'E1、L1 與管材外徑採工件基本表。另以 h=0.8P 最大基本牙高、對稱牙型模型計算參考大／小徑，與原表及工件限界分欄。保留歷史版本；參考輪廓不是實際工件的唯一尺寸或製造驗收上下限。'
     },
     {
       id: 'nptf-nbs-h28-1957-basic',
@@ -108,6 +109,21 @@
   const sizeKey = size => size.replace(/[\s/]+/g, '-');
   const referencePlane = 'E₁：外牙自小端（管端）沿軸線距離 L1 的手緊旋合平面；在基本旋合位置亦為內牙大端參考平面。';
 
+  // 最大基本牙高是選定的對稱牙型模型，不等於工件最大／最小大徑。
+  // 從原始 inch 值計算後再轉 mm；不使用已四捨五入的 pitchMm 反算。
+  function maximumBasicProfile(e1Inch,tpi) {
+    const heightInch=0.8/tpi;
+    return {
+      kind:'maximum-basic-height',
+      sourceId:'npt-nbs-h28-1957-basic',
+      majorMm:mm(e1Inch+heightInch),
+      minorMm:mm(e1Inch-heightInch),
+      heightMm:mm(heightInch),
+      formula:'h = 0.8P；大徑參考 = E₁ + h；小徑參考 = E₁ − h',
+      scope:'E₁ 基準面的對稱最大基本牙高模型。最大指牙高，不是工件大徑上限；實際牙頂、牙底可有不同截短，並受量規旋合位置允差影響。此值不是製造或檢驗限界。'
+    };
+  }
+
   function makeRecords(family, rows, sourceId) {
     const code = family.toUpperCase();
     return rows.map(([size, tpi, e1Inch, l1Inch, pipeOutsideInch]) => ({
@@ -133,6 +149,8 @@
         minorInternal: null,
         minorExternal: null
       },
+      // NPTF 的截形另有規定，不能套用此 NPT 參考模型。
+      profileReference:family==='npt'?maximumBasicProfile(e1Inch,tpi):null,
       symbols: { pitch: 'E₁' },
       referenceLabel: '基準平面基本尺寸',
       referenceEdition: 'NBS H28 · 1957 基本表',
@@ -150,7 +168,7 @@
       sourceIds: [sourceId, 'vermont-npt-reference-plane', ...(family==='npt'&&['1/2','1'].includes(size)?['baer-npt-reference-check']:[])],
       scope: family === 'nptf'
         ? '依 NBS H28（1957）表 VIII.4 摘錄的歷史 NPTF 工件基本值。只收 E₁／L1 與牙距；管材外徑 D 另列。未收基準面大、小徑及指定等級製造限界；不以 NPT 截形或量規尺寸代替。'
-        : '依 NBS H28（1957）表 VII.2 摘錄的歷史 NPT 工件基本值。只收 E₁／L1 與牙距；管材外徑 D 另列。未收基準面大、小徑及指定等級製造限界，亦非量規製造尺寸。'
+        : '依 NBS H28（1957）表 VII.2 摘錄 E₁／L1 與牙距，管材外徑 D 另列。大、小徑另提供 h=0.8P 最大基本牙高模型的計算參考；原表大、小徑欄及製造限界未收錄，不是量規製造尺寸。'
     }));
   }
 

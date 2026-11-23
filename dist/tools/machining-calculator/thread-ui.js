@@ -36,6 +36,13 @@
     const converted = dimension && unit === 'imperial' ? value / 25.4 : value;
     return new Intl.NumberFormat('en-US', {useGrouping:false,minimumFractionDigits:dimension?3:0,maximumFractionDigits:dimension?(unit==='metric'?5:6):4}).format(converted);
   }
+  // 計算牙型採較少顯示位數並加約等號，不暗示實際工件具有此量測精度。
+  function referenceNumber(value) {
+    if(!isNumber(value))return '—';
+    const digits=unit==='metric'?3:5;
+    return '≈'+new Intl.NumberFormat('en-US',{useGrouping:false,minimumFractionDigits:digits,maximumFractionDigits:digits})
+      .format(unit==='metric'?value:value/25.4);
+  }
   function pitchText(item) {
     return `P ${number(item.pitchMm)} ${sizeUnit()} · ${isNumber(item.tpi)?'':'換算 '}${number(isNumber(item.tpi) ? item.tpi : 25.4 / item.pitchMm, false)} TPI`;
   }
@@ -81,17 +88,22 @@
     }
   }
 
-  // ── 03｜尺寸：只顯示來源有收錄的界限，基本牙型以獨立的兩欄表呈現。 ──
+  // ── 03｜尺寸分層：工件限界、表列基本值與有模型標記的計算參考。 ──
   function rows() {
     const side = selected?.[member];
     const symbols = member === 'internal' ? ['D','D₂','D₁'] : ['d','d₂',selected?.family?.startsWith('metric')?'d₃':'d₁'];
-    return ['major','pitch','minor'].map((key,index) => ({key,label:['大徑','節徑','小徑'][index],symbol:selected?.symbols?.[key] || symbols[index],min:side?.[key]?.min,max:side?.[key]?.max,
-      basic:selected?.basic?.[key==='minor'?(member==='internal'?'minorInternal':'minorExternal'):key]}));
+    return ['major','pitch','minor'].map((key,index) => {
+      const basic=selected?.basic?.[key==='minor'?(member==='internal'?'minorInternal':'minorExternal'):key];
+      const reference=!isNumber(basic)?selected?.profileReference?.[key==='major'?'majorMm':key==='minor'?'minorMm':'']:null;
+      return {key,label:['大徑','節徑','小徑'][index],symbol:selected?.symbols?.[key] || symbols[index],
+        min:side?.[key]?.min,max:side?.[key]?.max,basic,reference};
+    });
   }
   function hasLimits() { return rows().some(row => isNumber(row.min) || isNumber(row.max)); }
   function renderDetail() {
     if (!selected) return;
     const type = familyMap.get(selected.family), side = selected[member], limits = hasLimits();
+    const hasReference=!limits&&rows().some(row=>isNumber(row.reference));
     $('thread-selected-kicker').textContent = type?.label || '';
     $('thread-selected-title').textContent = designation(selected);
     $('thread-selected-title').tabIndex = -1;
@@ -100,17 +112,22 @@
     $('thread-major-fact').textContent = `${number(selected.taper?selected.basic?.pitch:selected.diameterMm)} ${sizeUnit()}`;
     $('thread-pitch-fact').textContent = `${number(selected.pitchMm)} ${sizeUnit()} / ${number(isNumber(selected.tpi)?selected.tpi:25.4/selected.pitchMm,false)}`;
     $('thread-angle-fact').textContent = `${number(type?.angleDeg,false)}°`;
-    $('thread-class').textContent = side?.className || (selected.nominalOnly?'僅公稱規格':'基本值・未指定公差');
+    $('thread-class').textContent = side?.className || (selected.nominalOnly?'僅公稱規格':hasReference?'含牙型計算參考':'基本值・未指定公差');
     // 只有公稱資料的牙系不堆出三列空白尺寸；保留上方規格與明確範圍說明。
     document.querySelector('.thread-limits-heading').hidden=Boolean(selected.nominalOnly);
     document.querySelector('.thread-table-wrap').hidden=Boolean(selected.nominalOnly);
     document.querySelector('.thread-profile').hidden=Boolean(selected.nominalOnly);
-    $('thread-dimensions-title').textContent = `${limits?'尺寸限界':selected.referenceLabel || (selected.taper?'基準平面基本尺寸':'基本牙型尺寸')}（${sizeUnit()}）`;
-    $('thread-table-caption').textContent = `${designation(selected)}${selected.memberDesignations?'':member==='internal'?' 內牙':' 外牙'} ${limits?side?.className||'':'基本尺寸'}，單位 ${sizeUnit()}`;
-    $('thread-dimension-head').innerHTML = limits ? '<tr><th scope="col">尺寸項目</th><th scope="col">最小</th><th scope="col">最大</th></tr>' : '<tr><th scope="col">尺寸項目</th><th scope="col" colspan="2">基本值</th></tr>';
-    $('thread-dimensions').innerHTML = rows().map(row => `<tr><th scope="row">${row.label}<small>${row.symbol}</small></th>${limits?`<td>${number(row.min)}</td><td>${number(row.max)}</td>`:`<td colspan="2">${number(row.basic)}</td>`}</tr>`).join('');
+    $('thread-dimensions-title').textContent = `${limits?'尺寸限界':hasReference?'基準平面尺寸':selected.referenceLabel || (selected.taper?'基準平面基本尺寸':'基本牙型尺寸')}（${sizeUnit()}）`;
+    $('thread-table-caption').textContent = `${designation(selected)}${selected.memberDesignations?'':member==='internal'?' 內牙':' 外牙'} ${limits?side?.className||'':hasReference?'基本尺寸與牙型計算參考':'基本尺寸'}，單位 ${sizeUnit()}`;
+    $('thread-dimension-head').innerHTML = limits ? '<tr><th scope="col">尺寸項目</th><th scope="col">最小</th><th scope="col">最大</th></tr>' : `<tr><th scope="col">尺寸項目</th><th scope="col" colspan="2">${hasReference?'基本／參考值':'基本值'}</th></tr>`;
+    $('thread-dimensions').innerHTML = rows().map(row => {
+      const reference=isNumber(row.reference)&&!limits;
+      const value=reference?`<span class="thread-reference-value">${referenceNumber(row.reference)}</span><small class="thread-reference-kind">牙型計算參考</small>`:number(row.basic);
+      return `<tr><th scope="row">${row.label}${reference?'參考':''}<small>${row.symbol}</small></th>${limits?`<td>${number(row.min)}</td><td>${number(row.max)}</td>`:`<td colspan="2">${value}</td>`}</tr>`;
+    }).join('');
     $('thread-dimension-note').textContent = limits
       ? `「—」表示來源未列該界限，不以基本尺寸或底孔估算補入。${side?.scope || ''} 顯示單位換算可能四捨五入，原始資料單位為 mm。`
+      : hasReference?`E₁ 為來源基本節徑。「牙型計算參考」依 ${selected.profileReference.formula} 計算。${selected.profileReference.scope}`
       : selected.nominalOnly?'此批只收錄公稱規格與牙距，實際內外牙尺寸未收錄；「—」不是零。':`${selected.taper?'本列為指定基準平面的基本尺寸，離開該平面時直徑會隨軸向位置改變。':'本列為基本牙型資料。'}沒有指定配合等級的最小／最大尺寸，不可當作製造公差上下限。「—」表示未收錄。`;
     document.querySelectorAll('[data-thread-member]').forEach(button => {const supported=!selected.supportedMembers||selected.supportedMembers.includes(button.dataset.threadMember);button.disabled=!supported;button.setAttribute('aria-pressed',String(button.dataset.threadMember===member));button.textContent=button.dataset.threadMember==='internal'?(selected.family==='bspt'?'內牙 Rc':'內牙'):(selected.family==='bspt'?'外牙 R':'外牙');});
     $('thread-save').setAttribute('aria-pressed',String(favorites.has(selected.id)));
@@ -186,7 +203,8 @@
     const lines=[`${designation(selected)}｜${member==='internal'?'內牙':'外牙'}`,side?.className||'基本資料（未指定公差）',pitchText(selected),`尺寸單位：${sizeUnit()}`];
     if(selected.taper){lines.push(`直徑錐度 1:${selected.taper.diameterRatio}`,referencePlane());if(referenceLengthVisible())lines.push(`${selected.taper.referenceLengthLabel}：${number(selected.taper.referenceLengthMm)} ${sizeUnit()}`);if(selected.taper.note)lines.push(selected.taper.note);}
     if(isNumber(selected.pipeOutsideDiameterMm))lines.push(`管材外徑 D：${number(selected.pipeOutsideDiameterMm)} ${sizeUnit()}（非基準面螺紋大徑）`);
-    rows().forEach(row => lines.push(limits?`${row.label} ${row.symbol}：最小 ${number(row.min)} / 最大 ${number(row.max)}`:`${row.label} ${row.symbol}：基本值 ${number(row.basic)}`));
+    rows().forEach(row => lines.push(limits?`${row.label} ${row.symbol}：最小 ${number(row.min)} / 最大 ${number(row.max)}`:isNumber(row.reference)?`${row.label} ${row.symbol}：牙型計算參考 ${referenceNumber(row.reference)}`:`${row.label} ${row.symbol}：基本值 ${number(row.basic)}`));
+    if(selected.profileReference)lines.push(selected.profileReference.formula,selected.profileReference.scope);
     lines.push(limits?'— 代表來源未收錄該界限。':'基本尺寸不是製造公差上下限。',selected.scope||'');
     const ids=[...new Set([...(selected.sourceIds||[]),side?.sourceId].filter(Boolean))];
     ids.forEach(id=>{const source=sourceMap.get(id);if(source)lines.push(`${source.title}：${source.url}`);});

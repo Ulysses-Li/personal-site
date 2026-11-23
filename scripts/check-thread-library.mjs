@@ -73,6 +73,25 @@ check('NPT 與 NPTF 獨立範圍及 E1／L1',()=>{
   assert.ok(byId.has('npt-12'));assert.ok(byId.has('nptf-3'));assert.ok(!byId.has('nptf-12'));
 });
 check('NPT 1 與 BSPT 1 牙數不同',()=>{assert.equal(get('npt-1').tpi,11.5);assert.equal(get('bspt-1').tpi,11);});
+check('NPT 1/16 最大基本牙高模型獨立保存',()=>{
+  const row=get('npt-1-16'),profile=row.profileReference;
+  near(profile.majorMm,7.894565);near(profile.minorMm,6.389379);near(profile.heightMm,0.752593);
+  assert.equal(profile.kind,'maximum-basic-height');assert.match(profile.formula,/0\.8P/);
+  assert.equal(row.basic.major,null);assert.equal(row.basic.minorInternal,null);assert.equal(row.basic.minorExternal,null);
+  assert.equal(row.internal,null);assert.equal(row.external,null);assert.notEqual(profile.majorMm,row.pipeOutsideDiameterMm);
+});
+check('19 筆 NPT 參考模型使用原始牙距，未改限界',()=>{
+  for(const row of records.filter(item=>item.family==='npt')){
+    const profile=row.profileReference;valid(profile.majorMm);valid(profile.minorMm);valid(profile.heightMm);
+    near(profile.heightMm,0.8*25.4/row.tpi,0.00000051);
+    near((profile.majorMm+profile.minorMm)/2,row.basic.pitch,0.000001);
+    assert.ok(row.sourceIds.includes(profile.sourceId));assert.match(profile.scope,/不是工件大徑上限/);
+  }
+});
+check('NPTF 與其他牙系不套用 NPT 計算模型',()=>{
+  assert.equal(records.filter(row=>row.profileReference).length,19);
+  for(const row of records.filter(item=>item.family==='nptf'))assert.equal(row.profileReference,null);
+});
 check('Tr／Pg 不以公稱值冒充基本徑',()=>{
   const rows=records.filter(row=>row.nominalOnly);assert.equal(rows.length,27);
   for(const row of rows){assert.ok(['tr','pg'].includes(row.family));assert.ok(row.diameterLabel);assert.ok(Object.values(row.basic).every(value=>value===null));}
