@@ -45,8 +45,8 @@
         }]
       },
       {
-        id: 'thread', title: '螺紋與攻牙', english: 'Threading',
-        description: '換算螺距與 TPI，並粗估公制切削攻牙預鑽孔徑。',
+        id: 'thread', title: '螺紋資料', english: 'Thread data',
+        description: '快速查找牙系、尺寸與牙距，切換內外牙查看限界、基本尺寸與來源。',
         icon: 'thread', color: '#8562b6',
         tools: [{
           id: 'thread-pitch-drill', title: '螺距換算與預鑽粗估', method: 'thread',

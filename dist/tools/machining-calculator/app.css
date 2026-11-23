@@ -24,7 +24,8 @@
 }
 
 html {
-  min-width: 320px;
+  /* 讓 320px 裝置扣除捲軸後仍能貼齊視窗，不額外產生橫向捲動。 */
+  min-width: 0;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--app-header-height) + 20px);
 }

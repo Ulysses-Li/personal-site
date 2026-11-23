@@ -1,0 +1,1149 @@
+/*
+ * 螺紋資料查找｜加工工具箱的獨立資料介面。
+ * 載入於 app.css 之後；所有規則限於 .thread-library，沿用共用主題變數。
+ * 查找、內外螺紋、收藏及資料內容由 thread-ui.js 管理，本檔只處理呈現。
+ */
+
+/* ==========================================================================
+   01｜頁面尺度與無障礙
+   ========================================================================== */
+.thread-library {
+  --thread-border: rgba(148, 192, 223, 0.32);
+  --thread-radius: 22px;
+  min-width: 0;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.8;
+  scroll-margin-top: calc(var(--app-header-height) + 20px);
+}
+
+.thread-library[hidden],
+.thread-library [hidden] {
+  display: none !important;
+}
+
+.thread-library button,
+.thread-library input,
+.thread-library select {
+  font-family: inherit;
+}
+
+.thread-library button {
+  cursor: pointer;
+}
+
+.thread-library button:focus-visible,
+.thread-library input:focus-visible,
+.thread-library select:focus-visible,
+.thread-library a:focus-visible,
+.thread-library summary:focus-visible {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 4px;
+}
+
+.thread-library .thread-heading {
+  max-width: 850px;
+  margin-bottom: 24px;
+}
+
+.thread-library .thread-heading .eyebrow {
+  margin-bottom: 9px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.thread-library .thread-heading > h2 {
+  margin: 0 0 10px;
+  font-size: clamp(28px, 3vw, 35px);
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: -0.04em;
+}
+
+.thread-library .thread-heading > p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.85;
+}
+
+.thread-library .thread-workspace {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   02｜查找面板：搜尋、牙系與尺寸
+   結果沿頁面自然展開，不設定固定高度或額外的清單捲動區。
+   ========================================================================== */
+.thread-library .thread-picker {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--thread-border);
+  border-radius: var(--thread-radius);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 24px rgba(50, 104, 146, 0.035);
+}
+
+.thread-library .thread-search-label,
+.thread-library .thread-picker label[for="thread-size"] {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.thread-library .thread-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 2px 4px 2px 12px;
+  border: 1px solid rgba(148, 192, 223, 0.56);
+  border-radius: 14px;
+  background: #fbfdff;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.thread-library .thread-search-wrap:focus-within {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.11);
+}
+
+.thread-library .thread-search-wrap > .icon {
+  width: 20px;
+  height: 20px;
+  color: var(--primary-dark);
+}
+
+.thread-library #thread-search {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  padding: 8px 0;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.thread-library #thread-search::placeholder {
+  color: #71859c;
+  opacity: 1;
+}
+
+.thread-library #thread-search::-webkit-search-cancel-button {
+  display: none;
+}
+
+.thread-library #thread-search-clear {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-height: 44px;
+  padding: 10px;
+  border: 0;
+  border-radius: 11px;
+  color: var(--muted);
+  background: transparent;
+}
+
+.thread-library #thread-search-clear .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.thread-library .thread-family-list {
+  display: flex;
+  gap: 7px;
+  min-width: 0;
+  margin: 18px 0;
+  padding: 1px 1px 7px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: #b8d3e6 transparent;
+  scrollbar-width: thin;
+}
+
+.thread-library .thread-family-list > button {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 9px 13px;
+  border: 1px solid var(--thread-border);
+  border-radius: 12px;
+  color: var(--muted);
+  background: white;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.65;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.thread-library .thread-family-list > button[aria-pressed="true"] {
+  border-color: var(--primary-dark);
+  color: white;
+  background: var(--primary-dark);
+}
+
+.thread-library #thread-size {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  padding: 10px 34px 10px 13px;
+  border: 1px solid rgba(148, 192, 223, 0.56);
+  border-radius: 13px;
+  color: var(--text);
+  background: #fbfdff;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.thread-library #thread-result-count {
+  margin: 17px 0 13px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.thread-library .thread-match-list {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.thread-library .thread-match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 5px 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 68px;
+  padding: 12px 13px;
+  border: 1px solid var(--thread-border);
+  border-radius: 14px;
+  color: var(--text);
+  background: white;
+  text-align: left;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.thread-library .thread-match > strong {
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.55;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.thread-library .thread-match > small {
+  max-width: 110px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  text-align: right;
+}
+
+.thread-library .thread-match[aria-pressed="true"] {
+  border-color: var(--primary-dark);
+  color: var(--primary-hover);
+  background: #edf7ff;
+  box-shadow: inset 0 0 0 1px var(--primary-dark);
+}
+
+.thread-library .thread-empty {
+  padding: 21px 8px 7px;
+  text-align: center;
+}
+
+.thread-library .thread-empty h3 {
+  margin: 0 0 9px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.thread-library .thread-empty p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.thread-library .thread-empty button {
+  min-height: 44px;
+  margin-top: 15px;
+  padding: 9px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  color: var(--primary-dark);
+  background: #f1f8ff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+/* ==========================================================================
+   03｜規格標題、收藏與內外螺紋
+   ========================================================================== */
+.thread-library .thread-detail {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--thread-border);
+  border-radius: var(--thread-radius);
+  background: white;
+  box-shadow: var(--shadow-soft);
+  scroll-margin-top: calc(var(--app-header-height) + 20px);
+}
+
+.thread-library .thread-detail-head {
+  position: relative;
+  min-height: 48px;
+  margin-bottom: 22px;
+  padding-right: 61px;
+}
+
+.thread-library .thread-selected-kicker {
+  margin: 0 0 7px;
+  color: var(--primary-dark);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+.thread-library #thread-selected-title {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: clamp(27px, 2.5vw, 33px);
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.thread-library #thread-selected-summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.thread-library #thread-save {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  min-height: 46px;
+  padding: 11px;
+  border: 1px solid var(--thread-border);
+  border-radius: 14px;
+  color: var(--muted);
+  background: white;
+}
+
+.thread-library #thread-save[aria-pressed="true"] {
+  border-color: rgba(119, 84, 173, 0.3);
+  color: #7754ad;
+  background: #f2edff;
+}
+
+.thread-library #thread-save[aria-pressed="true"] .icon {
+  fill: rgba(167, 139, 250, 0.17);
+}
+
+.thread-library .thread-member-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(148, 192, 223, 0.17);
+  border-radius: 15px;
+  background: #edf3fa;
+}
+
+.thread-library .thread-member-switch > button {
+  min-width: 0;
+  min-height: 46px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.thread-library .thread-member-switch > button[aria-pressed="true"] {
+  color: var(--primary-dark);
+  background: white;
+  box-shadow: 0 3px 12px rgba(50, 104, 146, 0.08);
+}
+
+.thread-library .thread-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0 25px;
+}
+
+.thread-library .thread-facts > dl,
+.thread-library .thread-facts > div {
+  min-width: 0;
+  margin: 0;
+  padding: 16px 13px;
+  border: 1px solid rgba(14, 165, 233, 0.12);
+  border-radius: 14px;
+  background: #eef7ff;
+}
+
+.thread-library .thread-facts dt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.thread-library .thread-facts dd {
+  margin: 8px 0 0;
+  color: var(--primary-hover);
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   04｜尺寸範圍：固定三欄、等寬數字與清楚列標題
+   ========================================================================== */
+.thread-library .thread-limits-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 13px;
+}
+
+.thread-library .thread-limits-heading h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: -0.025em;
+}
+
+.thread-library #thread-class {
+  max-width: 100%;
+  padding: 4px 9px;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 8px;
+  color: #68548f;
+  background: #f3effc;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.thread-library .thread-table-wrap {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--thread-border);
+  border-radius: 14px;
+}
+
+.thread-library .thread-dimension-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.thread-library .thread-dimension-table thead {
+  background: #f2f7fc;
+}
+
+.thread-library .thread-dimension-table thead th {
+  width: 34%;
+  padding: 12px 9px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.7;
+  text-align: right;
+}
+
+.thread-library .thread-dimension-table thead th:first-child {
+  width: 32%;
+  text-align: left;
+}
+
+.thread-library .thread-dimension-table tbody th,
+.thread-library .thread-dimension-table tbody td {
+  padding: 17px 9px;
+  border-top: 1px solid rgba(148, 192, 223, 0.24);
+  vertical-align: middle;
+}
+
+.thread-library .thread-dimension-table tbody th:first-child,
+.thread-library .thread-dimension-table tbody td:first-child {
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.7;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.thread-library .thread-dimension-table tbody td:not(:first-child) {
+  color: var(--primary-hover);
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.04em;
+  text-align: right;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.thread-library .thread-dimension-table tbody small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.thread-library #thread-dimension-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* ==========================================================================
+   05｜牙型圖、來源與複製操作
+   ========================================================================== */
+.thread-library .thread-profile {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  margin-top: 23px;
+  padding: 18px;
+  border: 1px solid rgba(167, 139, 250, 0.16);
+  border-radius: 16px;
+  background: #f6f5fc;
+}
+
+.thread-library #thread-profile {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 360px;
+  aspect-ratio: 320 / 140;
+}
+
+.thread-library .thread-profile > div {
+  min-width: 0;
+}
+
+.thread-library .thread-profile h3 {
+  margin: 0 0 7px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.thread-library .thread-profile p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.thread-library .thread-source {
+  margin-top: 23px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.thread-library .thread-source > summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 30px 10px 0;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.75;
+  list-style: none;
+  cursor: pointer;
+}
+
+.thread-library .thread-source > summary::-webkit-details-marker {
+  display: none;
+}
+
+.thread-library .thread-source > summary::after {
+  position: absolute;
+  top: 18px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--primary-dark);
+  border-bottom: 2px solid var(--primary-dark);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.thread-library .thread-source[open] > summary::after {
+  top: 22px;
+  transform: rotate(225deg);
+}
+
+.thread-library #thread-source-links {
+  display: grid;
+  gap: 8px;
+  margin-top: 7px;
+}
+
+.thread-library #thread-source-links a {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(148, 192, 223, 0.24);
+  border-radius: 11px;
+  color: var(--primary-dark);
+  background: #f6faff;
+  font-size: 14px;
+  line-height: 1.8;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.thread-library #thread-scope {
+  margin: 13px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.thread-library .thread-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  margin-top: 23px;
+}
+
+.thread-library .thread-detail-actions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 48px;
+  margin: 0;
+  padding: 11px 17px;
+  border: 1px solid var(--line-strong);
+  border-radius: 13px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.thread-library .thread-detail-actions > .primary-button {
+  border-color: var(--primary-dark);
+  color: white;
+  background: var(--primary-dark);
+}
+
+.thread-library .thread-detail-actions > .plain-button {
+  color: var(--primary-dark);
+  background: white;
+}
+
+.thread-library .thread-detail-actions .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* ==========================================================================
+   06｜常用規格：輕量收藏籤，保留完整規格名稱
+   ========================================================================== */
+.thread-library .thread-saved {
+  margin-top: 24px;
+  padding: 23px;
+  border: 1px solid var(--thread-border);
+  border-radius: var(--thread-radius);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.thread-library .thread-saved > h3 {
+  margin: 0 0 15px;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: -0.025em;
+}
+
+.thread-library #thread-saved-list,
+.thread-library #thread-global-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  min-width: 0;
+}
+
+.thread-library #thread-saved-list > button,
+.thread-library #thread-global-list > a {
+  max-width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-radius: 11px;
+  color: #68548f;
+  background: #f7f3ff;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.7;
+  text-align: left;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.thread-library #thread-saved-list > button[aria-pressed="true"] {
+  border-color: #7754ad;
+  background: #eee5ff;
+}
+
+.thread-library #thread-saved-list > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+/* ==========================================================================
+   07｜滑鼠、平板與手機
+   900px 以下改單欄；尺寸表始終留在頁面寬度內。
+   ========================================================================== */
+@media (hover: hover) and (pointer: fine) {
+  .thread-library .thread-family-list > button:not([aria-pressed="true"]):hover,
+  .thread-library .thread-match:not([aria-pressed="true"]):hover {
+    border-color: var(--primary-dark);
+    background: #f3f9ff;
+  }
+
+  .thread-library #thread-search-clear:hover {
+    color: var(--primary-dark);
+    background: #eaf4ff;
+  }
+
+  .thread-library .thread-detail-actions > .primary-button:hover {
+    border-color: var(--primary-hover);
+    background: var(--primary-hover);
+  }
+
+  .thread-library .thread-detail-actions > .plain-button:hover {
+    border-color: var(--primary-dark);
+    background: #f1f8ff;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .thread-library .thread-workspace {
+    gap: 18px;
+  }
+
+  .thread-library .thread-detail {
+    padding: 23px;
+  }
+
+  .thread-library .thread-facts > dl,
+  .thread-library .thread-facts > div {
+    padding-inline: 10px;
+  }
+
+  .thread-library .thread-profile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+@media screen and (min-width: 901px) {
+  .thread-library .thread-family-list {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* 沒有輸入搜尋時，以尺寸選單為主，讓手機能直接看到規格資料。 */
+  .thread-library[data-searching="false"] .thread-match-list {
+    display: none;
+  }
+
+  .thread-library .thread-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .thread-library .thread-picker {
+    padding: 22px;
+  }
+
+  .thread-library .thread-detail {
+    padding: 26px;
+  }
+
+  .thread-library .thread-profile {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .thread-library .thread-match {
+    min-height: 64px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .thread-library .thread-heading .eyebrow,
+  .thread-library .thread-heading > h2 {
+    display: none;
+  }
+
+  .thread-library .thread-heading > p:not(.eyebrow) {
+    font-size: 16px;
+  }
+
+  .thread-library .thread-dimension-table tbody td:not(:first-child) {
+    font-size: clamp(16px, 4.6vw, 22px);
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  .thread-library .thread-heading {
+    margin-bottom: 19px;
+  }
+
+  .thread-library .thread-heading > h2 {
+    font-size: 28px;
+  }
+
+  .thread-library .thread-picker {
+    padding: 20px;
+  }
+
+  .thread-library .thread-detail {
+    padding: 23px 18px;
+  }
+
+  .thread-library .thread-detail-head {
+    margin-bottom: 19px;
+    padding-right: 58px;
+  }
+
+  .thread-library #thread-selected-title {
+    font-size: 28px;
+  }
+
+  .thread-library .thread-dimension-table thead th,
+  .thread-library .thread-dimension-table tbody th,
+  .thread-library .thread-dimension-table tbody td {
+    padding-inline: 5px;
+  }
+
+  .thread-library .thread-profile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .thread-library #thread-profile {
+    margin-inline: auto;
+  }
+
+  .thread-library .thread-saved {
+    margin-top: 18px;
+    padding: 21px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .thread-library .thread-facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid rgba(14, 165, 233, 0.12);
+    border-radius: 14px;
+  }
+
+  .thread-library .thread-facts > dl,
+  .thread-library .thread-facts > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 13px;
+    padding: 12px 14px;
+    border: 0;
+    border-bottom: 1px solid rgba(14, 165, 233, 0.12);
+    border-radius: 0;
+  }
+
+  .thread-library .thread-facts > dl:last-child,
+  .thread-library .thread-facts > div:last-child {
+    border-bottom: 0;
+  }
+
+  .thread-library .thread-facts dd {
+    margin: 0;
+    text-align: right;
+  }
+
+  .thread-library .thread-detail-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .thread-library .thread-detail-actions > button {
+    min-height: 50px;
+    padding-inline: 9px;
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 359.98px) {
+  .thread-library .thread-picker {
+    padding: 17px;
+  }
+
+  .thread-library .thread-match {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+    padding-block: 11px;
+  }
+
+  .thread-library .thread-match > small {
+    max-width: none;
+    text-align: left;
+  }
+
+  .thread-library .thread-detail {
+    padding-inline: 14px;
+  }
+
+  .thread-library .thread-dimension-table thead th,
+  .thread-library .thread-dimension-table tbody th,
+  .thread-library .thread-dimension-table tbody td {
+    padding-inline: 3px;
+  }
+
+  .thread-library .thread-dimension-table tbody th:first-child,
+  .thread-library .thread-dimension-table tbody td:first-child {
+    font-size: 14px;
+  }
+
+  .thread-library .thread-detail-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* 手機以緊湊選規格列與單列基本資訊，讓尺寸表更快進入首屏。 */
+@media screen and (max-width: 650px) {
+  .thread-library .thread-heading {
+    display: none;
+  }
+
+  .thread-library .thread-picker {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 10px;
+    padding: 14px;
+  }
+
+  .thread-library .thread-search-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .thread-library .thread-search-wrap,
+  .thread-library .thread-family-list,
+  .thread-library #thread-result-count,
+  .thread-library .thread-match-list,
+  .thread-library .thread-empty {
+    grid-column: 1 / -1;
+  }
+
+  .thread-library .thread-family-list {
+    margin: 10px 0;
+  }
+
+  .thread-library .thread-picker label[for="thread-size"] {
+    align-self: center;
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .thread-library #thread-size {
+    min-height: 44px;
+  }
+
+  .thread-library #thread-result-count {
+    margin: 8px 0 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+    font-size: 12px;
+  }
+
+  .thread-library[data-match-count="1"] .thread-match-list {
+    display: none;
+  }
+
+  .thread-library .thread-detail {
+    padding-top: 18px;
+  }
+
+  .thread-library .thread-selected-kicker,
+  .thread-library #thread-selected-summary {
+    display: none;
+  }
+
+  .thread-library .thread-detail-head {
+    min-height: 44px;
+    margin-bottom: 12px;
+  }
+
+  .thread-library .thread-facts {
+    grid-template-columns: 1fr 1.5fr 0.6fr;
+    gap: 0;
+    margin-block: 12px 16px;
+  }
+
+  .thread-library .thread-facts > dl {
+    display: block;
+    padding: 10px 5px;
+    border: 0;
+    border-right: 1px solid var(--line);
+  }
+
+  .thread-library .thread-facts > dl:last-child {
+    border: 0;
+  }
+
+  .thread-library .thread-facts dt {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .thread-library .thread-facts dd {
+    margin: 4px 0 0;
+    font-size: 14px;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  .thread-library .thread-dimension-table tbody th,
+  .thread-library .thread-dimension-table tbody td {
+    padding-block: 11px;
+  }
+}
+
+/* ==========================================================================
+   08｜減少動態與列印
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .thread-library *,
+  .thread-library *::before,
+  .thread-library *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media print {
+  .thread-library {
+    color: black;
+    background: white;
+  }
+
+  .thread-library .thread-picker,
+  .thread-library .thread-member-switch,
+  .thread-library .thread-detail-actions,
+  .thread-library .thread-saved {
+    display: none !important;
+  }
+
+  .thread-library .thread-workspace {
+    display: block;
+  }
+
+  .thread-library .thread-detail {
+    padding: 20px;
+    border: 1px solid #888888;
+    border-radius: 0;
+    background: white;
+    box-shadow: none;
+  }
+
+  .thread-library .thread-detail-head {
+    padding-right: 0;
+  }
+
+  .thread-library .thread-facts > dl,
+  .thread-library .thread-facts > div,
+  .thread-library .thread-profile,
+  .thread-library .thread-dimension-table thead {
+    color: black;
+    background: white;
+  }
+
+  .thread-library .thread-dimension-table tbody td,
+  .thread-library .thread-facts dd {
+    color: black;
+  }
+
+  .thread-library .thread-table-wrap,
+  .thread-library .thread-profile {
+    break-inside: avoid;
+  }
+}

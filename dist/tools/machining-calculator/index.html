@@ -9,8 +9,12 @@
   <link rel="icon" href="../../assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../assets/theme.css">
   <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="thread-library.css">
   <script src="engine.js" defer></script>
   <script src="catalog.js" defer></script>
+  <script src="thread-data.js" defer></script>
+  <script src="thread-extra-data.js" defer></script>
+  <script src="thread-ui.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body class="machining-app" data-screen="home">
@@ -68,8 +72,35 @@
         </aside>
       </div>
     </section>
-    <!-- 05｜常用收藏與來源：只儲存自己的工具偏好，不上傳輸入資料。 -->
-    <section class="screen" id="favorites-screen" hidden aria-labelledby="favorites-title"><div class="hero"><p class="eyebrow">YOUR SHORTCUTS</p><h2 id="favorites-title">常用的，放在手邊。</h2><p>在計算頁按星號，把常用工具留在這裡。</p></div><div class="category-grid" id="favorites-list"></div></section>
+    <!-- 05｜螺紋查表：原廠尺寸限界與基本牙型分別標示，不混用估算值。 -->
+    <section class="thread-library" id="thread-library" hidden aria-labelledby="thread-library-title" data-searching="false">
+      <header class="thread-heading"><p class="eyebrow">THREAD REFERENCE</p><h2 id="thread-library-title">螺紋資料，隨手查。</h2><p>選牙系、找規格，查看內外牙尺寸與資料來源。</p></header>
+      <div class="thread-workspace">
+        <aside class="thread-picker" aria-label="查找螺紋規格">
+          <label class="thread-search-label" for="thread-search">搜尋螺紋（全牙系）</label>
+          <div class="thread-search-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6"/></svg><input id="thread-search" type="search" placeholder="M10×1.5、1/4-20、BA 0…" autocomplete="off" spellcheck="false"><button id="thread-search-clear" type="button" aria-label="清除螺紋搜尋" hidden>×</button></div>
+          <div class="thread-family-list" id="thread-family-list" role="group" aria-label="螺紋牙系"></div>
+          <label for="thread-size">尺寸與牙距</label><select id="thread-size" aria-describedby="thread-result-count"></select>
+          <p id="thread-result-count" aria-live="polite"></p>
+          <div class="thread-match-list" id="thread-match-list" aria-label="符合的螺紋規格"></div>
+          <div class="thread-empty" id="thread-empty" hidden><h3>沒有符合的規格</h3><p>換個尺寸，或選「全部」牙系再找一次。</p><button class="plain-button" id="thread-reset" type="button">重設查找條件</button></div>
+        </aside>
+        <article class="thread-detail" id="thread-detail" aria-labelledby="thread-selected-title">
+          <div class="thread-detail-head"><div><p class="thread-selected-kicker" id="thread-selected-kicker"></p><h2 id="thread-selected-title"></h2><p id="thread-selected-summary"></p></div><button class="icon-button" id="thread-save" type="button" aria-label="收藏目前規格" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button></div>
+          <div class="thread-member-switch" role="group" aria-label="內牙或外牙"><button type="button" data-thread-member="internal" aria-pressed="true">內牙</button><button type="button" data-thread-member="external" aria-pressed="false">外牙</button></div>
+          <div class="thread-facts"><dl><dt>基本大徑</dt><dd id="thread-major-fact"></dd></dl><dl><dt>牙距 / 換算 TPI</dt><dd id="thread-pitch-fact"></dd></dl><dl><dt>牙型角</dt><dd id="thread-angle-fact"></dd></dl></div>
+          <div class="thread-limits-heading"><h3 id="thread-dimensions-title">尺寸範圍</h3><span id="thread-class"></span></div>
+          <div class="thread-table-wrap"><table class="thread-dimension-table"><caption class="sr-only" id="thread-table-caption">所選螺紋尺寸資料</caption><thead id="thread-dimension-head"></thead><tbody id="thread-dimensions"></tbody></table></div>
+          <p id="thread-dimension-note"></p>
+          <div class="thread-profile"><svg id="thread-profile" viewBox="0 0 320 140" role="img" aria-label="螺紋大徑、節徑與小徑示意"></svg><div><h3>看懂尺寸位置</h3><p id="thread-profile-note">大徑跨過牙頂，節徑位於牙形中間，小徑跨過牙底。示意圖不依數值比例繪製。</p></div></div>
+          <details class="thread-source"><summary>資料來源與適用範圍</summary><div id="thread-source-links"></div><p id="thread-scope"></p></details>
+          <div class="thread-detail-actions"><button class="primary-button" id="thread-copy" type="button"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>複製規格</button><button class="plain-button" id="thread-open-converter" type="button">公制攻牙換算</button></div>
+          <section class="thread-saved" id="thread-saved" aria-labelledby="thread-saved-title"><h3 id="thread-saved-title">常用規格</h3><div id="thread-saved-list"></div></section>
+        </article>
+      </div>
+    </section>
+    <!-- 06｜常用收藏與來源：只儲存自己的工具偏好，不上傳輸入資料。 -->
+    <section class="screen" id="favorites-screen" hidden aria-labelledby="favorites-title"><div class="hero"><p class="eyebrow">YOUR SHORTCUTS</p><h2 id="favorites-title">常用的，放在手邊。</h2><p>計算工具與螺紋規格，都能留下常用入口。</p></div><div class="category-grid" id="favorites-list"></div><section class="thread-library" id="thread-global-saved" hidden aria-labelledby="thread-global-saved-title"><div class="thread-saved"><h3 id="thread-global-saved-title">常用螺紋規格</h3><div id="thread-global-list"></div></div></section></section>
     <section class="screen" id="sources-screen" hidden aria-labelledby="sources-title"><div class="hero"><p class="eyebrow">FORMULAS &amp; SCOPE</p><h2 id="sources-title">知道怎麼算，<br>也知道用在哪裡。</h2><p>公式與單位依下列資料整理。輸入的切削速度與進給值請依刀具和加工條件決定；範例值只用來示範計算。</p></div><div id="sources-list"></div></section>
     <footer class="app-footer"><span>LOUIS LI / CNC WORKBENCH</span><span>本機工具 · 個人製作</span></footer>
     <noscript><p>請啟用 JavaScript 以使用加工計算工具。</p></noscript>

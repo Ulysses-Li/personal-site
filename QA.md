@@ -1,6 +1,20 @@
 # 網站驗證紀錄
 
-更新日期：2026-11-21
+更新日期：2026-11-23
+
+## 螺紋查表（2026-11-23）
+
+- 加工工具箱的螺紋入口新增查表頁，收錄 M、MF、UNC、UNF、BA、BSW、BSF、G／BSPP 共 8 個牙系、102 筆規格；原螺距／TPI 與攻牙底孔粗估仍保留為獨立換算頁。
+- 其中 36 筆 M／MF／UNC／UNF 提供來源已列出的工件尺寸限界：公制內牙 6H／外牙 6g，統一牙內牙 2B／外牙 2A。各列依內外牙、公差等級及來源欄位呈現，未收錄的限界保留 `null` 並顯示「—」，不以基本尺寸、預鑽孔徑或其他等級猜補。
+- 另 66 筆 BA／BSW／BSF／G 僅提供基本牙型資料，明示未指定製造公差上下限。BA 公稱外徑與牙距、BSW／BSF 規格與 TPI、G 基本外徑與 TPI 採來源表列資料；節徑與小徑的基本牙型推算另作標示。G 公稱尺寸不直接乘以 25.4 當外徑。
+- 工件限界來源依 `thread-data.js`：OSG Gauge Stock List 印刷 101／PDF 102，表據 JIS B0205-4、B0209-2/3:2001；OSG USA CFD Die Products 印刷 23／PDF 25 的 CLASS 2A；OSG USA Tapping Guide Vol.3 2024 的 PDF 1／2 的 2B 工件限界。未混入量規製造尺寸、絲攻 H 級、推薦毛胚或百分比預鑽值；英制原值換算 mm 不增加來源精度。
+- 基本牙型來源依 `thread-extra-data.js`：Dormer Pramet 螺紋技術海報第 1 頁牙型與第 2 頁 BA 表、Thürmer Tools Special thread sizes – FAQ 的 BSW／BSF 規格與 TPI、Thürmer 官方 ISO 228/1 G 管牙圖表。基本牙型幾何推算與原廠表列輸入分開保存。
+- 本輪 `node scripts/check-thread-data.mjs` 的 18 組資料檢查全數通過；原有 `node scripts/check-machining.mjs` 的 14 組加工核心檢查亦全數通過。
+- 58 項 UI 檢查全數通過，涵蓋八種牙系的完整規格選單、Unicode／全形與乘號正規化、分數尺寸及 BA 號數搜尋、內外牙切換、公英制往返、重新整理後的單位與收藏、主收藏頁規格連結、複製內容與來源，以及原四類計算和公制攻牙換算。基本牙型與工件限界分開呈現，缺值不顯示為零。
+- 已驗證 `#thread` 查表入口、`#thread/<id>/<member>` 規格與內外牙深連結，以及原換算頁 `#thread-calculator`；`member` 使用 `internal`／`external`。螺紋規格收藏使用獨立儲存鍵 `cwli-thread-reference-v1`，與原工具收藏分開維護。
+- 已檢查 320、390、430、768、900、1024px 及預設 1391px 桌機畫面，頁面與尺寸數字沒有橫向溢出；320px 英制數字不換行。手機選單改為緊湊排列，精確單筆搜尋隱藏重複結果，多筆搜尋選取後移至資料標題。修正共用頁面 320px 最小寬度與捲軸相加造成的橫向溢出。
+- 瀏覽器未發現 JavaScript 錯誤或警告，臨時視窗尺寸已恢復。桌機與 390 × 844px 手機截圖、58 項詳細紀錄存於本機忽略目錄 `.preview/thread-lookup-desktop.jpg`、`.preview/thread-lookup-mobile.jpg`、`.preview/thread-lookup-qa.json`。
+- 本輪只更新本機專案，未執行上線發佈或 push。以下保留各次歷史驗證紀錄。
 
 ## 作品頁改為專案展示
 
