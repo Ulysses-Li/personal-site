@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">B 切角單 L</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="160,120 224,120 224,316 352,316 352,380 192,380 160,348" fill="#ffffff"/>
+  <polygon points="352,316 416,316 416,348 384,380 352,380" fill="#67e8f9"/>
+</svg>

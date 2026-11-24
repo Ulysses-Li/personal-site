@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">C LL 連線</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="128,304 128,152 160,120 304,120 304,184 192,184 192,304" fill="#ffffff"/>
+  <polygon points="384,208 384,360 352,392 208,392 208,328 320,328 320,208" fill="#67e8f9"/>
+</svg>

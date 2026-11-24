@@ -1,12 +1,18 @@
 ﻿# 個人標誌 PNG 匯出｜直接讀取 SVG 原稿的底色及多邊形，不另存第二份座標。
 # Windows 內建 System.Drawing，不需安裝圖片套件。
 # 執行：powershell -NoProfile -ExecutionPolicy Bypass -File scripts/export-brand-icons.ps1
-param([string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot))
+param(
+  [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
+  # 提案可另指定原稿與輸出資料夾，不覆寫網站目前使用的圖示。
+  [string]$SvgPath = '',
+  [string]$TargetDirectory = '',
+  [int[]]$Sizes = @(16, 32, 180, 192, 512, 1024)
+)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
-$brandDirectory = Join-Path $ProjectRoot 'dist/assets/brand'
-$sourcePath = Join-Path $brandDirectory 'louis-li-mark.svg'
+$brandDirectory = if ($TargetDirectory) { $TargetDirectory } else { Join-Path $ProjectRoot 'dist/assets/brand' }
+$sourcePath = if ($SvgPath) { $SvgPath } else { Join-Path $brandDirectory 'louis-li-mark.svg' }
 [xml]$source = [System.IO.File]::ReadAllText($sourcePath)
 $background = $source.SelectSingleNode("//*[local-name()='rect']")
 $polygons = $source.SelectNodes("//*[local-name()='polygon']")
@@ -16,7 +22,7 @@ if ($source.DocumentElement.viewBox -ne '0 0 512 512' -or $polygons.Count -ne 2)
 $backgroundColor = [System.Drawing.ColorTranslator]::FromHtml($background.fill)
 
 # 四倍取樣後縮小，讓 16／32px 斜切角也有平滑邊緣。
-foreach ($size in @(16, 32, 180, 192, 512, 1024)) {
+foreach ($size in $Sizes) {
   $scale = 4
   $canvasSize = $size * $scale
   $canvas = [System.Drawing.Bitmap]::new($canvasSize, $canvasSize, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
