@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">I1 疊片對齊</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="136,152 168,120 232,120 232,296 368,296 368,392 168,392 136,360" fill="#67e8f9"/>
+  <polygon points="168,120 200,88 264,88 264,264 400,264 400,360 200,360 168,328" fill="#ffffff"/>
+  <polygon points="200,136 232,136 232,296 352,296 352,328 216,328 200,312" fill="#0369a1"/>
+</svg>

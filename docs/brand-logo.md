@@ -10,6 +10,8 @@
 
 第三輪沿著 G／H 增加創意構圖，開啟 `dist/brand-options-round3.html` 比較 I「負形刻線」、J「斜縫拼接」、K「折返刀路」、L「切面立體」。每款同樣保留 SVG、32／180／512px PNG 與小尺寸預覽；I 使用三層多邊形形成疊片與負形，其餘維持兩層。
 
+使用者選定 I 方向後，`dist/brand-options-i-refined.html` 提供原稿與三款細修對照：I1 將前後疊片精準錯位 32；I2 採 104 厚 L、40 寬刻線及直線段兩側各 32 白邊；I3 在尾端加入一致的 45° 切角。精修原稿位於 `concepts/i1-aligned-layers/`、`i2-small-size/`、`i3-precision-chamfer/`，各有 32／180／512／1024px PNG。推薦 I1 作為後續定稿基礎，原 I 保留。
+
 目前正式設定仍使用 A，提案比較頁不會切換網站圖示。選定後，再將該方案原稿套用到 `louis-li-mark.svg`，重新匯出正式圖示並記錄新版本。
 
 提案輸出可使用 `export-brand-icons.ps1` 的 `SvgPath`、`TargetDirectory`、`Sizes` 參數，寫入指定方案資料夾，避免覆寫現用圖檔；未指定參數時保留原來的正式輸出行為。

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">I2 小圖加強</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="136,152 168,120 240,120 240,296 368,296 368,400 168,400 136,368" fill="#67e8f9"/>
+  <polygon points="168,120 200,88 272,88 272,264 400,264 400,368 200,368 168,336" fill="#ffffff"/>
+  <polygon points="200,120 240,120 240,296 368,296 368,336 220,336 200,316" fill="#0369a1"/>
+</svg>
