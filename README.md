@@ -4,7 +4,7 @@
 
 本站同時作為個人介紹、作品集、面試履歷與長期技術知識索引。原本 `C:\Users\Louis\Desktop\links` 保留，新版採獨立資料夾維護。
 
-個人「雙 L 刀路」標誌的 SVG 原稿位於 `dist/assets/brand/louis-li-mark.svg`，已接入頁首、分頁與手機主畫面。修改及重新輸出方式見 [品牌圖示說明](docs/brand-logo.md)。
+個人標誌已選定 **I3「切角精修」**：白色 L、青色背片與藍色負形刻線三層構成，主切角 32、內切角 16，均為 45°。維護原稿位於 `dist/assets/brand/louis-li-mark.svg`，正式引用採 `louis-li-i3.*` 檔名，降低沿用舊圖示快取的機會；六個 PNG 尺寸與相容圖示由同一份原稿產生。修改及重新輸出方式見 [品牌圖示說明](docs/brand-logo.md)。本輪維護版次為 `1.1.1`（2026-11-24），正式網址為 `lab.cwli.dev`，部署狀態以 GitHub Actions 的對應提交為準。
 
 ## 開啟網站
 
@@ -62,12 +62,15 @@ personal-site/
 │  └─ assets/                共用 theme.css、頭像、圖示與專案截圖
 ├─ docs/
 │  ├─ project-structure.md   主站資料／元件分層、修改位置與版次流程
+│  ├─ brand-logo.md          I3 正式標誌、圖示檔名、匯出與快取說明
 │  ├─ support-center-case.md 代表作品的事實與畫面來源
 │  ├─ badminton-tool.md      羽球工具複本、修改位置與驗證說明
 │  ├─ fanuc-macro-tool.md    FANUC 資料、手冊來源及工具維護方式
 │  └─ machining-calculator.md 加工計算、單位、公式來源與維護方式
 ├─ scripts/
 │  ├─ preview.mjs            可選的本機預覽工具
+│  ├─ build-brand-icons.mjs  從同一 SVG 同步正式 I3／相容圖示與 Manifest
+│  ├─ check-brand-icons.mjs  SVG 安全區、PNG／ICO、安裝資訊與引用檢查
 │  ├─ check-fanuc.mjs        FANUC 條目、來源關聯及 G65 引數對照檢查
 │  ├─ check-site-shell.mjs   頁首／頁尾資料、元件、載入與版本結構檢查
 │  ├─ check-machining.mjs    加工公式、輸入驗證與單位換算檢查

@@ -2,6 +2,15 @@
 
 更新日期：2026-11-24
 
+## I3 正式定稿（1.1.1，2026-11-24）
+
+- 使用者選定 I3「切角精修」；來源為 `dist/assets/brand/concepts/i3-precision-chamfer/mark.svg`，正式維護原稿為 `dist/assets/brand/louis-li-mark.svg`。已核對來源 SVG 的白色 L、青色背片及藍色負形刻線三層，主切角 32、內切角 16，均為 45°。
+- 本輪設定以 `assets/brand/louis-li-i3.svg`、`louis-li-i3-{16,32,180,192,512,1024}.png`、`louis-li-i3.ico` 作正式引用，原有維護檔名與工具共用 `assets/mark.svg` 保留並同步。頁首、HTML Apple／favicon 及 Manifest 需與同批圖檔一併發布。
+- 四個比較頁保留舊稿，I3 標示為正式使用；品牌文件與 `data/version.js`、`CHANGELOG.md` 同步為 `1.1.1`。下方提案與 `1.1.0` 段落記錄各輪當時狀態，採用結果以本節為準。
+- 本輪重新匯出六尺寸 PNG、版本資源及穩定別名；品牌圖示 11／11、主站外框 13／13 組通過。FANUC 83 筆條目、加工計算 14 組、螺紋資料 18 組、螺紋資料庫 50 組、ISO 公差 30 組檢查皆通過；發布工作流程加入品牌與外框檢查。
+- HTTP 瀏覽器確認 I3 頁首實際載入，桌機 49px、手機 40px；Apple／favicon 指向 I3 正式檔名，版次 metadata 為 `1.1.1`。430px 無橫向溢出，漢堡選單展開、切換小工具及自動收合正常，測試後已恢復原尺寸。本機畫面在 `.preview/i3-final-local.jpg`。
+- 正式部署由既有 GitHub Pages 工作流程處理，狀態以 GitHub Actions 的對應提交為準；線上圖檔與瀏覽器另行確認，驗證紀錄保存於 `.preview/i3-release-verification.json` 及 `.preview/i3-final-live.jpg`，不將本機結果當作線上結果。未連接實際 iPhone，既有主畫面捷徑可能保留舊圖示，不保證更換檔名後立即更新。
+
 ## I 方向細節精修（2026-11-24）
 
 - 保留使用者選定 I 的三層結構，新增 I1 疊片對齊、I2 小圖加強、I3 切角精修。原 I 保留，現用網站 Logo 未切換。

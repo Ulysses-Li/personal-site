@@ -25,6 +25,7 @@ for (const path of ['data/site.js', 'data/header.js', 'components/shared.js', 'c
 }
 const settings = context.SITE_SETTINGS;
 const header = context.SITE_HEADER;
+const brandStem = header.brandImage.slice(0, -4);
 const requiredViews = ['home', 'work', 'tools', 'notes', 'resume'];
 
 function attributes(tag) {
@@ -112,7 +113,7 @@ await check('512 SVG 幾何標誌全部位於 maskable 中央安全圓內', () =
   const svg = master.toString('utf8');
   assert.deepEqual(tags(svg, 'svg')[0].viewBox.trim().split(/[\s,]+/).map(Number), [0, 0, 512, 512]);
   const polygons = tags(svg, 'polygon');
-  assert.ok(polygons.length >= 2, '應保留雙 L 幾何標誌');
+  assert.ok(polygons.length >= 2, '應保留分層幾何標誌');
   for (const polygon of polygons) {
     const values = polygon.points.trim().split(/[\s,]+/).map(Number);
     assert.ok(values.length >= 6 && values.length % 2 === 0 && values.every(Number.isFinite));
@@ -139,6 +140,15 @@ await check('六個 PNG 解出 alpha 後每個像素均完全不透明', () => {
 await check('根目錄 Apple 圖示及舊 SVG 路徑與正式主檔一致', async () => {
   assert.ok((await read('apple-touch-icon.png')).equals(pngFiles.get(180)));
   assert.ok((await read('assets/mark.svg')).equals(master));
+});
+
+await check('帶版本檔名的正式 SVG／六個 PNG／ICO 與匯出主檔一致', async () => {
+  assert.match(header.brandImage, /^assets\/brand\/[a-z0-9][a-z0-9-]*\.svg$/);
+  assert.ok((await readFile(localAsset(header.brandImage))).equals(master));
+  for (const size of sizes) {
+    assert.ok((await readFile(localAsset(`${brandStem}-${size}.png`))).equals(pngFiles.get(size)), `${size} 正式圖示未同步`);
+  }
+  assert.ok((await readFile(localAsset(`${brandStem}.ico`))).equals(await read('favicon.ico')));
 });
 
 await check('favicon.ico 包含與正式 32 PNG 相同的有效 PNG payload', async () => {
@@ -176,8 +186,11 @@ await check('Manifest 名稱與共用 profile／站名一致，基本安裝欄�
 await check('Manifest 圖示均為本機資源，宣告尺寸與真實 PNG 一致', async () => {
   assert.ok(Array.isArray(manifest.icons) && manifest.icons.length);
   for (const icon of manifest.icons) {
-    const info = pngInfo(await readFile(localAsset(icon.src)));
+    const bytes = await readFile(localAsset(icon.src));
+    const info = pngInfo(bytes);
     assert.equal(icon.sizes, `${info.width}x${info.height}`);
+    assert.equal(icon.src, `${brandStem}-${info.width}.png`);
+    assert.ok(bytes.equals(pngFiles.get(info.width)), 'Manifest 圖示必須與正式匯出版本一致');
     assert.equal(icon.type, 'image/png');
     assert.ok(icon.purpose.split(/\s+/).every(purpose => ['any', 'maskable'].includes(purpose)));
   }
@@ -207,11 +220,12 @@ await check('HTML 的 Apple／Manifest／favicon 與 title、meta 指向一致',
   };
   const apple = oneLink('apple-touch-icon');
   assert.equal(apple.sizes, '180x180');
+  assert.equal(apple.href, `${brandStem}-180.png`);
   assert.ok((await readFile(localAsset(apple.href))).equals(pngFiles.get(180)));
   assert.equal(oneLink('manifest').href, 'site.webmanifest');
   for (const link of links.filter(link => link.rel === 'icon')) await readFile(localAsset(link.href));
-  assert.ok(links.some(link => link.rel === 'icon' && link.type === 'image/svg+xml' && link.href === masterPath));
-  assert.ok(links.some(link => link.rel === 'icon' && link.href === 'favicon.ico' && link.sizes === '32x32'));
+  assert.ok(links.some(link => link.rel === 'icon' && link.type === 'image/svg+xml' && link.href === header.brandImage));
+  assert.ok(links.some(link => link.rel === 'icon' && link.href === `${brandStem}.ico` && link.sizes === '32x32'));
   assert.equal(html.match(/<title>([^<]*)<\/title>/i)?.[1], manifest.name);
   const meta = Object.fromEntries(tags(html, 'meta').filter(item => item.name).map(item => [item.name, item.content]));
   assert.equal(meta['apple-mobile-web-app-title'], manifest.short_name);

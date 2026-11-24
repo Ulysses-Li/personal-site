@@ -31,6 +31,8 @@ jobs:
 
       - name: 驗證工具資料與計算
         run: |
+          node scripts/check-site-shell.mjs
+          node scripts/check-brand-icons.mjs
           node scripts/check-fanuc.mjs
           node scripts/check-machining.mjs
           node scripts/check-thread-data.mjs
