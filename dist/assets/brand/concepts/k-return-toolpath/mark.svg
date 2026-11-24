@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">K 折返刀路</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="144,152 176,120 240,120 240,296 400,296 400,392 176,392 144,360" fill="#ffffff"/>
+  <polygon points="176,176 208,176 208,328 328,328 328,304 360,304 360,360 192,360 176,344" fill="#67e8f9"/>
+</svg>

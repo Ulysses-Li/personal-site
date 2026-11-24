@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">J 斜縫拼接</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="152,152 184,120 224,120 224,264 152,336" fill="#ffffff"/>
+  <polygon points="248,288 400,288 400,360 176,360" fill="#67e8f9"/>
+</svg>

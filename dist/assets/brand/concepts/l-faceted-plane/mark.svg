@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">L 切面立體</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="144,152 176,120 208,120 208,304 368,304 368,368 176,368 144,336" fill="#ffffff"/>
+  <polygon points="208,120 248,152 248,264 408,264 368,304 208,304" fill="#67e8f9"/>
+</svg>

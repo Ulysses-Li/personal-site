@@ -16,8 +16,8 @@ $sourcePath = if ($SvgPath) { $SvgPath } else { Join-Path $brandDirectory 'louis
 [xml]$source = [System.IO.File]::ReadAllText($sourcePath)
 $background = $source.SelectSingleNode("//*[local-name()='rect']")
 $polygons = $source.SelectNodes("//*[local-name()='polygon']")
-if ($source.DocumentElement.viewBox -ne '0 0 512 512' -or $polygons.Count -ne 2) {
-  throw 'SVG 需保留 512 座標、單一底色及兩個 polygon；變更構圖類型時請一併調整匯出器。'
+if ($source.DocumentElement.viewBox -ne '0 0 512 512' -or $polygons.Count -lt 1) {
+  throw 'SVG 需保留 512 座標、單一底色及 polygon 圖層；變更為曲線等構圖類型時請一併調整匯出器。'
 }
 $backgroundColor = [System.Drawing.ColorTranslator]::FromHtml($background.fill)
 

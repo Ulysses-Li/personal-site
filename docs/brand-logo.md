@@ -8,6 +8,8 @@
 
 第二輪依使用者喜歡的 A／B 延伸，開啟 `dist/brand-options-round2.html` 比較 E「直角雙 L」、F「並列雙 L」、G「斜肩單 L」、H「內嵌刀路」。新增四個方案資料夾保存各自原稿與 PNG，第一輪檔案全部保留。
 
+第三輪沿著 G／H 增加創意構圖，開啟 `dist/brand-options-round3.html` 比較 I「負形刻線」、J「斜縫拼接」、K「折返刀路」、L「切面立體」。每款同樣保留 SVG、32／180／512px PNG 與小尺寸預覽；I 使用三層多邊形形成疊片與負形，其餘維持兩層。
+
 目前正式設定仍使用 A，提案比較頁不會切換網站圖示。選定後，再將該方案原稿套用到 `louis-li-mark.svg`，重新匯出正式圖示並記錄新版本。
 
 提案輸出可使用 `export-brand-icons.ps1` 的 `SvgPath`、`TargetDirectory`、`Sizes` 參數，寫入指定方案資料夾，避免覆寫現用圖檔；未指定參數時保留原來的正式輸出行為。
@@ -44,9 +46,9 @@ node scripts/check-brand-icons.mjs
 node scripts/check-site-shell.mjs
 ```
 
-第一個指令呼叫 Windows 內建 System.Drawing，從同一份 SVG 的底色與兩個 polygon 匯出所有尺寸，不安裝圖片套件。使用四倍取樣後縮小；PNG、ICO、共用 SVG、Apple 根目錄圖示、Manifest 與安裝名稱會同步更新。一般改網頁文字不用執行此指令；換圖、改安裝名稱或個人姓名時才重新匯出。
+第一個指令呼叫 Windows 內建 System.Drawing，從同一份 SVG 的底色與 polygon 圖層匯出所有尺寸，不安裝圖片套件。使用四倍取樣後縮小；PNG、ICO、共用 SVG、Apple 根目錄圖示、Manifest 與安裝名稱會同步更新。一般改網頁文字不用執行此指令；換圖、改安裝名稱或個人姓名時才重新匯出。
 
-目前匯出器支援這份 512×512、單一實色矩形及兩個多邊形的構圖。可直接修改 points 與 fill；若改成曲線、漸層或更多圖層，需同步調整 `scripts/export-brand-icons.ps1`。該 PowerShell 檔使用 UTF-8 BOM，供 Windows PowerShell 5.1 正確讀取繁體中文。
+目前匯出器支援 512×512、單一實色底色及多個 polygon 圖層。可直接修改 points、fill 或增加多邊形；若改成曲線、漸層等其他 SVG 元素，需同步調整 `scripts/export-brand-icons.ps1`。該 PowerShell 檔使用 UTF-8 BOM，供 Windows PowerShell 5.1 正確讀取繁體中文。
 
 ## 網站與手機安裝
 
