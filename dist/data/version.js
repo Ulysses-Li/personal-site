@@ -5,7 +5,7 @@
  */
 window.SITE_VERSION = {
   schemaVersion: 1,
-  version: '1.0.0',
-  updatedAt: '2026-11-23',
-  summary: '主站頁首頁尾拆分為資料、元件與初始化程式。'
+  version: '1.1.0',
+  updatedAt: '2026-11-24',
+  summary: '加入個人雙 L 刀路標誌、手機主畫面圖示與安裝資訊。'
 };

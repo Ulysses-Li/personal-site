@@ -1,6 +1,17 @@
 # 網站驗證紀錄
 
-更新日期：2026-11-23
+更新日期：2026-11-24
+
+## 個人標誌與手機主畫面圖示（2026-11-24）
+
+- 新增「雙 L 刀路」原創幾何標誌：白色大 L、青色小 L、工程藍滿版底；兩條 60 寬筆畫與 40 間隙、30×30 斜切角，SVG 不依賴外部字型。512 座標的所有必要頂點均位於中央 40% 半徑安全圓，最遠約 195.35，小於 204.8。
+- 同一份 SVG 原稿匯出 16、32、180、192、512、1024px PNG，根目錄 Apple 圖示與 ICO；原 `assets/mark.svg` 路徑同步。匯出器讀取 SVG 座標，不手動保留第二套幾何；Windows PowerShell 5.1 腳本以 UTF-8 BOM 保存。
+- 頁首由 `data/header.js.brandImage` 指定向量圖，空白或無效路徑退回既有文字；圖片為裝飾，品牌連結仍有姓名的朗讀標籤。原五頁路由與漢堡選單保留。
+- HTML 已設定 Apple 180px PNG、安裝名稱、favicon、standalone 及相對路徑 Manifest。Manifest 名稱由共用 profile 匯出，網域根目錄與 `/personal-site/dist/` 部署子目錄均可解析。Node 預覽 MIME 補上 PNG、ICO、webmanifest。
+- `check-brand-icons.mjs` 10／10 組通過：原稿安全區、真實 PNG 簽名／尺寸、六張 PNG 全像素 alpha=255、別名 byte 一致、ICO 內嵌 PNG、Manifest 路徑／安裝資訊與正式頁首輸出。主站外框回歸更新為 13／13 組通過，語法與 diff 空白檢查通過。
+- 本輪 8 項瀏覽器檢查通過：頁首 SVG 實際載入、桌機 49px／手機 40px、Apple 圖示與名稱、Manifest／1.1.0 metadata、180px PNG HTTP 載入、手機無橫向溢出、漢堡與切頁回歸。沒有 JavaScript 錯誤或警告，430px 測試後已恢復原尺寸。
+- 本輪未連接實際 iPhone，未把 PNG／HTML 驗證當作真實安裝測試；正式 `lab.cwli.dev` 需更新網站檔案後採用。本次未新增 Service Worker，沒有宣稱整站離線快取。
+- 品牌維護與來源規範見 `docs/brand-logo.md`；完成畫面與紀錄在 `.preview/logo-header-desktop.jpg`、`.preview/brand-logo-qa.json`。維護版次為 1.1.0，本輪儲存於本機。
 
 ## 主站頁首／頁尾結構拆分（2026-11-23）
 

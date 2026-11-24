@@ -11,3 +11,7 @@ trim_trailing_whitespace = true
 
 [*.md]
 trim_trailing_whitespace = false
+
+# Windows PowerShell 5.1 以 BOM 辨識繁體中文腳本；其他原始碼仍用 UTF-8。
+[*.ps1]
+charset = utf-8-bom

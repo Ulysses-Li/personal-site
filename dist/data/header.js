@@ -7,6 +7,8 @@
 window.SITE_HEADER = {
   schemaVersion: 1,
   brandMark: 'L.',
+  // 可編輯向量標誌；移除此欄位則退回上方純文字，不影響導覽。
+  brandImage: 'assets/brand/louis-li-mark.svg',
   homeView: 'home',
   navigationLabel: '主要導覽',
   menu: {

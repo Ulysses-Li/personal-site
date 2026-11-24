@@ -9,6 +9,7 @@
 | 姓名、職稱、簡介、Email、GitHub、LINE | `dist/data/site.js` | `profile` |
 | 網站副標題 | `dist/data/site.js` | `siteName`；頁首與頁尾共用 |
 | 頁首 Logo 字樣 | `dist/data/header.js` | `brandMark` |
+| 頁首 Logo 圖片 | `dist/data/header.js` | `brandImage`；原稿與匯出方式見 `docs/brand-logo.md` |
 | 導覽文字、順序及是否顯示 | `dist/data/header.js` | `navigation`、`visible` |
 | 各頁瀏覽器標題 | `dist/data/header.js` | `navigation[].pageTitle`，未填則採選單名稱；首頁共用 `siteName` |
 | 聯絡按鈕文字 | `dist/data/header.js` | `contact.label`；信箱來自 `profile.email` |

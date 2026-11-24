@@ -8,10 +8,11 @@
   const mounted = new WeakMap();
 
   function render(settings, config) {
-    const { escape, safeHref } = window.SiteComponentUtils;
+    const { escape, safeHref, safeAssetPath } = window.SiteComponentUtils;
     const profile = settings.profile;
     const home = safeHref('#' + config.homeView, { allowHash: true });
     const contact = config.contact;
+    const brandImage = safeAssetPath(config.brandImage);
     const email = contact && safeHref('mailto:' + (profile[contact.profileKey] || ''), { allowMail: true });
     const links = config.navigation.filter(item => item.visible !== false).map(item => {
       const href = safeHref('#' + item.id, { allowHash: true });
@@ -20,7 +21,7 @@
 
     return `<div class="container header-inner">
       <a class="brand" href="${escape(home)}" aria-label="${escape(profile.name)} 首頁">
-        <span class="brand-mark">${escape(config.brandMark)}</span>
+        <span class="brand-mark${brandImage ? ' has-image' : ''}" aria-hidden="true">${brandImage ? `<img src="${escape(brandImage)}" alt="" width="49" height="49" decoding="sync">` : escape(config.brandMark)}</span>
         <span class="brand-copy"><strong>${escape(profile.name.toUpperCase())}</strong><small>${escape(settings.siteName)}</small></span>
       </a>
       <button class="menu-toggle" type="button" aria-label="${escape(config.menu.expandLabel)}" aria-controls="site-nav" aria-expanded="false">

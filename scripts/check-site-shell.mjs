@@ -341,7 +341,11 @@ await check('正式 renderer 對文字與屬性跳脫，不產生注入元素或
   context.SITE_FOOTER.links[0].label = text;
   for (const markup of [context.SiteHeader.render(context.SITE_SETTINGS, context.SITE_HEADER), context.SiteFooter.render(context.SITE_SETTINGS, context.SITE_FOOTER, { year: 2026 })]) {
     const fragment = parse(markup);
-    assert.equal(fragment.querySelectorAll('img').length, 0);
+    // 唯一允許的是資料指定的正式品牌圖，不可由文字注入第二張圖片。
+    const brandImages = fragment.querySelectorAll('img');
+    const expectedBrand = fragment.querySelector('.brand-mark img');
+    assert.equal(brandImages.length, expectedBrand ? 1 : 0);
+    if (expectedBrand) assert.equal(expectedBrand.getAttribute('src'), context.SITE_HEADER.brandImage);
     assert.equal(fragment.querySelectorAll('script').length, 0);
     const elements = [];
     const walk = node => { for (const child of node.children) { elements.push(child); walk(child); } };
@@ -352,6 +356,24 @@ await check('正式 renderer 對文字與屬性跳脫，不產生注入元素或
   const header = parse(context.SiteHeader.render(context.SITE_SETTINGS, context.SITE_HEADER));
   assert.equal(header.querySelector('.brand').getAttribute('aria-label'), text + ' 首頁');
   assert.equal(header.querySelector('.menu-toggle').getAttribute('aria-label'), text);
+});
+
+await check('品牌圖片限制站內檔案，未設定或無效時保留文字後備', () => {
+  const context = boot();
+  const { safeAssetPath } = context.SiteComponentUtils;
+  for (const value of ['javascript:alert(1)', 'data:image/svg+xml,x', 'https://example.com/logo.svg', '../logo.svg', '/logo.svg', 'assets//logo.svg', 'assets/./logo.svg', 'assets/logo.svg" onerror="x', null]) {
+    assert.equal(safeAssetPath(value), '');
+    context.SITE_HEADER.brandImage = value;
+    const fragment = parse(context.SiteHeader.render(context.SITE_SETTINGS, context.SITE_HEADER));
+    assert.equal(fragment.querySelectorAll('.brand-mark img').length, 0);
+    assert.equal(fragment.querySelector('.brand-mark').textContent, context.SITE_HEADER.brandMark);
+  }
+  context.SITE_HEADER.brandImage = 'assets/brand/louis-li-mark.svg';
+  const fragment = parse(context.SiteHeader.render(context.SITE_SETTINGS, context.SITE_HEADER));
+  const image = fragment.querySelector('.brand-mark img');
+  assert.equal(image.getAttribute('src'), context.SITE_HEADER.brandImage);
+  assert.equal(image.getAttribute('alt'), '');
+  assert.equal(fragment.querySelector('.brand-mark').getAttribute('aria-hidden'), 'true');
 });
 
 await check('實際 safeHref 與 renderer 拒絕危險網址，合法 HTTPS／mail／hash 可用', () => {

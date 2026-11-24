@@ -7,6 +7,8 @@
 *.md text eol=lf
 *.svg text eol=lf
 *.json text eol=lf
+*.webmanifest text eol=lf
+*.ps1 text eol=lf
 .gitignore text eol=lf
 .editorconfig text eol=lf
 .gitattributes text eol=lf
@@ -15,4 +17,5 @@
 *.jpeg binary
 *.jpg binary
 *.png binary
+*.ico binary
 *.tar.gz binary

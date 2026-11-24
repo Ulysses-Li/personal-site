@@ -4,6 +4,8 @@
 
 本站同時作為個人介紹、作品集、面試履歷與長期技術知識索引。原本 `C:\Users\Louis\Desktop\links` 保留，新版採獨立資料夾維護。
 
+個人「雙 L 刀路」標誌的 SVG 原稿位於 `dist/assets/brand/louis-li-mark.svg`，已接入頁首、分頁與手機主畫面。修改及重新輸出方式見 [品牌圖示說明](docs/brand-logo.md)。
+
 ## 開啟網站
 
 **直接雙擊根目錄的 `開啟網站.html`**，就會開啟 `dist/index.html`。也可以直接將 `dist/index.html` 拖進瀏覽器。
@@ -101,6 +103,7 @@ personal-site/
 | 頁首品牌、選單文字與順序、聯絡按鈕 | `data/header.js` |
 | 頁尾短句、版權起始年、連結標籤 | `data/footer.js` |
 | 頁首／頁尾 HTML 與漢堡選單行為 | `components/header.js`／`components/footer.js` |
+| 個人 Logo、手機主畫面圖示 | `assets/brand/louis-li-mark.svg`；改後執行 `node scripts/build-brand-icons.mjs` |
 | 主站版次與改版摘要 | `data/version.js`／根目錄 `CHANGELOG.md` |
 | 首頁專長與履歷能力 | `content.js` 的 `competencies` |
 | 新增作品、補上成果與證據 | `content.js` 的 `projects` |

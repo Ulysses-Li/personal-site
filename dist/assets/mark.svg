@@ -1,6 +1,8 @@
-<!-- 網站圖示：深藍底、白色 L 字與青色圓點，沿用 links 網站的藍色系。 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="8" fill="#0369a1" />
-  <path d="M18 14v36h24v-7H26V14Z" fill="#ffffff" />
-  <circle cx="47" cy="46" r="4" fill="#67e8f9" />
+<!-- Louis Li｜雙 L 刀路。滿版底色不預切圓角，由手機系統套用圖示遮罩。 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="logo-title logo-description">
+  <title id="logo-title">Louis Li 雙 L 標誌</title>
+  <desc id="logo-description">白色與青色的兩個幾何 L，以平行刀路和四十五度切角組成。</desc>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="144,104 204,104 204,328 400,328 400,388 174,388 144,358" fill="#ffffff"/>
+  <polygon points="244,104 304,104 304,228 432,228 432,258 402,288 274,288 244,258" fill="#67e8f9"/>
 </svg>
