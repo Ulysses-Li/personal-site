@@ -2,6 +2,13 @@
 
 更新日期：2026-11-24
 
+## A／B 標誌延伸提案（2026-11-24）
+
+- 依使用者偏好，新增 E 直角雙 L、F 並列雙 L、G 斜肩單 L、H 內嵌刀路，獨立保存 SVG 與 32／180／512px PNG，未切換現用 A。
+- `dist/brand-options-round2.html` 比較四款延伸設計及 48px／32px 顯示，保留第一輪返回入口。12 個圖像全部載入，沒有橫向溢出或 JavaScript 錯誤／警告。
+- 四款圖形位於中央安全圓；H 橫臂收至 x400，保留遮罩邊緣餘量。12 張 PNG 尺寸核對通過；現用原稿、Apple PNG、Manifest 與版本設定未改動。
+- 第二輪完整比較圖保存在忽略目錄 `.preview/logo-options-round2-comparison.jpg`。
+
 ## 四款標誌提案補充（2026-11-24）
 
 - 新增 `dist/brand-options.html`，並排比較 A 雙 L 刀路、B 切角單 L、C LL 連線、D CW 字母章；各方案保存 SVG 及 32／180／512px PNG，並顯示 48px／32px 實際尺寸預覽。

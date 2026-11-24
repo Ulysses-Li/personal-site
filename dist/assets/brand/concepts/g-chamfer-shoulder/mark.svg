@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">G 斜肩單 L</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="152,152 184,120 216,120 216,316 400,316 400,380 184,380 152,348" fill="#ffffff"/>
+  <polygon points="152,152 184,120 216,120 216,184 152,184" fill="#67e8f9"/>
+</svg>

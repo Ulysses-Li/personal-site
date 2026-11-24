@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">E 直角雙 L</title>
+  <rect width="512" height="512" fill="#0369a1"/>
+  <polygon points="144,112 208,112 208,328 400,328 400,392 144,392" fill="#ffffff"/>
+  <polygon points="248,112 312,112 312,232 400,232 400,296 248,296" fill="#67e8f9"/>
+</svg>
